@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Kanban Board</title>
+    <link rel="stylesheet" href="/dhtmlx/kanban/kanban.css">
+    <style>
+        /* Basic styling for the container */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #root {
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <!-- The DHTMLX Kanban library MUST be loaded before it is used -->
+    <script src="/dhtmlx/kanban/kanban.js"></script>
+    <script>
+        const columns = [
+            {
+                label: "Backlog",
+                id: "backlog",
+            },
+            {
+                label: "In progress",
+                id: "inprogress",
+            },
+            {
+                label: "Testing",
+                id: "testing",
+            },
+            {
+                label: "Done",
+                id: "done",
+            },
+        ];
+
+        const cards = [
+            {
+                id: 1,
+                label: "Integration with Angular/React",
+                priority: 1,
+                color: "#65D3B3",
+                start_date: new Date("2021-01-07"),
+                users: [3, 2],
+                column: "backlog",
+                type: "feature"
+            },
+            {
+                id: 2,
+                label: "Archive the cards/boards ",
+                priority: 3,
+                color: "#58C3FE",
+                users: [4],
+                progress: 1,
+                column: "backlog",
+                type: "feature",
+            },
+            {
+                id: 3,
+                label: "Searching and filtering",
+                priority: 1,
+                color: "#58C3FE",
+                start_date: new Date("2021-01-09"),
+                users: [3, 1],
+                progress: 1,
+                column: "backlog",
+                type: "task",
+            },
+            {
+                id: 4,
+                label: "Set the tasks priorities",
+                color: "#FFC975",
+                start_date: new Date("2020-12-21"),
+                users: [4],
+                progress: 75,
+                column: "inprogress",
+                type: "feature"
+            },
+            {
+                id: 5,
+                label: "Custom icons",
+                color: "#65D3B3",
+                start_date: new Date("2021-01-07"),
+                users: [3, 2],
+                column: "inprogress",
+                type: "task",
+            },
+            {
+                id: 6,
+                label: "Integration with Gantt",
+                color: "#FFC975",
+                start_date: new Date("2020-12-21"),
+                users: [4],
+                progress: 75,
+                column: "inprogress",
+                type: "task",
+            },
+            {
+                id: 7,
+                label: "Drag and drop",
+                priority: 1,
+                color: "#58C3FE",
+                users: [3, 1],
+                progress: 100,
+                column: "testing",
+                type: "feature",
+            },
+            {
+                id: 8,
+                label: "Adding images",
+                color: "#58C3FE",
+                users: [4],
+                column: "testing",
+                type: "task"
+            },
+            {
+                id: 9,
+                label: "Create cards and lists from the UI and from code",
+                priority: 3,
+                color: "#65D3B3",
+                start_date: new Date("2021-01-07"),
+                users: [3, 2],
+                column: "done",
+                type: "feature",
+            },
+            {
+                id: 10,
+                label: "Draw swimlanes",
+                color: "#FFC975",
+                users: [2],
+                column: "done",
+                type: "feature",
+            },
+            {
+                id: 11,
+                label: "Progress bar",
+                priority: 1,
+                color: "#FFC975",
+                start_date: new Date("2020-12-09"),
+                users: [1, 4, 3],
+                progress: 100,
+                column: "done",
+                type: "task",
+            },
+        ];
+
+        new kanban.Kanban("#root", {
+            columns,
+            cards,
+        });
+    </script>
+</body>
+</html>

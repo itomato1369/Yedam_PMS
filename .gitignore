@@ -1,0 +1,14 @@
+.metadata/
+.classpath
+bin/
+.settings/
+
+db.properties
+*.properties
+target/
+build/
+*.log
+
+.env
+
+node_modules/
