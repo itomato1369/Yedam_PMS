@@ -1,1494 +1,1109 @@
-<!doctype html>
+<!DOCTYPE html>
+<!--
+* CoreUI - Free Bootstrap Admin Template
+* @version v5.3.0
+* @link https://coreui.io/product/free-bootstrap-admin-template/
+* Copyright (c) 2025 creativeLabs Łukasz Holeczek
+* Licensed under MIT (https://github.com/coreui/coreui-free-bootstrap-admin-template/blob/main/LICENSE)
+-->
+
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="Content-Language" content="en">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Analytics Dashboard - This is an example dashboard
-	created using build-in elements and components.</title>
-<meta name="viewport"
-	content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,shrink-to-fit=no" />
-<meta name="description"
-	content="This is an example dashboard created using build-in elements and components.">
-<meta name="msapplication-tap-highlight" content="no">
-<link rel="icon" href="favicon.ico">
-<script defer="defer" src="./assets/scripts/main.js"></script>
-<script defer="defer" src="./assets/scripts/demo.js"></script>
-<script defer="defer" src="./assets/scripts/toastr.js"></script>
-<script defer="defer" src="./assets/scripts/scrollbar.js"></script>
-<script defer="defer" src="./assets/scripts/fullcalendar.js"></script>
-<script defer="defer" src="./assets/scripts/maps.js"></script>
-<script defer="defer" src="./assets/scripts/chart_js.js"></script>
-<link href="./assets/styles/main.css" rel="stylesheet">
-</head>
-<body>
-	<div
-		class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
-		<div class="app-header header-shadow">
-			<div class="app-header__logo">
-				<div class="logo-src"></div>
-				<div class="header__pane ms-auto">
-					<div>
-						<button type="button"
-							class="hamburger close-sidebar-btn hamburger--elastic"
-							data-class="closed-sidebar">
-							<span class="hamburger-box"><span class="hamburger-inner"></span></span>
-						</button>
-					</div>
-				</div>
-			</div>
-			<div class="app-header__mobile-menu">
-				<div>
-					<button type="button"
-						class="hamburger hamburger--elastic mobile-toggle-nav">
-						<span class="hamburger-box"><span class="hamburger-inner"></span></span>
-					</button>
-				</div>
-			</div>
-			<div class="app-header__menu">
-				<span><button type="button"
-						class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
-						<span class="btn-icon-wrapper"><i
-							class="fa fa-ellipsis-v fa-w-6"></i></span>
-					</button></span>
-			</div>
-			<div class="app-header__content">
-				<div class="app-header-left">
-					<div class="search-wrapper">
-						<div class="input-holder">
-							<input class="search-input" placeholder="Type to search">
-							<button class="search-icon">
-								<span></span>
-							</button>
-						</div>
-						<button class="btn-close"></button>
-					</div>
-					<ul class="header-menu nav">
-						<li class="nav-item"><a href="javascript:void(0);"
-							class="nav-link"><i class="nav-link-icon fa fa-database"></i>
-								Statistics</a></li>
-						<li class="btn-group nav-item"><a href="javascript:void(0);"
-							class="nav-link"><i class="nav-link-icon fa fa-edit"></i>
-								Projects</a></li>
-						<li class="dropdown nav-item"><a href="javascript:void(0);"
-							class="nav-link"><i class="nav-link-icon fa fa-cog"></i>
-								Settings</a></li>
-					</ul>
-				</div>
-				<div class="app-header-right">
-					<div class="header-btn-lg pe-0">
-						<div class="widget-content p-0">
-							<div class="widget-content-wrapper">
-								<div class="widget-content-left">
-									<div class="btn-group">
-										<a data-bs-toggle="dropdown" aria-haspopup="true"
-											aria-expanded="false" class="p-0 btn"><img width="42"
-											class="rounded-circle" src="assets/images/avatars/1.jpg"
-											alt=""> <i class="fa fa-angle-down ms-2 opacity-8"></i></a>
-										<div tabindex="-1" role="menu" aria-hidden="true"
-											class="dropdown-menu dropdown-menu-right">
-											<button type="button" tabindex="0" class="dropdown-item">User
-												Account</button>
-											<button type="button" tabindex="0" class="dropdown-item">Settings</button>
-											<h6 tabindex="-1" class="dropdown-header">Header</h6>
-											<button type="button" tabindex="0" class="dropdown-item">Actions</button>
-											<div tabindex="-1" class="dropdown-divider"></div>
-											<button type="button" tabindex="0" class="dropdown-item">Dividers</button>
-										</div>
-									</div>
-								</div>
-								<div class="widget-content-left ms-3 header-user-info">
-									<div class="widget-heading">Alina Mclourd</div>
-									<div class="widget-subheading">VP People Manager</div>
-								</div>
-								<div class="widget-content-right header-user-info ms-3">
-									<button type="button"
-										class="btn-shadow p-1 btn btn-primary btn-sm show-toastr-example">
-										<i class="fa text-white fa-calendar pe-1 ps-1"></i>
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="ui-theme-settings">
-			<button type="button" id="TooltipDemo"
-				class="btn-open-options btn btn-warning">
-				<i class="fa fa-cog fa-w-16 fa-spin fa-2x"></i>
-			</button>
-			<div class="theme-settings__inner">
-				<div class="scrollbar-container">
-					<div class="theme-settings__options-wrapper">
-						<h3 class="themeoptions-heading">Layout Options</h3>
-						<div class="p-3">
-							<ul class="list-group">
-								<li class="list-group-item"><div class="widget-content p-0">
-										<div class="widget-content-wrapper">
-											<div class="widget-content-left me-3">
-												<div class="switch has-switch switch-container-class"
-													data-class="fixed-header">
-													<div class="switch-animate switch-on">
-														<input type="checkbox" checked="checked"
-															data-toggle="toggle" data-onstyle="success">
-													</div>
-												</div>
-											</div>
-											<div class="widget-content-left">
-												<div class="widget-heading">Fixed Header</div>
-												<div class="widget-subheading">Makes the header top
-													fixed, always visible!</div>
-											</div>
-										</div>
-									</div></li>
-								<li class="list-group-item"><div class="widget-content p-0">
-										<div class="widget-content-wrapper">
-											<div class="widget-content-left me-3">
-												<div class="switch has-switch switch-container-class"
-													data-class="fixed-sidebar">
-													<div class="switch-animate switch-on">
-														<input type="checkbox" checked="checked"
-															data-toggle="toggle" data-onstyle="success">
-													</div>
-												</div>
-											</div>
-											<div class="widget-content-left">
-												<div class="widget-heading">Fixed Sidebar</div>
-												<div class="widget-subheading">Makes the sidebar left
-													fixed, always visible!</div>
-											</div>
-										</div>
-									</div></li>
-								<li class="list-group-item"><div class="widget-content p-0">
-										<div class="widget-content-wrapper">
-											<div class="widget-content-left me-3">
-												<div class="switch has-switch switch-container-class"
-													data-class="fixed-footer">
-													<div class="switch-animate switch-off">
-														<input type="checkbox" data-toggle="toggle"
-															data-onstyle="success">
-													</div>
-												</div>
-											</div>
-											<div class="widget-content-left">
-												<div class="widget-heading">Fixed Footer</div>
-												<div class="widget-subheading">Makes the app footer
-													bottom fixed, always visible!</div>
-											</div>
-										</div>
-									</div></li>
-							</ul>
-						</div>
-						<h3 class="themeoptions-heading">
-							<div>Header Options</div>
-							<button type="button"
-								class="btn-pill btn-shadow btn-wide ms-auto btn btn-focus btn-sm switch-header-cs-class"
-								data-class="">Restore Default</button>
-						</h3>
-						<div class="p-3">
-							<ul class="list-group">
-								<li class="list-group-item"><h5 class="pb-2">Choose
-										Color Scheme</h5>
-									<div class="theme-settings-swatches">
-										<div class="swatch-holder bg-primary switch-header-cs-class"
-											data-class="bg-primary header-text-light"></div>
-										<div class="swatch-holder bg-secondary switch-header-cs-class"
-											data-class="bg-secondary header-text-light"></div>
-										<div class="swatch-holder bg-success switch-header-cs-class"
-											data-class="bg-success header-text-dark"></div>
-										<div class="swatch-holder bg-info switch-header-cs-class"
-											data-class="bg-info header-text-dark"></div>
-										<div class="swatch-holder bg-warning switch-header-cs-class"
-											data-class="bg-warning header-text-dark"></div>
-										<div class="swatch-holder bg-danger switch-header-cs-class"
-											data-class="bg-danger header-text-light"></div>
-										<div class="swatch-holder bg-light switch-header-cs-class"
-											data-class="bg-light header-text-dark"></div>
-										<div class="swatch-holder bg-dark switch-header-cs-class"
-											data-class="bg-dark header-text-light"></div>
-										<div class="swatch-holder bg-focus switch-header-cs-class"
-											data-class="bg-focus header-text-light"></div>
-										<div class="swatch-holder bg-alternate switch-header-cs-class"
-											data-class="bg-alternate header-text-light"></div>
-										<div class="divider"></div>
-										<div
-											class="swatch-holder bg-vicious-stance switch-header-cs-class"
-											data-class="bg-vicious-stance header-text-light"></div>
-										<div
-											class="swatch-holder bg-midnight-bloom switch-header-cs-class"
-											data-class="bg-midnight-bloom header-text-light"></div>
-										<div class="swatch-holder bg-night-sky switch-header-cs-class"
-											data-class="bg-night-sky header-text-light"></div>
-										<div
-											class="swatch-holder bg-slick-carbon switch-header-cs-class"
-											data-class="bg-slick-carbon header-text-light"></div>
-										<div class="swatch-holder bg-asteroid switch-header-cs-class"
-											data-class="bg-asteroid header-text-light"></div>
-										<div class="swatch-holder bg-royal switch-header-cs-class"
-											data-class="bg-royal header-text-light"></div>
-										<div
-											class="swatch-holder bg-warm-flame switch-header-cs-class"
-											data-class="bg-warm-flame header-text-dark"></div>
-										<div
-											class="swatch-holder bg-night-fade switch-header-cs-class"
-											data-class="bg-night-fade header-text-dark"></div>
-										<div
-											class="swatch-holder bg-sunny-morning switch-header-cs-class"
-											data-class="bg-sunny-morning header-text-dark"></div>
-										<div
-											class="swatch-holder bg-tempting-azure switch-header-cs-class"
-											data-class="bg-tempting-azure header-text-dark"></div>
-										<div class="swatch-holder bg-amy-crisp switch-header-cs-class"
-											data-class="bg-amy-crisp header-text-dark"></div>
-										<div
-											class="swatch-holder bg-heavy-rain switch-header-cs-class"
-											data-class="bg-heavy-rain header-text-dark"></div>
-										<div
-											class="swatch-holder bg-mean-fruit switch-header-cs-class"
-											data-class="bg-mean-fruit header-text-dark"></div>
-										<div
-											class="swatch-holder bg-malibu-beach switch-header-cs-class"
-											data-class="bg-malibu-beach header-text-light"></div>
-										<div class="swatch-holder bg-deep-blue switch-header-cs-class"
-											data-class="bg-deep-blue header-text-dark"></div>
-										<div
-											class="swatch-holder bg-ripe-malin switch-header-cs-class"
-											data-class="bg-ripe-malin header-text-light"></div>
-										<div
-											class="swatch-holder bg-arielle-smile switch-header-cs-class"
-											data-class="bg-arielle-smile header-text-light"></div>
-										<div
-											class="swatch-holder bg-plum-plate switch-header-cs-class"
-											data-class="bg-plum-plate header-text-light"></div>
-										<div
-											class="swatch-holder bg-happy-fisher switch-header-cs-class"
-											data-class="bg-happy-fisher header-text-dark"></div>
-										<div
-											class="swatch-holder bg-happy-itmeo switch-header-cs-class"
-											data-class="bg-happy-itmeo header-text-light"></div>
-										<div
-											class="swatch-holder bg-mixed-hopes switch-header-cs-class"
-											data-class="bg-mixed-hopes header-text-light"></div>
-										<div
-											class="swatch-holder bg-strong-bliss switch-header-cs-class"
-											data-class="bg-strong-bliss header-text-light"></div>
-										<div
-											class="swatch-holder bg-grow-early switch-header-cs-class"
-											data-class="bg-grow-early header-text-light"></div>
-										<div class="swatch-holder bg-love-kiss switch-header-cs-class"
-											data-class="bg-love-kiss header-text-light"></div>
-										<div
-											class="swatch-holder bg-premium-dark switch-header-cs-class"
-											data-class="bg-premium-dark header-text-light"></div>
-										<div
-											class="swatch-holder bg-happy-green switch-header-cs-class"
-											data-class="bg-happy-green header-text-light"></div>
-									</div></li>
-							</ul>
-						</div>
-						<h3 class="themeoptions-heading">
-							<div>Sidebar Options</div>
-							<button type="button"
-								class="btn-pill btn-shadow btn-wide ms-auto btn btn-focus btn-sm switch-sidebar-cs-class"
-								data-class="">Restore Default</button>
-						</h3>
-						<div class="p-3">
-							<ul class="list-group">
-								<li class="list-group-item"><h5 class="pb-2">Choose
-										Color Scheme</h5>
-									<div class="theme-settings-swatches">
-										<div class="swatch-holder bg-primary switch-sidebar-cs-class"
-											data-class="bg-primary sidebar-text-light"></div>
-										<div
-											class="swatch-holder bg-secondary switch-sidebar-cs-class"
-											data-class="bg-secondary sidebar-text-light"></div>
-										<div class="swatch-holder bg-success switch-sidebar-cs-class"
-											data-class="bg-success sidebar-text-dark"></div>
-										<div class="swatch-holder bg-info switch-sidebar-cs-class"
-											data-class="bg-info sidebar-text-dark"></div>
-										<div class="swatch-holder bg-warning switch-sidebar-cs-class"
-											data-class="bg-warning sidebar-text-dark"></div>
-										<div class="swatch-holder bg-danger switch-sidebar-cs-class"
-											data-class="bg-danger sidebar-text-light"></div>
-										<div class="swatch-holder bg-light switch-sidebar-cs-class"
-											data-class="bg-light sidebar-text-dark"></div>
-										<div class="swatch-holder bg-dark switch-sidebar-cs-class"
-											data-class="bg-dark sidebar-text-light"></div>
-										<div class="swatch-holder bg-focus switch-sidebar-cs-class"
-											data-class="bg-focus sidebar-text-light"></div>
-										<div
-											class="swatch-holder bg-alternate switch-sidebar-cs-class"
-											data-class="bg-alternate sidebar-text-light"></div>
-										<div class="divider"></div>
-										<div
-											class="swatch-holder bg-vicious-stance switch-sidebar-cs-class"
-											data-class="bg-vicious-stance sidebar-text-light"></div>
-										<div
-											class="swatch-holder bg-midnight-bloom switch-sidebar-cs-class"
-											data-class="bg-midnight-bloom sidebar-text-light"></div>
-										<div
-											class="swatch-holder bg-night-sky switch-sidebar-cs-class"
-											data-class="bg-night-sky sidebar-text-light"></div>
-										<div
-											class="swatch-holder bg-slick-carbon switch-sidebar-cs-class"
-											data-class="bg-slick-carbon sidebar-text-light"></div>
-										<div class="swatch-holder bg-asteroid switch-sidebar-cs-class"
-											data-class="bg-asteroid sidebar-text-light"></div>
-										<div class="swatch-holder bg-royal switch-sidebar-cs-class"
-											data-class="bg-royal sidebar-text-light"></div>
-										<div
-											class="swatch-holder bg-warm-flame switch-sidebar-cs-class"
-											data-class="bg-warm-flame sidebar-text-dark"></div>
-										<div
-											class="swatch-holder bg-night-fade switch-sidebar-cs-class"
-											data-class="bg-night-fade sidebar-text-dark"></div>
-										<div
-											class="swatch-holder bg-sunny-morning switch-sidebar-cs-class"
-											data-class="bg-sunny-morning sidebar-text-dark"></div>
-										<div
-											class="swatch-holder bg-tempting-azure switch-sidebar-cs-class"
-											data-class="bg-tempting-azure sidebar-text-dark"></div>
-										<div
-											class="swatch-holder bg-amy-crisp switch-sidebar-cs-class"
-											data-class="bg-amy-crisp sidebar-text-dark"></div>
-										<div
-											class="swatch-holder bg-heavy-rain switch-sidebar-cs-class"
-											data-class="bg-heavy-rain sidebar-text-dark"></div>
-										<div
-											class="swatch-holder bg-mean-fruit switch-sidebar-cs-class"
-											data-class="bg-mean-fruit sidebar-text-dark"></div>
-										<div
-											class="swatch-holder bg-malibu-beach switch-sidebar-cs-class"
-											data-class="bg-malibu-beach sidebar-text-light"></div>
-										<div
-											class="swatch-holder bg-deep-blue switch-sidebar-cs-class"
-											data-class="bg-deep-blue sidebar-text-dark"></div>
-										<div
-											class="swatch-holder bg-ripe-malin switch-sidebar-cs-class"
-											data-class="bg-ripe-malin sidebar-text-light"></div>
-										<div
-											class="swatch-holder bg-arielle-smile switch-sidebar-cs-class"
-											data-class="bg-arielle-smile sidebar-text-light"></div>
-										<div
-											class="swatch-holder bg-plum-plate switch-sidebar-cs-class"
-											data-class="bg-plum-plate sidebar-text-light"></div>
-										<div
-											class="swatch-holder bg-happy-fisher switch-sidebar-cs-class"
-											data-class="bg-happy-fisher sidebar-text-dark"></div>
-										<div
-											class="swatch-holder bg-happy-itmeo switch-sidebar-cs-class"
-											data-class="bg-happy-itmeo sidebar-text-light"></div>
-										<div
-											class="swatch-holder bg-mixed-hopes switch-sidebar-cs-class"
-											data-class="bg-mixed-hopes sidebar-text-light"></div>
-										<div
-											class="swatch-holder bg-strong-bliss switch-sidebar-cs-class"
-											data-class="bg-strong-bliss sidebar-text-light"></div>
-										<div
-											class="swatch-holder bg-grow-early switch-sidebar-cs-class"
-											data-class="bg-grow-early sidebar-text-light"></div>
-										<div
-											class="swatch-holder bg-love-kiss switch-sidebar-cs-class"
-											data-class="bg-love-kiss sidebar-text-light"></div>
-										<div
-											class="swatch-holder bg-premium-dark switch-sidebar-cs-class"
-											data-class="bg-premium-dark sidebar-text-light"></div>
-										<div
-											class="swatch-holder bg-happy-green switch-sidebar-cs-class"
-											data-class="bg-happy-green sidebar-text-light"></div>
-									</div></li>
-							</ul>
-						</div>
-						<h3 class="themeoptions-heading">
-							<div>Main Content Options</div>
-							<button type="button"
-								class="btn-pill btn-shadow btn-wide ms-auto active btn btn-focus btn-sm">Restore
-								Default</button>
-						</h3>
-						<div class="p-3">
-							<ul class="list-group">
-								<li class="list-group-item"><h5 class="pb-2">Page
-										Section Tabs</h5>
-									<div class="theme-settings-swatches">
-										<div role="group" class="mt-2 btn-group">
-											<button type="button"
-												class="btn-wide btn-shadow btn-primary btn btn-secondary switch-theme-class"
-												data-class="body-tabs-line">Line</button>
-											<button type="button"
-												class="btn-wide btn-shadow btn-primary active btn btn-secondary switch-theme-class"
-												data-class="body-tabs-shadow">Shadow</button>
-										</div>
-									</div></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="app-main">
-			<div class="app-sidebar sidebar-shadow">
-				<div class="app-header__logo">
-					<div class="logo-src"></div>
-					<div class="header__pane ms-auto">
-						<div>
-							<button type="button"
-								class="hamburger close-sidebar-btn hamburger--elastic"
-								data-class="closed-sidebar">
-								<span class="hamburger-box"><span class="hamburger-inner"></span></span>
-							</button>
-						</div>
-					</div>
-				</div>
-				<div class="app-header__mobile-menu">
-					<div>
-						<button type="button"
-							class="hamburger hamburger--elastic mobile-toggle-nav">
-							<span class="hamburger-box"><span class="hamburger-inner"></span></span>
-						</button>
-					</div>
-				</div>
-				<div class="app-header__menu">
-					<span><button type="button"
-							class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
-							<span class="btn-icon-wrapper"><i
-								class="fa fa-ellipsis-v fa-w-6"></i></span>
-						</button></span>
-				</div>
-				<div class="scrollbar-sidebar">
-					<div class="app-sidebar__inner">
-						<ul class="vertical-nav-menu">
-							<li class="app-sidebar__heading">Dashboards</li>
-							<li><a href="index.html" class="mm-active"><i
-									class="metismenu-icon pe-7s-rocket"></i> Dashboard Example 1</a></li>
-							<li class="app-sidebar__heading">UI Components</li>
-							<li><a href="#"><i class="metismenu-icon pe-7s-diamond"></i>
-									Elements <i
-									class="metismenu-state-icon pe-7s-angle-down caret-left"></i></a>
-							<ul>
-									<li><a href="elements-buttons-standard.html"><i
-											class="metismenu-icon"></i> Buttons</a></li>
-									<li><a href="elements-dropdowns.html"><i
-											class="metismenu-icon"></i>Dropdowns</a></li>
-									<li><a href="elements-icons.html"><i
-											class="metismenu-icon"></i>Icons</a></li>
-									<li><a href="elements-badges-labels.html"><i
-											class="metismenu-icon"></i>Badges</a></li>
-									<li><a href="elements-cards.html"><i
-											class="metismenu-icon"></i>Cards</a></li>
-									<li><a href="elements-list-group.html"><i
-											class="metismenu-icon"></i>List Groups</a></li>
-									<li><a href="elements-navigation.html"><i
-											class="metismenu-icon"></i>Navigation Menus</a></li>
-									<li><a href="elements-utilities.html"><i
-											class="metismenu-icon"></i>Utilities</a></li>
-								</ul></li>
-							<li><a href="#"><i class="metismenu-icon pe-7s-car"></i>
-									Components <i
-									class="metismenu-state-icon pe-7s-angle-down caret-left"></i></a>
-							<ul>
-									<li><a href="components-tabs.html"><i
-											class="metismenu-icon"></i>Tabs</a></li>
-									<li><a href="components-accordions.html"><i
-											class="metismenu-icon"></i>Accordions</a></li>
-									<li><a href="components-notifications.html"><i
-											class="metismenu-icon"></i>Notifications</a></li>
-									<li><a href="components-modals.html"><i
-											class="metismenu-icon"></i>Modals</a></li>
-									<li><a href="components-progress-bar.html"><i
-											class="metismenu-icon"></i>Progress Bar</a></li>
-									<li><a href="components-tooltips-popovers.html"><i
-											class="metismenu-icon"></i>Tooltips &amp; Popovers</a></li>
-									<li><a href="components-carousel.html"><i
-											class="metismenu-icon"></i>Carousel</a></li>
-									<li><a href="components-calendar.html"><i
-											class="metismenu-icon"></i>Calendar</a></li>
-									<li><a href="components-pagination.html"><i
-											class="metismenu-icon"></i>Pagination</a></li>
-									<li><a href="components-scrollable-elements.html"><i
-											class="metismenu-icon"></i>Scrollable</a></li>
-									<li><a href="components-maps.html"><i
-											class="metismenu-icon"></i>Maps</a></li>
-								</ul></li>
-							<li><a href="tables-regular.html"><i
-									class="metismenu-icon pe-7s-display2"></i> Tables</a></li>
-							<li class="app-sidebar__heading">Widgets</li>
-							<li><a href="dashboard-boxes.html"><i
-									class="metismenu-icon pe-7s-display2"></i> Dashboard Boxes</a></li>
-							<li class="app-sidebar__heading">Forms</li>
-							<li><a href="forms-controls.html"><i
-									class="metismenu-icon pe-7s-mouse"></i>Forms Controls</a></li>
-							<li><a href="forms-layouts.html"><i
-									class="metismenu-icon pe-7s-eyedropper"></i>Forms Layouts</a></li>
-							<li><a href="forms-validation.html"><i
-									class="metismenu-icon pe-7s-pendrive"></i>Forms Validation</a></li>
-							<li class="app-sidebar__heading">Charts</li>
-							<li><a href="charts-chartjs.html"><i
-									class="metismenu-icon pe-7s-graph2"></i>ChartJS</a></li>
-							<li class="app-sidebar__heading">PRO Version</li>
-							<li><a
-								href="https://dashboardpack.com/theme-details/architectui-dashboard-html-pro/?utm_source=free-theme&utm_medium=sidebar&utm_campaign=architectui-html-upgrade&utm_content=menu-link"
-								target="_blank" rel="noopener"><i
-									class="metismenu-icon pe-7s-star"></i> Upgrade to PRO <span
-									class="badge rounded-pill bg-warning text-dark ms-auto">PRO</span></a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="app-main__outer">
-				<div class="app-main__inner">
-					<div class="app-page-title">
-						<div class="page-title-wrapper">
-							<div class="page-title-heading">
-								<div class="page-title-icon">
-									<i class="pe-7s-car icon-gradient bg-mean-fruit"></i>
-								</div>
-								<div>
-									Analytics Dashboard
-									<div class="page-title-subheading">This is an example
-										dashboard created using build-in elements and components.</div>
-								</div>
-							</div>
-							<div class="page-title-actions">
-								<button type="button" data-bs-toggle="tooltip"
-									title="Example Tooltip" data-bs-placement="bottom"
-									class="btn-shadow me-3 btn btn-dark">
-									<i class="fa fa-star"></i>
-								</button>
-								<div class="d-inline-block dropdown">
-									<button type="button" data-bs-toggle="dropdown"
-										aria-haspopup="true" aria-expanded="false"
-										class="btn-shadow dropdown-toggle btn btn-info">
-										<span class="btn-icon-wrapper pe-2 opacity-7"><i
-											class="fa fa-business-time fa-w-20"></i> </span>Buttons
-									</button>
-									<div tabindex="-1" role="menu" aria-hidden="true"
-										class="dropdown-menu dropdown-menu-right">
-										<ul class="nav flex-column">
-											<li class="nav-item"><a href="javascript:void(0);"
-												class="nav-link"><i class="nav-link-icon lnr-inbox"></i>
-													<span>Inbox</span>
-												<div class="ms-auto badge rounded-pill bg-secondary">86</div></a></li>
-											<li class="nav-item"><a href="javascript:void(0);"
-												class="nav-link"><i class="nav-link-icon lnr-book"></i>
-													<span>Book</span>
-												<div class="ms-auto badge rounded-pill bg-danger">5</div></a></li>
-											<li class="nav-item"><a href="javascript:void(0);"
-												class="nav-link"><i class="nav-link-icon lnr-picture"></i>
-													<span>Picture</span></a></li>
-											<li class="nav-item"><a disabled="disabled"
-												href="javascript:void(0);" class="nav-link disabled"><i
-													class="nav-link-icon lnr-file-empty"></i> <span>File
-														Disabled</span></a></li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6 col-xl-4">
-							<div class="card mb-3 widget-content bg-midnight-bloom">
-								<div class="widget-content-wrapper text-white">
-									<div class="widget-content-left">
-										<div class="widget-heading">Total Orders</div>
-										<div class="widget-subheading">Last year expenses</div>
-									</div>
-									<div class="widget-content-right">
-										<div class="widget-numbers text-white">
-											<span>1896</span>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 col-xl-4">
-							<div class="card mb-3 widget-content bg-arielle-smile">
-								<div class="widget-content-wrapper text-white">
-									<div class="widget-content-left">
-										<div class="widget-heading">Clients</div>
-										<div class="widget-subheading">Total Clients Profit</div>
-									</div>
-									<div class="widget-content-right">
-										<div class="widget-numbers text-white">
-											<span>$ 568</span>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 col-xl-4">
-							<div class="card mb-3 widget-content bg-grow-early">
-								<div class="widget-content-wrapper text-white">
-									<div class="widget-content-left">
-										<div class="widget-heading">Followers</div>
-										<div class="widget-subheading">People Interested</div>
-									</div>
-									<div class="widget-content-right">
-										<div class="widget-numbers text-white">
-											<span>46%</span>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="d-xl-none d-lg-block col-md-6 col-xl-4">
-							<div class="card mb-3 widget-content bg-premium-dark">
-								<div class="widget-content-wrapper text-white">
-									<div class="widget-content-left">
-										<div class="widget-heading">Products Sold</div>
-										<div class="widget-subheading">Revenue streams</div>
-									</div>
-									<div class="widget-content-right">
-										<div class="widget-numbers text-warning">
-											<span>$14M</span>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-12 col-lg-6">
-							<div class="mb-3 card">
-								<div
-									class="card-header-tab card-header-tab-animation card-header">
-									<div class="card-header-title">
-										<i
-											class="header-icon lnr-apartment icon-gradient bg-love-kiss"></i>
-										Sales Report
-									</div>
-									<ul class="nav" role="tablist">
-										<li class="nav-item"><a href="#tab-sales-last"
-											class="active nav-link" data-bs-toggle="tab" role="tab">Last</a></li>
-										<li class="nav-item"><a href="#tab-sales-current"
-											class="nav-link" data-bs-toggle="tab" role="tab">Current</a></li>
-									</ul>
-								</div>
-								<div class="card-body">
-									<div class="tab-content">
-										<div class="tab-pane fade show active" id="tab-sales-last"
-											role="tabpanel">
-											<div
-												class="card mb-3 widget-chart widget-chart2 text-start w-100">
-												<div class="widget-chat-wrapper-outer">
-													<div
-														class="widget-chart-wrapper widget-chart-wrapper-lg opacity-10 m-0">
-														<div class="chart-container">
-															<canvas id="chart-vert-bar" class="chart-container"></canvas>
-														</div>
-													</div>
-												</div>
-											</div>
-											<h6
-												class="text-muted text-uppercase font-size-md opacity-5 fw-normal">Top
-												Authors</h6>
-											<div class="scroll-area-sm">
-												<div class="scrollbar-container">
-													<ul
-														class="rm-list-borders rm-list-borders-scroll list-group list-group-flush">
-														<li class="list-group-item"><div
-																class="widget-content p-0">
-																<div class="widget-content-wrapper">
-																	<div class="widget-content-left me-3">
-																		<img width="42" class="rounded-circle"
-																			src="assets/images/avatars/9.jpg" alt="">
-																	</div>
-																	<div class="widget-content-left">
-																		<div class="widget-heading">Ella-Rose Henry</div>
-																		<div class="widget-subheading">Web Developer</div>
-																	</div>
-																	<div class="widget-content-right">
-																		<div class="font-size-xlg text-muted">
-																			<small class="opacity-5 pe-1">$</small> <span>129</span>
-																			<small class="text-danger ps-2"><i
-																				class="fa fa-angle-down"></i></small>
-																		</div>
-																	</div>
-																</div>
-															</div></li>
-														<li class="list-group-item"><div
-																class="widget-content p-0">
-																<div class="widget-content-wrapper">
-																	<div class="widget-content-left me-3">
-																		<img width="42" class="rounded-circle"
-																			src="assets/images/avatars/5.jpg" alt="">
-																	</div>
-																	<div class="widget-content-left">
-																		<div class="widget-heading">Ruben Tillman</div>
-																		<div class="widget-subheading">UI Designer</div>
-																	</div>
-																	<div class="widget-content-right">
-																		<div class="font-size-xlg text-muted">
-																			<small class="opacity-5 pe-1">$</small> <span>54</span>
-																			<small class="text-success ps-2"><i
-																				class="fa fa-angle-up"></i></small>
-																		</div>
-																	</div>
-																</div>
-															</div></li>
-														<li class="list-group-item"><div
-																class="widget-content p-0">
-																<div class="widget-content-wrapper">
-																	<div class="widget-content-left me-3">
-																		<img width="42" class="rounded-circle"
-																			src="assets/images/avatars/4.jpg" alt="">
-																	</div>
-																	<div class="widget-content-left">
-																		<div class="widget-heading">Vinnie Wagstaff</div>
-																		<div class="widget-subheading">Java Programmer</div>
-																	</div>
-																	<div class="widget-content-right">
-																		<div class="font-size-xlg text-muted">
-																			<small class="opacity-5 pe-1">$</small> <span>429</span>
-																			<small class="text-warning ps-2"><i
-																				class="fa fa-dot-circle"></i></small>
-																		</div>
-																	</div>
-																</div>
-															</div></li>
-														<li class="list-group-item"><div
-																class="widget-content p-0">
-																<div class="widget-content-wrapper">
-																	<div class="widget-content-left me-3">
-																		<img width="42" class="rounded-circle"
-																			src="assets/images/avatars/3.jpg" alt="">
-																	</div>
-																	<div class="widget-content-left">
-																		<div class="widget-heading">Ella-Rose Henry</div>
-																		<div class="widget-subheading">Web Developer</div>
-																	</div>
-																	<div class="widget-content-right">
-																		<div class="font-size-xlg text-muted">
-																			<small class="opacity-5 pe-1">$</small> <span>129</span>
-																			<small class="text-danger ps-2"><i
-																				class="fa fa-angle-down"></i></small>
-																		</div>
-																	</div>
-																</div>
-															</div></li>
-														<li class="list-group-item"><div
-																class="widget-content p-0">
-																<div class="widget-content-wrapper">
-																	<div class="widget-content-left me-3">
-																		<img width="42" class="rounded-circle"
-																			src="assets/images/avatars/2.jpg" alt="">
-																	</div>
-																	<div class="widget-content-left">
-																		<div class="widget-heading">Ruben Tillman</div>
-																		<div class="widget-subheading">UI Designer</div>
-																	</div>
-																	<div class="widget-content-right">
-																		<div class="font-size-xlg text-muted">
-																			<small class="opacity-5 pe-1">$</small> <span>54</span>
-																			<small class="text-success ps-2"><i
-																				class="fa fa-angle-up"></i></small>
-																		</div>
-																	</div>
-																</div>
-															</div></li>
-													</ul>
-												</div>
-											</div>
-										</div>
-										<div class="tab-pane fade" id="tab-sales-current"
-											role="tabpanel">
-											<div
-												class="card mb-3 widget-chart widget-chart2 text-start w-100">
-												<div class="widget-chat-wrapper-outer">
-													<div
-														class="widget-chart-wrapper widget-chart-wrapper-lg opacity-10 m-0">
-														<div class="chart-container">
-															<canvas id="chart-horiz-bar" class="chart-container"></canvas>
-														</div>
-													</div>
-												</div>
-											</div>
-											<h6
-												class="text-muted text-uppercase font-size-md opacity-5 fw-normal">Top
-												Categories</h6>
-											<div class="scroll-area-sm">
-												<div class="scrollbar-container">
-													<ul
-														class="rm-list-borders rm-list-borders-scroll list-group list-group-flush">
-														<li class="list-group-item"><div
-																class="widget-content p-0">
-																<div class="widget-content-wrapper">
-																	<div class="widget-content-left me-3">
-																		<img width="42" class="rounded-circle"
-																			src="assets/images/avatars/1.jpg" alt="">
-																	</div>
-																	<div class="widget-content-left">
-																		<div class="widget-heading">Electronics</div>
-																		<div class="widget-subheading">Tech Products</div>
-																	</div>
-																	<div class="widget-content-right">
-																		<div class="font-size-xlg text-muted">
-																			<small class="opacity-5 pe-1">$</small> <span>842</span>
-																			<small class="text-success ps-2"><i
-																				class="fa fa-angle-up"></i></small>
-																		</div>
-																	</div>
-																</div>
-															</div></li>
-														<li class="list-group-item"><div
-																class="widget-content p-0">
-																<div class="widget-content-wrapper">
-																	<div class="widget-content-left me-3">
-																		<img width="42" class="rounded-circle"
-																			src="assets/images/avatars/2.jpg" alt="">
-																	</div>
-																	<div class="widget-content-left">
-																		<div class="widget-heading">Fashion</div>
-																		<div class="widget-subheading">Clothing &
-																			Accessories</div>
-																	</div>
-																	<div class="widget-content-right">
-																		<div class="font-size-xlg text-muted">
-																			<small class="opacity-5 pe-1">$</small> <span>567</span>
-																			<small class="text-success ps-2"><i
-																				class="fa fa-angle-up"></i></small>
-																		</div>
-																	</div>
-																</div>
-															</div></li>
-														<li class="list-group-item"><div
-																class="widget-content p-0">
-																<div class="widget-content-wrapper">
-																	<div class="widget-content-left me-3">
-																		<img width="42" class="rounded-circle"
-																			src="assets/images/avatars/3.jpg" alt="">
-																	</div>
-																	<div class="widget-content-left">
-																		<div class="widget-heading">Home & Garden</div>
-																		<div class="widget-subheading">Interior Design</div>
-																	</div>
-																	<div class="widget-content-right">
-																		<div class="font-size-xlg text-muted">
-																			<small class="opacity-5 pe-1">$</small> <span>324</span>
-																			<small class="text-warning ps-2"><i
-																				class="fa fa-dot-circle"></i></small>
-																		</div>
-																	</div>
-																</div>
-															</div></li>
-														<li class="list-group-item"><div
-																class="widget-content p-0">
-																<div class="widget-content-wrapper">
-																	<div class="widget-content-left me-3">
-																		<img width="42" class="rounded-circle"
-																			src="assets/images/avatars/4.jpg" alt="">
-																	</div>
-																	<div class="widget-content-left">
-																		<div class="widget-heading">Sports & Outdoors</div>
-																		<div class="widget-subheading">Fitness Equipment</div>
-																	</div>
-																	<div class="widget-content-right">
-																		<div class="font-size-xlg text-muted">
-																			<small class="opacity-5 pe-1">$</small> <span>289</span>
-																			<small class="text-danger ps-2"><i
-																				class="fa fa-angle-down"></i></small>
-																		</div>
-																	</div>
-																</div>
-															</div></li>
-														<li class="list-group-item"><div
-																class="widget-content p-0">
-																<div class="widget-content-wrapper">
-																	<div class="widget-content-left me-3">
-																		<img width="42" class="rounded-circle"
-																			src="assets/images/avatars/5.jpg" alt="">
-																	</div>
-																	<div class="widget-content-left">
-																		<div class="widget-heading">Books & Media</div>
-																		<div class="widget-subheading">Digital Content</div>
-																	</div>
-																	<div class="widget-content-right">
-																		<div class="font-size-xlg text-muted">
-																			<small class="opacity-5 pe-1">$</small> <span>156</span>
-																			<small class="text-success ps-2"><i
-																				class="fa fa-angle-up"></i></small>
-																		</div>
-																	</div>
-																</div>
-															</div></li>
-													</ul>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-12 col-lg-6">
-							<div class="mb-3 card">
-								<div class="card-header-tab card-header">
-									<div class="card-header-title">
-										<i
-											class="header-icon lnr-rocket icon-gradient bg-tempting-azure"></i>
-										Bandwidth Reports
-									</div>
-									<div class="btn-actions-pane-right">
-										<div class="nav" role="tablist">
-											<a href="#tab-bandwidth-1"
-												class="border-0 btn-pill btn-wide btn-transition active btn btn-outline-alternate"
-												data-bs-toggle="tab" role="tab">Tab 1</a> <a
-												href="#tab-bandwidth-2"
-												class="ms-1 btn-pill btn-wide border-0 btn-transition btn btn-outline-alternate"
-												data-bs-toggle="tab" role="tab">Tab 2</a>
-										</div>
-									</div>
-								</div>
-								<div class="tab-content">
-									<div class="tab-pane fade active show" id="tab-bandwidth-1"
-										role="tabpanel">
-										<div class="widget-chart p-3">
-											<div class="chart-container-lg">
-												<canvas id="line-chart"></canvas>
-											</div>
-											<div class="widget-chart-content text-center mt-5">
-												<div class="widget-description mt-0 text-warning">
-													<i class="fa fa-arrow-left"></i> <span class="ps-1">175.5%</span>
-													<span class="text-muted opacity-8 ps-1">increased
-														server resources</span>
-												</div>
-											</div>
-										</div>
-										<div class="pt-2 card-body">
-											<div class="row">
-												<div class="col-md-6">
-													<div class="widget-content">
-														<div class="widget-content-outer">
-															<div class="widget-content-wrapper">
-																<div class="widget-content-left">
-																	<div class="widget-numbers fsize-3 text-muted">63%</div>
-																</div>
-																<div class="widget-content-right">
-																	<div class="text-muted opacity-6">Generated Leads</div>
-																</div>
-															</div>
-															<div class="widget-progress-wrapper mt-1">
-																<div
-																	class="progress-bar-sm progress-bar-animated-alt progress">
-																	<div class="progress-bar bg-danger" role="progressbar"
-																		aria-valuenow="63" aria-valuemin="0"
-																		aria-valuemax="100" style="width: 63%;"></div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="col-md-6">
-													<div class="widget-content">
-														<div class="widget-content-outer">
-															<div class="widget-content-wrapper">
-																<div class="widget-content-left">
-																	<div class="widget-numbers fsize-3 text-muted">32%</div>
-																</div>
-																<div class="widget-content-right">
-																	<div class="text-muted opacity-6">Submitted
-																		Tickers</div>
-																</div>
-															</div>
-															<div class="widget-progress-wrapper mt-1">
-																<div
-																	class="progress-bar-sm progress-bar-animated-alt progress">
-																	<div class="progress-bar bg-success" role="progressbar"
-																		aria-valuenow="32" aria-valuemin="0"
-																		aria-valuemax="100" style="width: 32%;"></div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="col-md-6">
-													<div class="widget-content">
-														<div class="widget-content-outer">
-															<div class="widget-content-wrapper">
-																<div class="widget-content-left">
-																	<div class="widget-numbers fsize-3 text-muted">71%</div>
-																</div>
-																<div class="widget-content-right">
-																	<div class="text-muted opacity-6">Server
-																		Allocation</div>
-																</div>
-															</div>
-															<div class="widget-progress-wrapper mt-1">
-																<div
-																	class="progress-bar-sm progress-bar-animated-alt progress">
-																	<div class="progress-bar bg-primary" role="progressbar"
-																		aria-valuenow="71" aria-valuemin="0"
-																		aria-valuemax="100" style="width: 71%;"></div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="col-md-6">
-													<div class="widget-content">
-														<div class="widget-content-outer">
-															<div class="widget-content-wrapper">
-																<div class="widget-content-left">
-																	<div class="widget-numbers fsize-3 text-muted">41%</div>
-																</div>
-																<div class="widget-content-right">
-																	<div class="text-muted opacity-6">Generated Leads</div>
-																</div>
-															</div>
-															<div class="widget-progress-wrapper mt-1">
-																<div
-																	class="progress-bar-sm progress-bar-animated-alt progress">
-																	<div class="progress-bar bg-warning" role="progressbar"
-																		aria-valuenow="41" aria-valuemin="0"
-																		aria-valuemax="100" style="width: 41%;"></div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="tab-pane fade" id="tab-bandwidth-2" role="tabpanel">
-										<div class="widget-chart p-3">
-											<div class="chart-container-lg">
-												<canvas id="line-chart-2"></canvas>
-											</div>
-											<div class="widget-chart-content text-center mt-5">
-												<div class="widget-description mt-0 text-success">
-													<i class="fa fa-arrow-up"></i> <span class="ps-1">12.4%</span>
-													<span class="text-muted opacity-8 ps-1">improvement
-														from last week</span>
-												</div>
-											</div>
-										</div>
-										<div class="pt-2 card-body">
-											<div class="row">
-												<div class="col-md-6">
-													<div class="widget-content">
-														<div class="widget-content-outer">
-															<div class="widget-content-wrapper">
-																<div class="widget-content-left">
-																	<div class="widget-numbers fsize-3 text-muted">89%</div>
-																</div>
-																<div class="widget-content-right">
-																	<div class="text-muted opacity-6">CPU Usage</div>
-																</div>
-															</div>
-															<div class="widget-progress-wrapper mt-1">
-																<div
-																	class="progress-bar-sm progress-bar-animated-alt progress">
-																	<div class="progress-bar bg-info" role="progressbar"
-																		aria-valuenow="89" aria-valuemin="0"
-																		aria-valuemax="100" style="width: 89%;"></div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="col-md-6">
-													<div class="widget-content">
-														<div class="widget-content-outer">
-															<div class="widget-content-wrapper">
-																<div class="widget-content-left">
-																	<div class="widget-numbers fsize-3 text-muted">67%</div>
-																</div>
-																<div class="widget-content-right">
-																	<div class="text-muted opacity-6">Memory Usage</div>
-																</div>
-															</div>
-															<div class="widget-progress-wrapper mt-1">
-																<div
-																	class="progress-bar-sm progress-bar-animated-alt progress">
-																	<div class="progress-bar bg-alternate"
-																		role="progressbar" aria-valuenow="67"
-																		aria-valuemin="0" aria-valuemax="100"
-																		style="width: 67%;"></div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="col-md-6">
-													<div class="widget-content">
-														<div class="widget-content-outer">
-															<div class="widget-content-wrapper">
-																<div class="widget-content-left">
-																	<div class="widget-numbers fsize-3 text-muted">54%</div>
-																</div>
-																<div class="widget-content-right">
-																	<div class="text-muted opacity-6">Disk I/O</div>
-																</div>
-															</div>
-															<div class="widget-progress-wrapper mt-1">
-																<div
-																	class="progress-bar-sm progress-bar-animated-alt progress">
-																	<div class="progress-bar bg-success" role="progressbar"
-																		aria-valuenow="54" aria-valuemin="0"
-																		aria-valuemax="100" style="width: 54%;"></div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="col-md-6">
-													<div class="widget-content">
-														<div class="widget-content-outer">
-															<div class="widget-content-wrapper">
-																<div class="widget-content-left">
-																	<div class="widget-numbers fsize-3 text-muted">78%</div>
-																</div>
-																<div class="widget-content-right">
-																	<div class="text-muted opacity-6">Network Load</div>
-																</div>
-															</div>
-															<div class="widget-progress-wrapper mt-1">
-																<div
-																	class="progress-bar-sm progress-bar-animated-alt progress">
-																	<div class="progress-bar bg-warning" role="progressbar"
-																		aria-valuenow="78" aria-valuemin="0"
-																		aria-valuemax="100" style="width: 78%;"></div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6 col-xl-4">
-							<div class="card mb-3 widget-content">
-								<div class="widget-content-outer">
-									<div class="widget-content-wrapper">
-										<div class="widget-content-left">
-											<div class="widget-heading">Total Orders</div>
-											<div class="widget-subheading">Last year expenses</div>
-										</div>
-										<div class="widget-content-right">
-											<div class="widget-numbers text-success">1896</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 col-xl-4">
-							<div class="card mb-3 widget-content">
-								<div class="widget-content-outer">
-									<div class="widget-content-wrapper">
-										<div class="widget-content-left">
-											<div class="widget-heading">Products Sold</div>
-											<div class="widget-subheading">Revenue streams</div>
-										</div>
-										<div class="widget-content-right">
-											<div class="widget-numbers text-warning">$3M</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 col-xl-4">
-							<div class="card mb-3 widget-content">
-								<div class="widget-content-outer">
-									<div class="widget-content-wrapper">
-										<div class="widget-content-left">
-											<div class="widget-heading">Followers</div>
-											<div class="widget-subheading">People Interested</div>
-										</div>
-										<div class="widget-content-right">
-											<div class="widget-numbers text-danger">45,9%</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="d-xl-none d-lg-block col-md-6 col-xl-4">
-							<div class="card mb-3 widget-content">
-								<div class="widget-content-outer">
-									<div class="widget-content-wrapper">
-										<div class="widget-content-left">
-											<div class="widget-heading">Income</div>
-											<div class="widget-subheading">Expected totals</div>
-										</div>
-										<div class="widget-content-right">
-											<div class="widget-numbers text-focus">$147</div>
-										</div>
-									</div>
-									<div class="widget-progress-wrapper">
-										<div
-											class="progress-bar-sm progress-bar-animated-alt progress">
-											<div class="progress-bar bg-info" role="progressbar"
-												aria-valuenow="54" aria-valuemin="0" aria-valuemax="100"
-												style="width: 54%;"></div>
-										</div>
-										<div class="progress-sub-label">
-											<div class="sub-label-left">Expenses</div>
-											<div class="sub-label-right">100%</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-12">
-							<div class="main-card mb-3 card">
-								<div class="card-header">
-									Active Users
-									<div class="btn-actions-pane-right">
-										<div role="group" class="btn-group-sm btn-group">
-											<button class="active btn btn-focus">Last Week</button>
-											<button class="btn btn-focus">All Month</button>
-										</div>
-									</div>
-								</div>
-								<div class="table-responsive">
-									<table
-										class="align-middle mb-0 table table-borderless table-striped table-hover">
-										<thead>
-											<tr>
-												<th class="text-center">#</th>
-												<th>Name</th>
-												<th class="text-center">City</th>
-												<th class="text-center">Status</th>
-												<th class="text-center">Actions</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td class="text-center text-muted">#345</td>
-												<td><div class="widget-content p-0">
-														<div class="widget-content-wrapper">
-															<div class="widget-content-left me-3">
-																<div class="widget-content-left">
-																	<img width="40" class="rounded-circle"
-																		src="assets/images/avatars/4.jpg" alt="">
-																</div>
-															</div>
-															<div class="widget-content-left flex2">
-																<div class="widget-heading">John Doe</div>
-																<div class="widget-subheading opacity-7">Web
-																	Developer</div>
-															</div>
-														</div>
-													</div></td>
-												<td class="text-center">Madrid</td>
-												<td class="text-center"><div class="badge bg-warning">Pending</div></td>
-												<td class="text-center"><button type="button"
-														id="PopoverCustomT-1" class="btn btn-primary btn-sm">Details</button></td>
-											</tr>
-											<tr>
-												<td class="text-center text-muted">#347</td>
-												<td><div class="widget-content p-0">
-														<div class="widget-content-wrapper">
-															<div class="widget-content-left me-3">
-																<div class="widget-content-left">
-																	<img width="40" class="rounded-circle"
-																		src="assets/images/avatars/3.jpg" alt="">
-																</div>
-															</div>
-															<div class="widget-content-left flex2">
-																<div class="widget-heading">Ruben Tillman</div>
-																<div class="widget-subheading opacity-7">Etiam sit
-																	amet orci eget</div>
-															</div>
-														</div>
-													</div></td>
-												<td class="text-center">Berlin</td>
-												<td class="text-center"><div class="badge bg-success">Completed</div></td>
-												<td class="text-center"><button type="button"
-														id="PopoverCustomT-2" class="btn btn-primary btn-sm">Details</button></td>
-											</tr>
-											<tr>
-												<td class="text-center text-muted">#321</td>
-												<td><div class="widget-content p-0">
-														<div class="widget-content-wrapper">
-															<div class="widget-content-left me-3">
-																<div class="widget-content-left">
-																	<img width="40" class="rounded-circle"
-																		src="assets/images/avatars/2.jpg" alt="">
-																</div>
-															</div>
-															<div class="widget-content-left flex2">
-																<div class="widget-heading">Elliot Huber</div>
-																<div class="widget-subheading opacity-7">Lorem
-																	ipsum dolor sic</div>
-															</div>
-														</div>
-													</div></td>
-												<td class="text-center">London</td>
-												<td class="text-center"><div class="badge bg-danger">In
-														Progress</div></td>
-												<td class="text-center"><button type="button"
-														id="PopoverCustomT-3" class="btn btn-primary btn-sm">Details</button></td>
-											</tr>
-											<tr>
-												<td class="text-center text-muted">#55</td>
-												<td><div class="widget-content p-0">
-														<div class="widget-content-wrapper">
-															<div class="widget-content-left me-3">
-																<div class="widget-content-left">
-																	<img width="40" class="rounded-circle"
-																		src="assets/images/avatars/1.jpg" alt="">
-																</div>
-															</div>
-															<div class="widget-content-left flex2">
-																<div class="widget-heading">Vinnie Wagstaff</div>
-																<div class="widget-subheading opacity-7">UI
-																	Designer</div>
-															</div>
-														</div>
-													</div></td>
-												<td class="text-center">Amsterdam</td>
-												<td class="text-center"><div class="badge bg-info">On
-														Hold</div></td>
-												<td class="text-center"><button type="button"
-														id="PopoverCustomT-4" class="btn btn-primary btn-sm">Details</button></td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-								<div class="d-block text-center card-footer">
-									<button
-										class="me-2 btn-icon btn-icon-only btn btn-outline-danger">
-										<i class="pe-7s-trash btn-icon-wrapper"></i>
-									</button>
-									<button class="btn-wide btn btn-success">Save</button>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6 col-lg-3">
-							<div
-								class="card-shadow-danger mb-3 widget-chart widget-chart2 text-start card">
-								<div class="widget-content">
-									<div class="widget-content-outer">
-										<div class="widget-content-wrapper">
-											<div class="widget-content-left pe-2 fsize-1">
-												<div class="widget-numbers mt-0 fsize-3 text-danger">71%</div>
-											</div>
-											<div class="widget-content-right w-100">
-												<div class="progress-bar-xs progress">
-													<div class="progress-bar bg-danger" role="progressbar"
-														aria-valuenow="71" aria-valuemin="0" aria-valuemax="100"
-														style="width: 71%;"></div>
-												</div>
-											</div>
-										</div>
-										<div class="widget-content-left fsize-1">
-											<div class="text-muted opacity-6">Income Target</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 col-lg-3">
-							<div
-								class="card-shadow-success mb-3 widget-chart widget-chart2 text-start card">
-								<div class="widget-content">
-									<div class="widget-content-outer">
-										<div class="widget-content-wrapper">
-											<div class="widget-content-left pe-2 fsize-1">
-												<div class="widget-numbers mt-0 fsize-3 text-success">54%</div>
-											</div>
-											<div class="widget-content-right w-100">
-												<div class="progress-bar-xs progress">
-													<div class="progress-bar bg-success" role="progressbar"
-														aria-valuenow="54" aria-valuemin="0" aria-valuemax="100"
-														style="width: 54%;"></div>
-												</div>
-											</div>
-										</div>
-										<div class="widget-content-left fsize-1">
-											<div class="text-muted opacity-6">Expenses Target</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 col-lg-3">
-							<div
-								class="card-shadow-warning mb-3 widget-chart widget-chart2 text-start card">
-								<div class="widget-content">
-									<div class="widget-content-outer">
-										<div class="widget-content-wrapper">
-											<div class="widget-content-left pe-2 fsize-1">
-												<div class="widget-numbers mt-0 fsize-3 text-warning">32%</div>
-											</div>
-											<div class="widget-content-right w-100">
-												<div class="progress-bar-xs progress">
-													<div class="progress-bar bg-warning" role="progressbar"
-														aria-valuenow="32" aria-valuemin="0" aria-valuemax="100"
-														style="width: 32%;"></div>
-												</div>
-											</div>
-										</div>
-										<div class="widget-content-left fsize-1">
-											<div class="text-muted opacity-6">Spendings Target</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 col-lg-3">
-							<div
-								class="card-shadow-info mb-3 widget-chart widget-chart2 text-start card">
-								<div class="widget-content">
-									<div class="widget-content-outer">
-										<div class="widget-content-wrapper">
-											<div class="widget-content-left pe-2 fsize-1">
-												<div class="widget-numbers mt-0 fsize-3 text-info">89%</div>
-											</div>
-											<div class="widget-content-right w-100">
-												<div class="progress-bar-xs progress">
-													<div class="progress-bar bg-info" role="progressbar"
-														aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"
-														style="width: 89%;"></div>
-												</div>
-											</div>
-										</div>
-										<div class="widget-content-left fsize-1">
-											<div class="text-muted opacity-6">Totals Target</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="app-wrapper-footer">
-					<div class="app-footer">
-						<div class="app-footer__inner">
-							<div class="app-footer-left">
-								<ul class="nav">
-									<li class="nav-item"><a href="javascript:void(0);"
-										class="nav-link">Footer Link 1</a></li>
-									<li class="nav-item"><a href="javascript:void(0);"
-										class="nav-link">Footer Link 2</a></li>
-								</ul>
-							</div>
-							<div class="app-footer-right">
-								<ul class="nav">
-									<li class="nav-item"><a href="javascript:void(0);"
-										class="nav-link">Footer Link 3</a></li>
-									<li class="nav-item"><a href="javascript:void(0);"
-										class="nav-link"><div class="badge bg-success me-1 ms-0">
-												<small>NEW</small>
-											</div>Footer Link 4</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<script src="http://maps.google.com/maps/api/js?sensor=true"></script>
-		</div>
-	</div>
-</body>
+  <head>
+    <base href="./">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
+    <meta name="author" content="Łukasz Holeczek">
+    <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
+    <title>CoreUI Free Bootstrap Admin Template</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="assets/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="assets/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="assets/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="assets/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="assets/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="assets/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="assets/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="assets/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
+    <link rel="manifest" href="assets/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="assets/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Vendors styles-->
+    <link rel="stylesheet" href="node_modules/simplebar/dist/simplebar.css">
+    <link rel="stylesheet" href="css/vendors/simplebar.css">
+    <!-- Main styles for this application-->
+    <link href="css/style.css" rel="stylesheet">
+    <!-- We use those styles to show code examples, you should remove them in your application.-->
+    <link href="css/examples.css" rel="stylesheet">
+    <script src="js/config.js"></script>
+    <script src="js/color-modes.js"></script>
+    <link href="node_modules/@coreui/chartjs/dist/css/coreui-chartjs.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="sidebar sidebar-dark sidebar-fixed border-end" id="sidebar">
+      <div class="sidebar-header border-bottom">
+        <div class="sidebar-brand">
+          <svg class="sidebar-brand-full" width="88" height="32" alt="CoreUI Logo">
+            <use xlink:href="assets/brand/coreui.svg#full"></use>
+          </svg>
+          <svg class="sidebar-brand-narrow" width="32" height="32" alt="CoreUI Logo">
+            <use xlink:href="assets/brand/coreui.svg#signet"></use>
+          </svg>
+        </div>
+        <button class="btn-close d-lg-none" type="button" data-coreui-theme="dark" aria-label="Close" onclick="coreui.Sidebar.getInstance(document.querySelector(&quot;#sidebar&quot;)).toggle()"></button>
+      </div>
+      <ul class="sidebar-nav" data-coreui="navigation" data-simplebar>
+        <li class="nav-item"><a class="nav-link" href="index.html">
+            <svg class="nav-icon">
+              <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-speedometer"></use>
+            </svg> Dashboard<span class="badge badge-sm bg-info ms-auto">NEW</span></a></li>
+        <li class="nav-title">Theme</li>
+        <li class="nav-item"><a class="nav-link" href="colors.html">
+            <svg class="nav-icon">
+              <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-drop"></use>
+            </svg> Colors</a></li>
+        <li class="nav-item"><a class="nav-link" href="typography.html">
+            <svg class="nav-icon">
+              <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-pencil"></use>
+            </svg> Typography</a></li>
+        <li class="nav-title">Components</li>
+        <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
+            <svg class="nav-icon">
+              <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-puzzle"></use>
+            </svg> Base</a>
+          <ul class="nav-group-items compact">
+            <li class="nav-item"><a class="nav-link" href="base/accordion.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Accordion</a></li>
+            <li class="nav-item"><a class="nav-link" href="base/breadcrumb.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Breadcrumb</a></li>
+            <li class="nav-item"><a class="nav-link" href="https://coreui.io/bootstrap/docs/components/calendar/" target="_blank"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Calendar
+                <svg class="icon icon-sm ms-2">
+                  <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-external-link"></use>
+                </svg><span class="badge badge-sm bg-danger ms-auto">PRO</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="base/cards.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Cards</a></li>
+            <li class="nav-item"><a class="nav-link" href="base/carousel.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Carousel</a></li>
+            <li class="nav-item"><a class="nav-link" href="base/collapse.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Collapse</a></li>
+            <li class="nav-item"><a class="nav-link" href="base/list-group.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> List group</a></li>
+            <li class="nav-item"><a class="nav-link" href="base/navs-tabs.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Navs &amp; Tabs</a></li>
+            <li class="nav-item"><a class="nav-link" href="base/pagination.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Pagination</a></li>
+            <li class="nav-item"><a class="nav-link" href="base/placeholders.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Placeholders</a></li>
+            <li class="nav-item"><a class="nav-link" href="base/popovers.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Popovers</a></li>
+            <li class="nav-item"><a class="nav-link" href="base/progress.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Progress</a></li>
+            <li class="nav-item"><a class="nav-link" href="base/spinners.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Spinners</a></li>
+            <li class="nav-item"><a class="nav-link" href="base/tables.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Tables</a></li>
+            <li class="nav-item"><a class="nav-link" href="base/tooltips.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Tooltips</a></li>
+          </ul>
+        </li>
+        <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
+            <svg class="nav-icon">
+              <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-cursor"></use>
+            </svg> Buttons</a>
+          <ul class="nav-group-items compact">
+            <li class="nav-item"><a class="nav-link" href="buttons/buttons.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Buttons</a></li>
+            <li class="nav-item"><a class="nav-link" href="buttons/button-group.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Buttons Group</a></li>
+            <li class="nav-item"><a class="nav-link" href="buttons/dropdowns.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Dropdowns</a></li>
+            <li class="nav-item"><a class="nav-link" href="https://coreui.io/bootstrap/docs/components/loading-buttons/" target="_blank"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Loading Buttons
+                <svg class="icon icon-sm ms-2">
+                  <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-external-link"></use>
+                </svg><span class="badge badge-sm bg-danger ms-auto">PRO</span></a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="charts.html">
+            <svg class="nav-icon">
+              <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-chart-pie"></use>
+            </svg> Charts</a></li>
+        <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
+            <svg class="nav-icon">
+              <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-notes"></use>
+            </svg> Forms</a>
+          <ul class="nav-group-items compact">
+            <li class="nav-item"><a class="nav-link" href="https://coreui.io/bootstrap/docs/forms/autocomplete/" target="_blank"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Autocomplete
+                <svg class="icon icon-sm ms-2">
+                  <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-external-link"></use>
+                </svg><span class="badge badge-sm bg-danger ms-auto">PRO</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="forms/checks-radios.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Checks and radios</a></li>
+            <li class="nav-item"><a class="nav-link" href="https://coreui.io/bootstrap/docs/forms/date-picker/" target="_blank"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Date Picker
+                <svg class="icon icon-sm ms-2">
+                  <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-external-link"></use>
+                </svg><span class="badge badge-sm bg-danger ms-auto">PRO</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="https://coreui.io/bootstrap/docs/forms/date-range-picker/" target="_blank"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Date Range Picker<span class="badge badge-sm bg-danger ms-auto">PRO</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="forms/floating-labels.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Floating labels</a></li>
+            <li class="nav-item"><a class="nav-link" href="forms/form-control.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Form Control</a></li>
+            <li class="nav-item"><a class="nav-link" href="forms/input-group.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Input group</a></li>
+            <li class="nav-item"><a class="nav-link" href="https://coreui.io/bootstrap/docs/forms/multi-select/" target="_blank"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Multi Select
+                <svg class="icon icon-sm ms-2">
+                  <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-external-link"></use>
+                </svg><span class="badge badge-sm bg-danger ms-auto">PRO</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="forms/range.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Range</a></li>
+            <li class="nav-item"><a class="nav-link" href="https://coreui.io/bootstrap/docs/forms/range-slider/" target="_blank"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Range Slider
+                <svg class="icon icon-sm ms-2">
+                  <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-external-link"></use>
+                </svg><span class="badge badge-sm bg-danger ms-auto">PRO</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="https://coreui.io/bootstrap/docs/forms/rating/" target="_blank"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Rating
+                <svg class="icon icon-sm ms-2">
+                  <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-external-link"></use>
+                </svg><span class="badge badge-sm bg-danger ms-auto">PRO</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="forms/select.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Select</a></li>
+            <li class="nav-item"><a class="nav-link" href="https://coreui.io/bootstrap/docs/forms/time-picker/" target="_blank"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Time Picker
+                <svg class="icon icon-sm ms-2">
+                  <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-external-link"></use>
+                </svg><span class="badge badge-sm bg-danger ms-auto">PRO</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="forms/layout.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Layout</a></li>
+            <li class="nav-item"><a class="nav-link" href="forms/validation.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Validation</a></li>
+          </ul>
+        </li>
+        <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
+            <svg class="nav-icon">
+              <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-star"></use>
+            </svg> Icons</a>
+          <ul class="nav-group-items compact">
+            <li class="nav-item"><a class="nav-link" href="icons/coreui-icons-free.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> CoreUI Icons<span class="badge badge-sm bg-success ms-auto">Free</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="icons/coreui-icons-brand.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> CoreUI Icons - Brand</a></li>
+            <li class="nav-item"><a class="nav-link" href="icons/coreui-icons-flag.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> CoreUI Icons - Flag</a></li>
+          </ul>
+        </li>
+        <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
+            <svg class="nav-icon">
+              <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-bell"></use>
+            </svg> Notifications</a>
+          <ul class="nav-group-items compact">
+            <li class="nav-item"><a class="nav-link" href="notifications/alerts.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Alerts</a></li>
+            <li class="nav-item"><a class="nav-link" href="notifications/badge.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Badge</a></li>
+            <li class="nav-item"><a class="nav-link" href="notifications/modals.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Modals</a></li>
+            <li class="nav-item"><a class="nav-link" href="notifications/toasts.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Toasts</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="widgets.html">
+            <svg class="nav-icon">
+              <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-calculator"></use>
+            </svg> Widgets<span class="badge badge-sm bg-info ms-auto">NEW</span></a></li>
+        <li class="nav-divider"></li>
+        <li class="nav-title">Extras</li>
+        <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
+            <svg class="nav-icon">
+              <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-star"></use>
+            </svg> Pages</a>
+          <ul class="nav-group-items compact">
+            <li class="nav-item"><a class="nav-link" href="login.html" target="_top">
+                <svg class="nav-icon">
+                  <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-account-logout"></use>
+                </svg> Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="register.html" target="_top">
+                <svg class="nav-icon">
+                  <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-account-logout"></use>
+                </svg> Register</a></li>
+            <li class="nav-item"><a class="nav-link" href="404.html" target="_top">
+                <svg class="nav-icon">
+                  <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-bug"></use>
+                </svg> Error 404</a></li>
+            <li class="nav-item"><a class="nav-link" href="500.html" target="_top">
+                <svg class="nav-icon">
+                  <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-bug"></use>
+                </svg> Error 500</a></li>
+          </ul>
+        </li>
+        <li class="nav-item mt-auto"><a class="nav-link" href="https://coreui.io/bootstrap/docs/templates/installation/" target="_blank">
+            <svg class="nav-icon">
+              <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-description"></use>
+            </svg> Docs</a></li>
+        <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="https://coreui.io/product/bootstrap-dashboard-template/" target="_top">
+            <svg class="nav-icon text-primary">
+              <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-layers"></use>
+            </svg> Try CoreUI PRO</a></li>
+      </ul>
+      <div class="sidebar-footer border-top d-none d-md-flex">     
+        <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
+      </div>
+    </div>
+    <div class="wrapper d-flex flex-column min-vh-100">
+      <header class="header header-sticky p-0 mb-4">
+        <div class="container-fluid border-bottom px-4">
+          <button class="header-toggler" type="button" onclick="coreui.Sidebar.getInstance(document.querySelector('#sidebar')).toggle()" style="margin-inline-start: -14px;">
+            <svg class="icon icon-lg">
+              <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-menu"></use>
+            </svg>
+          </button>
+          <ul class="header-nav d-none d-lg-flex">
+            <li class="nav-item"><a class="nav-link" href="#">Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Users</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
+          </ul>
+          <ul class="header-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="#">
+                <svg class="icon icon-lg">
+                  <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-bell"></use>
+                </svg></a></li>
+            <li class="nav-item"><a class="nav-link" href="#">
+                <svg class="icon icon-lg">
+                  <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-list-rich"></use>
+                </svg></a></li>
+            <li class="nav-item"><a class="nav-link" href="#">
+                <svg class="icon icon-lg">
+                  <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-envelope-open"></use>
+                </svg></a></li>
+          </ul>
+          <ul class="header-nav">
+            <li class="nav-item py-1">
+              <div class="vr h-100 mx-2 text-body text-opacity-75"></div>
+            </li>
+            <li class="nav-item dropdown">
+              <button class="btn btn-link nav-link py-2 px-2 d-flex align-items-center" type="button" aria-expanded="false" data-coreui-toggle="dropdown">
+                <svg class="icon icon-lg theme-icon-active">
+                  <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-contrast"></use>
+                </svg>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end" style="--cui-dropdown-min-width: 8rem;">
+                <li>
+                  <button class="dropdown-item d-flex align-items-center" type="button" data-coreui-theme-value="light">
+                    <svg class="icon icon-lg me-3">
+                      <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-sun"></use>
+                    </svg>Light
+                  </button>
+                </li>
+                <li>
+                  <button class="dropdown-item d-flex align-items-center" type="button" data-coreui-theme-value="dark">
+                    <svg class="icon icon-lg me-3">
+                      <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-moon"></use>
+                    </svg>Dark
+                  </button>
+                </li>
+                <li>
+                  <button class="dropdown-item d-flex align-items-center active" type="button" data-coreui-theme-value="auto">
+                    <svg class="icon icon-lg me-3">
+                      <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-contrast"></use>
+                    </svg>Auto
+                  </button>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item py-1">
+              <div class="vr h-100 mx-2 text-body text-opacity-75"></div>
+            </li>
+            <li class="nav-item dropdown"><a class="nav-link py-0 pe-0" data-coreui-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                <div class="avatar avatar-md"><img class="avatar-img" src="assets/img/avatars/8.jpg" alt="user@email.com"></div></a>
+              <div class="dropdown-menu dropdown-menu-end pt-0">
+                <div class="dropdown-header bg-body-tertiary text-body-secondary fw-semibold rounded-top mb-2">Account</div><a class="dropdown-item" href="#">
+                  <svg class="icon me-2">
+                    <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-bell"></use>
+                  </svg> Updates<span class="badge badge-sm bg-info ms-2">42</span></a><a class="dropdown-item" href="#">
+                  <svg class="icon me-2">
+                    <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-envelope-open"></use>
+                  </svg> Messages<span class="badge badge-sm bg-success ms-2">42</span></a><a class="dropdown-item" href="#">
+                  <svg class="icon me-2">
+                    <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-task"></use>
+                  </svg> Tasks<span class="badge badge-sm bg-danger ms-2">42</span></a><a class="dropdown-item" href="#">
+                  <svg class="icon me-2">
+                    <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-comment-square"></use>
+                  </svg> Comments<span class="badge badge-sm bg-warning ms-2">42</span></a>
+                <div class="dropdown-header bg-body-tertiary text-body-secondary fw-semibold my-2">
+                  <div class="fw-semibold">Settings</div>
+                </div><a class="dropdown-item" href="#">
+                  <svg class="icon me-2">
+                    <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-user"></use>
+                  </svg> Profile</a><a class="dropdown-item" href="#">
+                  <svg class="icon me-2">
+                    <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-settings"></use>
+                  </svg> Settings</a><a class="dropdown-item" href="#">
+                  <svg class="icon me-2">
+                    <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-credit-card"></use>
+                  </svg> Payments<span class="badge badge-sm bg-secondary ms-2">42</span></a><a class="dropdown-item" href="#">
+                  <svg class="icon me-2">
+                    <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-file"></use>
+                  </svg> Projects<span class="badge badge-sm bg-primary ms-2">42</span></a>
+                <div class="dropdown-divider"></div><a class="dropdown-item" href="#">
+                  <svg class="icon me-2">
+                    <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-lock-locked"></use>
+                  </svg> Lock Account</a><a class="dropdown-item" href="#">
+                  <svg class="icon me-2">
+                    <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-account-logout"></use>
+                  </svg> Logout</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="container-fluid px-4">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb my-0">
+              <li class="breadcrumb-item"><a href="#">Home</a>
+              </li>
+              <li class="breadcrumb-item active"><span>Dashboard</span>
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </header>
+      <div class="body flex-grow-1">
+        <div class="container-lg px-4">
+          <div class="row g-4 mb-4">
+            <div class="col-sm-6 col-xl-3">
+              <div class="card text-white bg-primary">
+                <div class="card-body pb-0 d-flex justify-content-between align-items-start">
+                  <div>
+                    <div class="fs-4 fw-semibold">26K <span class="fs-6 fw-normal">(-12.4%
+                        <svg class="icon">
+                          <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-arrow-bottom"></use>
+                        </svg>)</span></div>
+                    <div>Users</div>
+                  </div>
+                  <div class="dropdown">
+                    <button class="btn btn-transparent text-white p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <svg class="icon">
+                        <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-options"></use>
+                      </svg>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#">Action</a><a class="dropdown-item" href="#">Another action</a><a class="dropdown-item" href="#">Something else here</a></div>
+                  </div>
+                </div>
+                <div class="c-chart-wrapper mt-3 mx-3" style="height:70px;">
+                  <canvas class="chart" id="card-chart1" height="70"></canvas>
+                </div>
+              </div>
+            </div>
+            <!-- /.col-->
+            <div class="col-sm-6 col-xl-3">
+              <div class="card text-white bg-info">
+                <div class="card-body pb-0 d-flex justify-content-between align-items-start">
+                  <div>
+                    <div class="fs-4 fw-semibold">$6.200 <span class="fs-6 fw-normal">(40.9%
+                        <svg class="icon">
+                          <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-arrow-top"></use>
+                        </svg>)</span></div>
+                    <div>Income</div>
+                  </div>
+                  <div class="dropdown">
+                    <button class="btn btn-transparent text-white p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <svg class="icon">
+                        <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-options"></use>
+                      </svg>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#">Action</a><a class="dropdown-item" href="#">Another action</a><a class="dropdown-item" href="#">Something else here</a></div>
+                  </div>
+                </div>
+                <div class="c-chart-wrapper mt-3 mx-3" style="height:70px;">
+                  <canvas class="chart" id="card-chart2" height="70"></canvas>
+                </div>
+              </div>
+            </div>
+            <!-- /.col-->
+            <div class="col-sm-6 col-xl-3">
+              <div class="card text-white bg-warning">
+                <div class="card-body pb-0 d-flex justify-content-between align-items-start">
+                  <div>
+                    <div class="fs-4 fw-semibold">2.49% <span class="fs-6 fw-normal">(84.7%
+                        <svg class="icon">
+                          <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-arrow-top"></use>
+                        </svg>)</span></div>
+                    <div>Conversion Rate</div>
+                  </div>
+                  <div class="dropdown">
+                    <button class="btn btn-transparent text-white p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <svg class="icon">
+                        <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-options"></use>
+                      </svg>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#">Action</a><a class="dropdown-item" href="#">Another action</a><a class="dropdown-item" href="#">Something else here</a></div>
+                  </div>
+                </div>
+                <div class="c-chart-wrapper mt-3" style="height:70px;">
+                  <canvas class="chart" id="card-chart3" height="70"></canvas>
+                </div>
+              </div>
+            </div>
+            <!-- /.col-->
+            <div class="col-sm-6 col-xl-3">
+              <div class="card text-white bg-danger">
+                <div class="card-body pb-0 d-flex justify-content-between align-items-start">
+                  <div>
+                    <div class="fs-4 fw-semibold">44K <span class="fs-6 fw-normal">(-23.6%
+                        <svg class="icon">
+                          <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-arrow-bottom"></use>
+                        </svg>)</span></div>
+                    <div>Sessions</div>
+                  </div>
+                  <div class="dropdown">
+                    <button class="btn btn-transparent text-white p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <svg class="icon">
+                        <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-options"></use>
+                      </svg>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#">Action</a><a class="dropdown-item" href="#">Another action</a><a class="dropdown-item" href="#">Something else here</a></div>
+                  </div>
+                </div>
+                <div class="c-chart-wrapper mt-3 mx-3" style="height:70px;">
+                  <canvas class="chart" id="card-chart4" height="70"></canvas>
+                </div>
+              </div>
+            </div>
+            <!-- /.col-->
+          </div>
+          <!-- /.row-->
+          <div class="card mb-4">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h4 class="card-title mb-0">Traffic</h4>
+                  <div class="small text-body-secondary">January - July 2023</div>
+                </div>
+                <div class="btn-toolbar d-none d-md-block" role="toolbar" aria-label="Toolbar with buttons">
+                  <div class="btn-group btn-group-toggle mx-3" data-coreui-toggle="buttons">
+                    <input class="btn-check" id="option1" type="radio" name="options" autocomplete="off">
+                    <label class="btn btn-outline-secondary"> Day</label>
+                    <input class="btn-check" id="option2" type="radio" name="options" autocomplete="off" checked="">
+                    <label class="btn btn-outline-secondary active"> Month</label>
+                    <input class="btn-check" id="option3" type="radio" name="options" autocomplete="off">
+                    <label class="btn btn-outline-secondary"> Year</label>
+                  </div>
+                  <button class="btn btn-primary" type="button">
+                    <svg class="icon">
+                      <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-cloud-download"></use>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="c-chart-wrapper" style="height:300px;margin-top:40px;">
+                <canvas class="chart" id="main-chart" height="300"></canvas>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 row-cols-xl-5 g-4 mb-2 text-center">
+                <div class="col">
+                  <div class="text-body-secondary">Visits</div>
+                  <div class="fw-semibold text-truncate">29.703 Users (40%)</div>
+                  <div class="progress progress-thin mt-2">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="text-body-secondary">Unique</div>
+                  <div class="fw-semibold text-truncate">24.093 Users (20%)</div>
+                  <div class="progress progress-thin mt-2">
+                    <div class="progress-bar bg-info" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="text-body-secondary">Pageviews</div>
+                  <div class="fw-semibold text-truncate">78.706 Views (60%)</div>
+                  <div class="progress progress-thin mt-2">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="text-body-secondary">New Users</div>
+                  <div class="fw-semibold text-truncate">22.123 Users (80%)</div>
+                  <div class="progress progress-thin mt-2">
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+                <div class="col d-none d-xl-block">
+                  <div class="text-body-secondary">Bounce Rate</div>
+                  <div class="fw-semibold text-truncate">40.15%</div>
+                  <div class="progress progress-thin mt-2">
+                    <div class="progress-bar" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /.card-->
+          <div class="row g-4 mb-4">
+            <div class="col-sm-6 col-lg-4">
+              <div class="card" style="--cui-card-cap-bg: #3b5998">
+                <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                  <svg class="icon icon-3xl text-white my-4">
+                    <use xlink:href="node_modules/@coreui/icons/sprites/brand.svg#cib-facebook-f"></use>
+                  </svg>
+                  <div class="chart-wrapper position-absolute top-0 start-0 w-100 h-100">
+                    <canvas id="social-box-chart-1" height="90"></canvas>
+                  </div>
+                </div>
+                <div class="card-body row text-center">
+                  <div class="col">
+                    <div class="fs-5 fw-semibold">89k</div>
+                    <div class="text-uppercase text-body-secondary small">friends</div>
+                  </div>
+                  <div class="vr"></div>
+                  <div class="col">
+                    <div class="fs-5 fw-semibold">459</div>
+                    <div class="text-uppercase text-body-secondary small">feeds</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /.col-->
+            <div class="col-sm-6 col-lg-4">
+              <div class="card" style="--cui-card-cap-bg: #00aced">
+                <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                  <svg class="icon icon-3xl text-white my-4">
+                    <use xlink:href="node_modules/@coreui/icons/sprites/brand.svg#cib-twitter"></use>
+                  </svg>
+                  <div class="chart-wrapper position-absolute top-0 start-0 w-100 h-100">
+                    <canvas id="social-box-chart-2" height="90"></canvas>
+                  </div>
+                </div>
+                <div class="card-body row text-center">
+                  <div class="col">
+                    <div class="fs-5 fw-semibold">973k</div>
+                    <div class="text-uppercase text-body-secondary small">followers</div>
+                  </div>
+                  <div class="vr"></div>
+                  <div class="col">
+                    <div class="fs-5 fw-semibold">1.792</div>
+                    <div class="text-uppercase text-body-secondary small">tweets</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /.col-->
+            <div class="col-sm-6 col-lg-4">
+              <div class="card" style="--cui-card-cap-bg: #4875b4">
+                <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                  <svg class="icon icon-3xl text-white my-4">
+                    <use xlink:href="node_modules/@coreui/icons/sprites/brand.svg#cib-linkedin"></use>
+                  </svg>
+                  <div class="chart-wrapper position-absolute top-0 start-0 w-100 h-100">
+                    <canvas id="social-box-chart-3" height="90"></canvas>
+                  </div>
+                </div>
+                <div class="card-body row text-center">
+                  <div class="col">
+                    <div class="fs-5 fw-semibold">500+</div>
+                    <div class="text-uppercase text-body-secondary small">contacts</div>
+                  </div>
+                  <div class="vr"></div>
+                  <div class="col">
+                    <div class="fs-5 fw-semibold">292</div>
+                    <div class="text-uppercase text-body-secondary small">feeds</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /.col-->
+          </div>
+          <!-- /.row-->
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card mb-4">
+                <div class="card-header">Traffic &amp; Sales</div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <div class="row">
+                        <div class="col-6">
+                          <div class="border-start border-start-4 border-start-info px-3 mb-3">
+                            <div class="small text-body-secondary text-truncate">New Clients</div>
+                            <div class="fs-5 fw-semibold">9.123</div>
+                          </div>
+                        </div>
+                        <!-- /.col-->
+                        <div class="col-6">
+                          <div class="border-start border-start-4 border-start-danger px-3 mb-3">
+                            <div class="small text-body-secondary text-truncate">Recuring Clients</div>
+                            <div class="fs-5 fw-semibold">22.643</div>
+                          </div>
+                        </div>
+                        <!-- /.col-->
+                      </div>
+                      <!-- /.row-->
+                      <hr class="mt-0">
+                      <div class="progress-group mb-4">
+                        <div class="progress-group-prepend"><span class="text-body-secondary small">Monday</span></div>
+                        <div class="progress-group-bars">
+                          <div class="progress progress-thin">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 34%" aria-valuenow="34" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                          <div class="progress progress-thin">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: 78%" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="progress-group mb-4">
+                        <div class="progress-group-prepend"><span class="text-body-secondary small">Tuesday</span></div>
+                        <div class="progress-group-bars">
+                          <div class="progress progress-thin">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 56%" aria-valuenow="56" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                          <div class="progress progress-thin">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: 94%" aria-valuenow="94" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="progress-group mb-4">
+                        <div class="progress-group-prepend"><span class="text-body-secondary small">Wednesday</span></div>
+                        <div class="progress-group-bars">
+                          <div class="progress progress-thin">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 12%" aria-valuenow="12" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                          <div class="progress progress-thin">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: 67%" aria-valuenow="67" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="progress-group mb-4">
+                        <div class="progress-group-prepend"><span class="text-body-secondary small">Thursday</span></div>
+                        <div class="progress-group-bars">
+                          <div class="progress progress-thin">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 43%" aria-valuenow="43" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                          <div class="progress progress-thin">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: 91%" aria-valuenow="91" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="progress-group mb-4">
+                        <div class="progress-group-prepend"><span class="text-body-secondary small">Friday</span></div>
+                        <div class="progress-group-bars">
+                          <div class="progress progress-thin">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 22%" aria-valuenow="22" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                          <div class="progress progress-thin">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: 73%" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="progress-group mb-4">
+                        <div class="progress-group-prepend"><span class="text-body-secondary small">Saturday</span></div>
+                        <div class="progress-group-bars">
+                          <div class="progress progress-thin">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 53%" aria-valuenow="53" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                          <div class="progress progress-thin">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: 82%" aria-valuenow="82" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="progress-group mb-4">
+                        <div class="progress-group-prepend"><span class="text-body-secondary small">Sunday</span></div>
+                        <div class="progress-group-bars">
+                          <div class="progress progress-thin">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 9%" aria-valuenow="9" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                          <div class="progress progress-thin">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: 69%" aria-valuenow="69" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- /.col-->
+                    <div class="col-sm-6">
+                      <div class="row">
+                        <div class="col-6">
+                          <div class="border-start border-start-4 border-start-warning px-3 mb-3">
+                            <div class="small text-body-secondary text-truncate">Pageviews</div>
+                            <div class="fs-5 fw-semibold">78.623</div>
+                          </div>
+                        </div>
+                        <!-- /.col-->
+                        <div class="col-6">
+                          <div class="border-start border-start-4 border-start-success px-3 mb-3">
+                            <div class="small text-body-secondary text-truncate">Organic</div>
+                            <div class="fs-5 fw-semibold">49.123</div>
+                          </div>
+                        </div>
+                        <!-- /.col-->
+                      </div>
+                      <!-- /.row-->
+                      <hr class="mt-0">
+                      <div class="progress-group">
+                        <div class="progress-group-header">
+                          <svg class="icon icon-lg me-2">
+                            <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-user"></use>
+                          </svg>
+                          <div>Male</div>
+                          <div class="ms-auto fw-semibold">43%</div>
+                        </div>
+                        <div class="progress-group-bars">
+                          <div class="progress progress-thin">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 43%" aria-valuenow="43" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="progress-group mb-5">
+                        <div class="progress-group-header">
+                          <svg class="icon icon-lg me-2">
+                            <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-user-female"></use>
+                          </svg>
+                          <div>Female</div>
+                          <div class="ms-auto fw-semibold">37%</div>
+                        </div>
+                        <div class="progress-group-bars">
+                          <div class="progress progress-thin">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 43%" aria-valuenow="43" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="progress-group">
+                        <div class="progress-group-header">
+                          <svg class="icon icon-lg me-2">
+                            <use xlink:href="node_modules/@coreui/icons/sprites/brand.svg#cib-google"></use>
+                          </svg>
+                          <div>Organic Search</div>
+                          <div class="ms-auto fw-semibold me-2">191.235</div>
+                          <div class="text-body-secondary small">(56%)</div>
+                        </div>
+                        <div class="progress-group-bars">
+                          <div class="progress progress-thin">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 56%" aria-valuenow="56" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="progress-group">
+                        <div class="progress-group-header">
+                          <svg class="icon icon-lg me-2">
+                            <use xlink:href="node_modules/@coreui/icons/sprites/brand.svg#cib-facebook-f"></use>
+                          </svg>
+                          <div>Facebook</div>
+                          <div class="ms-auto fw-semibold me-2">51.223</div>
+                          <div class="text-body-secondary small">(15%)</div>
+                        </div>
+                        <div class="progress-group-bars">
+                          <div class="progress progress-thin">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 15%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="progress-group">
+                        <div class="progress-group-header">
+                          <svg class="icon icon-lg me-2">
+                            <use xlink:href="node_modules/@coreui/icons/sprites/brand.svg#cib-twitter"></use>
+                          </svg>
+                          <div>Twitter</div>
+                          <div class="ms-auto fw-semibold me-2">37.564</div>
+                          <div class="text-body-secondary small">(11%)</div>
+                        </div>
+                        <div class="progress-group-bars">
+                          <div class="progress progress-thin">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 11%" aria-valuenow="11" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="progress-group">
+                        <div class="progress-group-header">
+                          <svg class="icon icon-lg me-2">
+                            <use xlink:href="node_modules/@coreui/icons/sprites/brand.svg#cib-linkedin"></use>
+                          </svg>
+                          <div>LinkedIn</div>
+                          <div class="ms-auto fw-semibold me-2">27.319</div>
+                          <div class="text-body-secondary small">(8%)</div>
+                        </div>
+                        <div class="progress-group-bars">
+                          <div class="progress progress-thin">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 8%" aria-valuenow="8" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- /.col-->
+                  </div>
+                  <!-- /.row--><br>
+                  <div class="table-responsive">
+                    <table class="table border mb-0">
+                      <thead class="fw-semibold text-nowrap">
+                        <tr class="align-middle">
+                          <th class="bg-body-secondary text-center">
+                            <svg class="icon">
+                              <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-people"></use>
+                            </svg>
+                          </th>
+                          <th class="bg-body-secondary">User</th>
+                          <th class="bg-body-secondary text-center">Country</th>
+                          <th class="bg-body-secondary">Usage</th>
+                          <th class="bg-body-secondary text-center">Payment Method</th>
+                          <th class="bg-body-secondary">Activity</th>
+                          <th class="bg-body-secondary"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="align-middle">
+                          <td class="text-center">
+                            <div class="avatar avatar-md"><img class="avatar-img" src="assets/img/avatars/1.jpg" alt="user@email.com"><span class="avatar-status bg-success"></span></div>
+                          </td>
+                          <td>
+                            <div class="text-nowrap">Yiorgos Avraamu</div>
+                            <div class="small text-body-secondary text-nowrap"><span>New</span> | Registered: Jan 1, 2023</div>
+                          </td>
+                          <td class="text-center">
+                            <svg class="icon icon-xl">
+                              <use xlink:href="node_modules/@coreui/icons/sprites/flag.svg#cif-us"></use>
+                            </svg>
+                          </td>
+                          <td>
+                            <div class="d-flex justify-content-between align-items-baseline">
+                              <div class="fw-semibold">50%</div>
+                              <div class="text-nowrap small text-body-secondary ms-3">Jun 11, 2023 - Jul 10, 2023</div>
+                            </div>
+                            <div class="progress progress-thin">
+                              <div class="progress-bar bg-success" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                          </td>
+                          <td class="text-center">
+                            <svg class="icon icon-xl">
+                              <use xlink:href="node_modules/@coreui/icons/sprites/brand.svg#cib-cc-mastercard"></use>
+                            </svg>
+                          </td>
+                          <td>
+                            <div class="small text-body-secondary">Last login</div>
+                            <div class="fw-semibold text-nowrap">10 sec ago</div>
+                          </td>
+                          <td>
+                            <div class="dropdown">
+                              <button class="btn btn-transparent p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <svg class="icon">
+                                  <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-options"></use>
+                                </svg>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#">Info</a><a class="dropdown-item" href="#">Edit</a><a class="dropdown-item text-danger" href="#">Delete</a></div>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr class="align-middle">
+                          <td class="text-center">
+                            <div class="avatar avatar-md"><img class="avatar-img" src="assets/img/avatars/2.jpg" alt="user@email.com"><span class="avatar-status bg-danger"></span></div>
+                          </td>
+                          <td>
+                            <div class="text-nowrap">Avram Tarasios</div>
+                            <div class="small text-body-secondary text-nowrap"><span>Recurring</span> | Registered: Jan 1, 2023</div>
+                          </td>
+                          <td class="text-center">
+                            <svg class="icon icon-xl">
+                              <use xlink:href="node_modules/@coreui/icons/sprites/flag.svg#cif-br"></use>
+                            </svg>
+                          </td>
+                          <td>
+                            <div class="d-flex justify-content-between align-items-baseline">
+                              <div class="fw-semibold">10%</div>
+                              <div class="text-nowrap small text-body-secondary ms-3">Jun 11, 2023 - Jul 10, 2023</div>
+                            </div>
+                            <div class="progress progress-thin">
+                              <div class="progress-bar bg-info" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                          </td>
+                          <td class="text-center">
+                            <svg class="icon icon-xl">
+                              <use xlink:href="node_modules/@coreui/icons/sprites/brand.svg#cib-cc-visa"></use>
+                            </svg>
+                          </td>
+                          <td>
+                            <div class="small text-body-secondary">Last login</div>
+                            <div class="fw-semibold text-nowrap">5 minutes ago</div>
+                          </td>
+                          <td>
+                            <div class="dropdown">
+                              <button class="btn btn-transparent p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <svg class="icon">
+                                  <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-options"></use>
+                                </svg>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#">Info</a><a class="dropdown-item" href="#">Edit</a><a class="dropdown-item text-danger" href="#">Delete</a></div>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr class="align-middle">
+                          <td class="text-center">
+                            <div class="avatar avatar-md"><img class="avatar-img" src="assets/img/avatars/3.jpg" alt="user@email.com"><span class="avatar-status bg-warning"></span></div>
+                          </td>
+                          <td>
+                            <div class="text-nowrap">Quintin Ed</div>
+                            <div class="small text-body-secondary text-nowrap"><span>New</span> | Registered: Jan 1, 2023</div>
+                          </td>
+                          <td class="text-center">
+                            <svg class="icon icon-xl">
+                              <use xlink:href="node_modules/@coreui/icons/sprites/flag.svg#cif-in"></use>
+                            </svg>
+                          </td>
+                          <td>
+                            <div class="d-flex justify-content-between align-items-baseline">
+                              <div class="fw-semibold">74%</div>
+                              <div class="text-nowrap small text-body-secondary ms-3">Jun 11, 2023 - Jul 10, 2023</div>
+                            </div>
+                            <div class="progress progress-thin">
+                              <div class="progress-bar bg-warning" role="progressbar" style="width: 74%" aria-valuenow="74" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                          </td>
+                          <td class="text-center">
+                            <svg class="icon icon-xl">
+                              <use xlink:href="node_modules/@coreui/icons/sprites/brand.svg#cib-cc-stripe"></use>
+                            </svg>
+                          </td>
+                          <td>
+                            <div class="small text-body-secondary">Last login</div>
+                            <div class="fw-semibold text-nowrap">1 hour ago</div>
+                          </td>
+                          <td>
+                            <div class="dropdown">
+                              <button class="btn btn-transparent p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <svg class="icon">
+                                  <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-options"></use>
+                                </svg>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#">Info</a><a class="dropdown-item" href="#">Edit</a><a class="dropdown-item text-danger" href="#">Delete</a></div>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr class="align-middle">
+                          <td class="text-center">
+                            <div class="avatar avatar-md"><img class="avatar-img" src="assets/img/avatars/4.jpg" alt="user@email.com"><span class="avatar-status bg-secondary"></span></div>
+                          </td>
+                          <td>
+                            <div class="text-nowrap">Enéas Kwadwo</div>
+                            <div class="small text-body-secondary text-nowrap"><span>New</span> | Registered: Jan 1, 2023</div>
+                          </td>
+                          <td class="text-center">
+                            <svg class="icon icon-xl">
+                              <use xlink:href="node_modules/@coreui/icons/sprites/flag.svg#cif-fr"></use>
+                            </svg>
+                          </td>
+                          <td>
+                            <div class="d-flex justify-content-between align-items-baseline">
+                              <div class="fw-semibold">98%</div>
+                              <div class="text-nowrap small text-body-secondary ms-3">Jun 11, 2023 - Jul 10, 2023</div>
+                            </div>
+                            <div class="progress progress-thin">
+                              <div class="progress-bar bg-danger" role="progressbar" style="width: 98%" aria-valuenow="98" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                          </td>
+                          <td class="text-center">
+                            <svg class="icon icon-xl">
+                              <use xlink:href="node_modules/@coreui/icons/sprites/brand.svg#cib-cc-paypal"></use>
+                            </svg>
+                          </td>
+                          <td>
+                            <div class="small text-body-secondary">Last login</div>
+                            <div class="fw-semibold text-nowrap">Last month</div>
+                          </td>
+                          <td>
+                            <div class="dropdown">
+                              <button class="btn btn-transparent p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <svg class="icon">
+                                  <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-options"></use>
+                                </svg>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#">Info</a><a class="dropdown-item" href="#">Edit</a><a class="dropdown-item text-danger" href="#">Delete</a></div>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr class="align-middle">
+                          <td class="text-center">
+                            <div class="avatar avatar-md"><img class="avatar-img" src="assets/img/avatars/5.jpg" alt="user@email.com"><span class="avatar-status bg-success"></span></div>
+                          </td>
+                          <td>
+                            <div class="text-nowrap">Agapetus Tadeáš</div>
+                            <div class="small text-body-secondary text-nowrap"><span>New</span> | Registered: Jan 1, 2023</div>
+                          </td>
+                          <td class="text-center">
+                            <svg class="icon icon-xl">
+                              <use xlink:href="node_modules/@coreui/icons/sprites/flag.svg#cif-es"></use>
+                            </svg>
+                          </td>
+                          <td>
+                            <div class="d-flex justify-content-between align-items-baseline">
+                              <div class="fw-semibold">22%</div>
+                              <div class="text-nowrap small text-body-secondary ms-3">Jun 11, 2023 - Jul 10, 2023</div>
+                            </div>
+                            <div class="progress progress-thin">
+                              <div class="progress-bar bg-info" role="progressbar" style="width: 22%" aria-valuenow="22" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                          </td>
+                          <td class="text-center">
+                            <svg class="icon icon-xl">
+                              <use xlink:href="node_modules/@coreui/icons/sprites/brand.svg#cib-cc-apple-pay"></use>
+                            </svg>
+                          </td>
+                          <td>
+                            <div class="small text-body-secondary">Last login</div>
+                            <div class="fw-semibold text-nowrap">Last week</div>
+                          </td>
+                          <td>
+                            <div class="dropdown dropup">
+                              <button class="btn btn-transparent p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <svg class="icon">
+                                  <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-options"></use>
+                                </svg>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#">Info</a><a class="dropdown-item" href="#">Edit</a><a class="dropdown-item text-danger" href="#">Delete</a></div>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr class="align-middle">
+                          <td class="text-center">
+                            <div class="avatar avatar-md"><img class="avatar-img" src="assets/img/avatars/6.jpg" alt="user@email.com"><span class="avatar-status bg-danger"></span></div>
+                          </td>
+                          <td>
+                            <div class="text-nowrap">Friderik Dávid</div>
+                            <div class="small text-body-secondary text-nowrap"><span>New</span> | Registered: Jan 1, 2023</div>
+                          </td>
+                          <td class="text-center">
+                            <svg class="icon icon-xl">
+                              <use xlink:href="node_modules/@coreui/icons/sprites/flag.svg#cif-pl"></use>
+                            </svg>
+                          </td>
+                          <td>
+                            <div class="d-flex justify-content-between align-items-baseline">
+                              <div class="fw-semibold">43%</div>
+                              <div class="text-nowrap small text-body-secondary ms-3">Jun 11, 2023 - Jul 10, 2023</div>
+                            </div>
+                            <div class="progress progress-thin">
+                              <div class="progress-bar bg-success" role="progressbar" style="width: 43%" aria-valuenow="43" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                          </td>
+                          <td class="text-center">
+                            <svg class="icon icon-xl">
+                              <use xlink:href="node_modules/@coreui/icons/sprites/brand.svg#cib-cc-amex"></use>
+                            </svg>
+                          </td>
+                          <td>
+                            <div class="small text-body-secondary">Last login</div>
+                            <div class="fw-semibold text-nowrap">Yesterday</div>
+                          </td>
+                          <td>
+                            <div class="dropdown dropup">
+                              <button class="btn btn-transparent p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <svg class="icon">
+                                  <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-options"></use>
+                                </svg>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#">Info</a><a class="dropdown-item" href="#">Edit</a><a class="dropdown-item text-danger" href="#">Delete</a></div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /.col-->
+          </div>
+          <!-- /.row-->
+        </div>
+      </div>
+      <footer class="footer px-4">
+        <div><a href="https://coreui.io">CoreUI </a><a href="https://coreui.io/product/free-bootstrap-admin-template/">Bootstrap Admin Template</a> &copy; 2025 creativeLabs.</div>
+        <div class="ms-auto">Powered by&nbsp;<a href="https://coreui.io/bootstrap/docs/">CoreUI UI Components</a></div>
+      </footer>
+    </div>
+    <!-- CoreUI and necessary plugins-->
+    <script src="node_modules/@coreui/coreui/dist/js/coreui.bundle.min.js"></script>
+    <script src="node_modules/simplebar/dist/simplebar.min.js"></script>
+    <script>
+      const header = document.querySelector('header.header');
+      
+      document.addEventListener('scroll', () => {
+        if (header) {
+          header.classList.toggle('shadow-sm', document.documentElement.scrollTop > 0);
+        }
+      });
+      
+    </script>
+    <!-- Plugins and scripts required by this view-->
+    <script src="node_modules/chart.js/dist/chart.umd.js"></script>
+    <script src="node_modules/@coreui/chartjs/dist/js/coreui-chartjs.js"></script>
+    <script src="node_modules/@coreui/utils/dist/umd/index.js"></script>
+    <script src="js/main.js"></script>
+    <script> 
+    </script>
+  </body>
 </html>
