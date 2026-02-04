@@ -1,101 +1,190 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<div th:fragment="DefaultHeader" class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
-    <div class="app-header header-shadow">
-        <div class="app-header__logo">
-            <div class="logo-src"></div>
-            <div class="header__pane ms-auto">
-                <div>
-                    <button type="button" class="hamburger close-sidebar-btn hamburger--elastic"
-                        data-class="closed-sidebar">
-                        <span class="hamburger-box"><span class="hamburger-inner"></span></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="app-header__mobile-menu">
-            <div>
-                <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
-                    <span class="hamburger-box"><span class="hamburger-inner"></span></span>
-                </button>
-            </div>
-        </div>
-        <div class="app-header__menu">
-            <span><button type="button"
-                    class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
-                    <span class="btn-icon-wrapper"><i class="fa fa-ellipsis-v fa-w-6"></i></span>
-                </button></span>
-        </div>
-        <div class="app-header__content">
-            <div class="app-header-left">
-                <div class="search-wrapper">
-                    <div class="input-holder">
-                        <input class="search-input" placeholder="Type to search">
-                        <button class="search-icon">
-                            <span></span>
-                        </button>
-                    </div>
-                    <button class="btn-close"></button>
-                </div>
-                <ul class="header-menu nav">
-                    <li class="nav-item"><a href="javascript:void(0);" class="nav-link"><i
-                                class="nav-link-icon fa fa-database"></i>
-                            Statistics</a></li>
-                    <li class="btn-group nav-item"><a href="javascript:void(0);" class="nav-link"><i
-                                class="nav-link-icon fa fa-edit"></i>
-                            Projects</a></li>
-                    <li class="dropdown nav-item"><a href="javascript:void(0);" class="nav-link"><i
-                                class="nav-link-icon fa fa-cog"></i>
-                            Settings</a></li>
-                </ul>
-            </div>
-            <div class="app-header-right">
-                <div class="header-btn-lg pe-0">
-                    <div class="widget-content p-0">
-                        <div class="widget-content-wrapper">
-                            <div class="widget-content-left">
-                                <div class="btn-group">
-                                    <a data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                        class="p-0 btn">
-                                        
-                                        <img width="42" class="rounded-circle" th:src="@{/assets/images/avatars/1.jpg}" alt="">
-                                        
-                                        <i class="fa fa-angle-down ms-2 opacity-8"></i>
-                                    </a>
-                                    <div tabindex="-1" role="menu" aria-hidden="true"
-                                        class="dropdown-menu dropdown-menu-right">
-                                        <button type="button" tabindex="0" class="dropdown-item">User
-                                            Account</button>
-                                        <button type="button" tabindex="0" class="dropdown-item">Settings</button>
-                                        <h6 tabindex="-1" class="dropdown-header">Header</h6>
-                                        <button type="button" tabindex="0" class="dropdown-item">Actions</button>
-                                        <div tabindex="-1" class="dropdown-divider"></div>
-                                        <button type="button" tabindex="0" class="dropdown-item">Dividers</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="widget-content-left ms-3 header-user-info">
-                                
-                                <div class="widget-heading" th:text="${userName} ?: 'Alina Mclourd'">
-                                    Alina Mclourd
-                                </div>
-                                <div class="widget-subheading" th:text="${userRole} ?: 'VP People Manager'">
-                                    VP People Manager
-                                </div>
-                                
-                            </div>
-                            <div class="widget-content-right header-user-info ms-3">
-                                <button type="button"
-                                    class="btn-shadow p-1 btn btn-primary btn-sm show-toastr-example">
-                                    <i class="fa text-white fa-calendar pe-1 ps-1"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div th:fragment="DefaultHeader">
+	<header class="header header-sticky p-0 mb-4">
+		<div class="container-fluid border-bottom px-4">
+			<button class="header-toggler" type="button"
+				onclick="coreui.Sidebar.getInstance(document.querySelector('#sidebar')).toggle()"
+				style="margin-inline-start: -14px;">
+				<svg class="icon icon-lg">
+					<use th:href="@{/coreui/vendors/@coreui/icons/svg/free.svg#cil-menu}"></use>
+				</svg>
+			</button>
+			
+			<ul class="header-nav d-none d-lg-flex">
+				<li class="nav-item"><a class="nav-link" th:href="@{/}">Dashboard</a></li>
+				<li class="nav-item"><a class="nav-link" href="#">Users</a></li>
+				<li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
+			</ul>
+			
+			<ul class="header-nav ms-auto">
+				<li class="nav-item">
+					<a class="nav-link" href="#"> 
+						<svg class="icon icon-lg">
+							<use th:href="@{/coreui/vendors/@coreui/icons/svg/free.svg#cil-bell}"></use>
+						</svg>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#"> 
+						<svg class="icon icon-lg">
+							<use th:href="@{/coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich}"></use>
+						</svg>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#"> 
+						<svg class="icon icon-lg">
+							<use th:href="@{/coreui/vendors/@coreui/icons/svg/free.svg#cil-envelope-open}"></use>
+						</svg>
+					</a>
+				</li>
+			</ul>
+			
+			<ul class="header-nav">
+				<li class="nav-item py-1">
+					<div class="vr h-100 mx-2 text-body text-opacity-75"></div>
+				</li>
+				
+				<!-- Theme Switcher -->
+				<li class="nav-item dropdown">
+					<button class="btn btn-link nav-link py-2 px-2 d-flex align-items-center"
+						type="button" aria-expanded="false" data-coreui-toggle="dropdown">
+						<svg class="icon icon-lg theme-icon-active">
+							<use th:href="@{/coreui/vendors/@coreui/icons/svg/free.svg#cil-contrast}"></use>
+						</svg>
+					</button>
+					<ul class="dropdown-menu dropdown-menu-end" style="--cui-dropdown-min-width: 8rem;">
+						<li>
+							<button class="dropdown-item d-flex align-items-center" type="button" data-coreui-theme-value="light">
+								<svg class="icon icon-lg me-3">
+									<use th:href="@{/coreui/vendors/@coreui/icons/svg/free.svg#cil-sun}"></use>
+								</svg>
+								Light
+							</button>
+						</li>
+						<li>
+							<button class="dropdown-item d-flex align-items-center" type="button" data-coreui-theme-value="dark">
+								<svg class="icon icon-lg me-3">
+									<use th:href="@{/coreui/vendors/@coreui/icons/svg/free.svg#cil-moon}"></use>
+								</svg>
+								Dark
+							</button>
+						</li>
+						<li>
+							<button class="dropdown-item d-flex align-items-center active" type="button" data-coreui-theme-value="auto">
+								<svg class="icon icon-lg me-3">
+									<use th:href="@{/coreui/vendors/@coreui/icons/svg/free.svg#cil-contrast}"></use>
+								</svg>
+								Auto
+							</button>
+						</li>
+					</ul>
+				</li>
+				
+				<li class="nav-item py-1">
+					<div class="vr h-100 mx-2 text-body text-opacity-75"></div>
+				</li>
+				
+				<!-- User Dropdown -->
+				<li class="nav-item dropdown">
+					<a class="nav-link py-0 pe-0" data-coreui-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+						<div class="avatar avatar-md">
+							<img class="avatar-img" th:src="@{/coreui/assets/img/avatars/8.jpg}" alt="user@email.com">
+						</div>
+					</a>
+					<div class="dropdown-menu dropdown-menu-end pt-0">
+						<div class="dropdown-header bg-body-tertiary text-body-secondary fw-semibold rounded-top mb-2">
+							Account
+						</div>
+						<a class="dropdown-item" href="#"> 
+							<svg class="icon me-2">
+								<use th:href="@{/coreui/vendors/@coreui/icons/svg/free.svg#cil-bell}"></use>
+							</svg> 
+							Updates
+							<span class="badge badge-sm bg-info ms-2">42</span>
+						</a>
+						<a class="dropdown-item" href="#"> 
+							<svg class="icon me-2">
+								<use th:href="@{/coreui/vendors/@coreui/icons/svg/free.svg#cil-envelope-open}"></use>
+							</svg> 
+							Messages
+							<span class="badge badge-sm bg-success ms-2">42</span>
+						</a>
+						<a class="dropdown-item" href="#"> 
+							<svg class="icon me-2">
+								<use th:href="@{/coreui/vendors/@coreui/icons/svg/free.svg#cil-task}"></use>
+							</svg> 
+							Tasks
+							<span class="badge badge-sm bg-danger ms-2">42</span>
+						</a>
+						<a class="dropdown-item" href="#"> 
+							<svg class="icon me-2">
+								<use th:href="@{/coreui/vendors/@coreui/icons/svg/free.svg#cil-comment-square}"></use>
+							</svg> 
+							Comments
+							<span class="badge badge-sm bg-warning ms-2">42</span>
+						</a>
+						
+						<div class="dropdown-header bg-body-tertiary text-body-secondary fw-semibold my-2">
+							Settings
+						</div>
+						<a class="dropdown-item" href="#"> 
+							<svg class="icon me-2">
+								<use th:href="@{/coreui/vendors/@coreui/icons/svg/free.svg#cil-user}"></use>
+							</svg> 
+							Profile
+						</a>
+						<a class="dropdown-item" href="#"> 
+							<svg class="icon me-2">
+								<use th:href="@{/coreui/vendors/@coreui/icons/svg/free.svg#cil-settings}"></use>
+							</svg> 
+							Settings
+						</a>
+						<a class="dropdown-item" href="#"> 
+							<svg class="icon me-2">
+								<use th:href="@{/coreui/vendors/@coreui/icons/svg/free.svg#cil-credit-card}"></use>
+							</svg> 
+							Payments
+							<span class="badge badge-sm bg-secondary ms-2">42</span>
+						</a>
+						<a class="dropdown-item" href="#"> 
+							<svg class="icon me-2">
+								<use th:href="@{/coreui/vendors/@coreui/icons/svg/free.svg#cil-file}"></use>
+							</svg> 
+							Projects
+							<span class="badge badge-sm bg-primary ms-2">42</span>
+						</a>
+						
+						<div class="dropdown-divider"></div>
+						
+						<a class="dropdown-item" href="#"> 
+							<svg class="icon me-2">
+								<use th:href="@{/coreui/vendors/@coreui/icons/svg/free.svg#cil-lock-locked}"></use>
+							</svg> 
+							Lock Account
+						</a>
+						<a class="dropdown-item" href="#"> 
+							<svg class="icon me-2">
+								<use th:href="@{/coreui/vendors/@coreui/icons/svg/free.svg#cil-account-logout}"></use>
+							</svg> 
+							Logout
+						</a>
+					</div>
+				</li>
+			</ul>
+		</div>
+		
+		<!-- Breadcrumb -->
+		<div class="container-fluid px-4">
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb my-0">
+					<li class="breadcrumb-item"><a href="#">Home</a></li>
+					<li class="breadcrumb-item active"><span>Dashboard</span></li>
+				</ol>
+			</nav>
+		</div>
+	</header>
 </div>
 </html>

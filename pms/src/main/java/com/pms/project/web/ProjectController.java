@@ -22,4 +22,9 @@ public class ProjectController {
 		model.addAttribute("projects", list);
 		return "backend";
 	}
+	
+	@GetMapping("/temptest")
+	public String template() {
+		return "index";
+	}
 }
