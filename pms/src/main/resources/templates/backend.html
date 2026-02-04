@@ -6,7 +6,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Kanban Board</title>
-    <link rel="stylesheet" href="/dhtmlx/kanban/kanban.css">
     <style>
         /* Basic styling for the container */
         html, body {
@@ -21,10 +20,7 @@
     </style>
 </head>
 <body>
-    <div id="root"></div>
-
-    <!-- The DHTMLX Kanban library MUST be loaded before it is used -->
-    <script src="/dhtmlx/kanban/kanban.js"></script>
+    <div id="kanbantest"></div>
     <script>
         const columns = [
             {
@@ -155,7 +151,7 @@
             },
         ];
 
-        new kanban.Kanban("#root", {
+        new kanban.Kanban("#kanbantest", {
             columns,
             cards,
         });
