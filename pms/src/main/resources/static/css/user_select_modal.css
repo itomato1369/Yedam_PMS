@@ -1,0 +1,17 @@
+.user-item {
+  cursor: pointer;
+}
+
+.user-item:hover {
+  background-color: var(--bs-primary);
+  color: white;
+}
+.job-item {
+  cursor: pointer;
+}
+
+.job-item:hover {
+  background-color: var(--bs-primary);
+  color: white;
+}
+
