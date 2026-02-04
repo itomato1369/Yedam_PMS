@@ -14,11 +14,10 @@ import lombok.RequiredArgsConstructor;
 public class HomeController {
 	private final HomeService homeService;
 
-	@GetMapping("/")
+	@GetMapping("/home")
 	public String home(Model model) {
 		HomeDto dtoList = homeService.loadMainPage();
-		System.out.println(dtoList.toString());
 		model.addAttribute("list", dtoList);
-		return "";
+		return "/home/home_index.html";
 	}
 }
