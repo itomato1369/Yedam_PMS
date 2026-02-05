@@ -10,16 +10,16 @@ import com.pms.setting.projects.service.ProjectsService;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/settings/projects")
+@RequestMapping("/")
 public class ProjectsSettingController {
 
     private final ProjectsService projectService;
 
-    @GetMapping
+    @GetMapping("/settings")
     public String projectList(Model model) {
 
         model.addAttribute("projects", projectService.getAllProjects());
 
-        return "settings/project-list";  // templates/settings/project-list.html
+        return "settings";  // templates/settings/project-list.html
     }
 }
