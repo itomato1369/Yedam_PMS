@@ -6,7 +6,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Kanban Board</title>
-    <link rel="stylesheet" href="/dhtmlx/kanban/kanban.css">
     <style>
         /* Basic styling for the container */
         html, body {
@@ -19,12 +18,14 @@
             height: 100%;
         }
     </style>
+    <link href="/dhtmlx/kanban/kanban.css" rel="stylesheet">
+    <!-- The DHTMLX Kanban library MUST be loaded before it is used -->
+    
+    <script src="/dhtmlx/kanban/kanban.js"></script>
+    <!-- DHTMLX kanban board -->
 </head>
 <body>
-    <div id="root"></div>
-
-    <!-- The DHTMLX Kanban library MUST be loaded before it is used -->
-    <script src="/dhtmlx/kanban/kanban.js"></script>
+    <div id="kanbantest"></div>
     <script>
         const columns = [
             {
@@ -155,9 +156,14 @@
             },
         ];
 
-        new kanban.Kanban("#root", {
+        new kanban.Kanban("#kanbantest", {
             columns,
             cards,
+            editor: {
+                show: true,
+                placement: "modal",  // ← 핵심! 사이드바 대신 모달
+                autoSave: true
+            }
         });
     </script>
 </body>
