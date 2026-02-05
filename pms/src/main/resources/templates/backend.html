@@ -18,6 +18,11 @@
             height: 100%;
         }
     </style>
+    <link href="/dhtmlx/kanban/kanban.css" rel="stylesheet">
+    <!-- The DHTMLX Kanban library MUST be loaded before it is used -->
+    
+    <script src="/dhtmlx/kanban/kanban.js"></script>
+    <!-- DHTMLX kanban board -->
 </head>
 <body>
     <div id="kanbantest"></div>
@@ -154,6 +159,11 @@
         new kanban.Kanban("#kanbantest", {
             columns,
             cards,
+            editor: {
+                show: true,
+                placement: "modal",  // ← 핵심! 사이드바 대신 모달
+                autoSave: true
+            }
         });
     </script>
 </body>

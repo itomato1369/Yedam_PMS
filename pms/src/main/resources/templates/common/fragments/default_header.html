@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<div th:fragment="DefaultHeader">
-	<header class="header header-sticky p-0 mb-4">
+	<header class="header header-sticky p-0 mb-4" th:fragment="DefaultHeader">
 		<div class="container-fluid border-bottom px-4">
 			<button class="header-toggler" type="button"
 				onclick="coreui.Sidebar.getInstance(document.querySelector('#sidebar')).toggle()"
@@ -175,16 +174,6 @@
 				</li>
 			</ul>
 		</div>
-		
-		<!-- Breadcrumb -->
-		<div class="container-fluid px-4">
-			<nav aria-label="breadcrumb">
-				<ol class="breadcrumb my-0">
-					<li class="breadcrumb-item"><a href="#">Home</a></li>
-					<li class="breadcrumb-item active"><span>Dashboard</span></li>
-				</ol>
-			</nav>
-		</div>
-	</header>
-</div>
+		</header>
+
 </html>
