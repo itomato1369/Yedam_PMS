@@ -46,9 +46,9 @@ public class ProjectsEntity {
     @Column(name = "PUBLIC_YN")
     private Integer publicYn;  // 공개 프로젝트 여부
 
-    @Column(name = "STATUS")
-    private Integer status;    // 1=활성, 0=비활성
-
+    @Column(name="STATUS")
+    private Integer status;
+    
     @Column(name = "PARENT_PROJECT_NO")
     private Long parentProjectNo;  // 계층 구조용
 }
