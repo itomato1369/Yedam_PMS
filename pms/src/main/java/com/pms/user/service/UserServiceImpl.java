@@ -1,6 +1,7 @@
 package com.pms.user.service;
 
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-	
+
 	private final UserRepository userRepository;
 	private final PasswordPolicy passwordPolicy;
 
@@ -31,6 +32,21 @@ public class UserServiceImpl implements UserService {
 
 		UserEntity userData = userDto.toEntity(encodedPw);
 		userRepository.save(userData);
+	}
+
+	@Override
+	@Transactional
+	public UserEntity login(String userId, String password) {
+
+		UserEntity user = userRepository.findById(userId)
+				.orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 올바르지 않습니다."));
+
+		if (!passwordPolicy.matches(password, user.getPasswd())) {
+			throw new IllegalArgumentException("아이디 또는 비밀번호가 올바르지 않습니다.");
+		}
+
+		userRepository.updateLastLogin(userId, LocalDateTime.now());
+		return user;
 	}
 
 }
