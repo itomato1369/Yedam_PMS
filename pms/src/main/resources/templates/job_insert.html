@@ -8,7 +8,8 @@
 <!-- bootstrap-datepicker -->
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css" />
-<link rel="stylesheet" th:href="@{/css/user_select_modal.css}" />
+<link rel="stylesheet" th:href="@{/css/modal.css}" />
+
 <!-- 1. jQuery = JavaScript 라이브러리-->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <!-- 2. bootstrap-datepicker 본체 -->
@@ -17,12 +18,11 @@
 <!-- 3. 한국어 캘린더-->
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/locales/bootstrap-datepicker.ko.min.js"></script>
-
 <title>일감 등록</title>
 </head>
 <body>
 	<div class="container">
-		<form method="post">
+		<form method="post" enctype="multipart/form-data">
 			<!-- 제목 -->
 			<div class="">
 				<label class="form-label">제목</label> <input type="text"
@@ -31,23 +31,25 @@
 
 			<!-- 상태 -->
 			<!-- th:value는 서버로 보내는 값 th:text는 사용자에게 보여주는 값 -->
-			<div class="mb-3">
-				<label class="form-label">일감 상태</label> <select class="form-select"
-					name="status">
-					<option value="">선택</option>
-					<option th:each="status : ${statusList}" th:value="${status}"
-						th:text="${status}"></option>
-				</select>
-			</div>
+			<div class="row mb-3">
+				<div class="col-md-6">
+					<label class="form-label">일감 상태</label> <select class="form-select"
+						name="status">
+						<option value="">선택</option>
+						<option th:each="status : ${statusList}" th:value="${status}"
+							th:text="${status}"></option>
+					</select>
+				</div>
 
-			<!-- 유형 -->
-			<div class="mb-3">
-				<label class="form-label">일감 유형</label> <select class="form-select"
-					name="type">
-					<option value="">선택</option>
-					<option th:each="type : ${typeList}" th:value="${type}"
-						th:text="${type}"></option>
-				</select>
+				<!-- 유형 -->
+				<div class="col-md-6">
+					<label class="form-label">일감 유형</label> <select class="form-select"
+						name="type">
+						<option value="">선택</option>
+						<option th:each="type : ${typeList}" th:value="${type}"
+							th:text="${type}"></option>
+					</select>
+				</div>
 			</div>
 
 			<!-- 상세 설명 -->
@@ -98,20 +100,12 @@
 				readonly />
 
 			<!-- 진척도 -->
-			<div>
-				진척도<select class="form-select form-select mb-3"
-					aria-label=".form-select-sm">
-					<option selected>선택</option>
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-					<option value="10">10</option>
+			<div class="mb-3">
+				<label class="form-label">진척도</label> <select class="form-select"
+					name="progress">
+					<option value="">선택</option>
+					<option th:each="p : ${#numbers.sequence(1, 10)}" th:value="${p}"
+						th:text="${(p * 10) + '%'}"></option>
 				</select>
 			</div>
 
@@ -122,22 +116,7 @@
 			</div>
 
 			<!-- 공개범위 -->
-			<fieldset class="row mb-3">
-				<legend class="col-form-label col-sm-2 pt-0">공개범위</legend>
-				<div class="col-sm-10">
-					<div class="form-check">
-						<input class="form-check-input" type="radio" name="gridRadios"
-							id="gridRadios1" value="option1" checked /> <label
-							class="form-check-label" for="gridRadios1">전체공개</label>
-					</div>
-					<div class="form-check">
-						<input class="form-check-input" type="radio" name="gridRadios"
-							id="gridRadios2" value="option2" /> <label
-							class="form-check-label" for="gridRadios2">일부공개 </label>
-					</div>
-				</div>
-			</fieldset>
-
+			<!-- 전송 -->
 			<button class="btn btn-primary" type="submit">등록</button>
 		</form>
 	</div>
@@ -149,18 +128,18 @@
 		th:replace="~{common/fragments/issue_select_modal :: IssueSelectModal}"></th:block>
 
 	<script>
-		// html css를 다 로드한 다음에 script문을 실행!
-		document.addEventListener("DOMContentLoaded", function() {
-			/*	bootstrap-datepicker 플러그인을 적용한다
+      // html css를 다 로드한 다음에 script문을 실행!
+      document.addEventListener("DOMContentLoaded", function () {
+        /*	bootstrap-datepicker 플러그인을 적용한다
 					class="datepicker"를 가진 input요소를 찾아서
 					datepicker() method를 실행하겠다
 			 */
-			$(".datepicker").datepicker({
-				format : "yyyy-mm-dd",
-				language : "ko",
-				autoclose : true,
-			});
-		});
-	</script>
+        $(".datepicker").datepicker({
+          format: "yyyy-mm-dd",
+          language: "ko",
+          autoclose: true,
+        });
+      });
+    </script>
 </body>
 </html>
