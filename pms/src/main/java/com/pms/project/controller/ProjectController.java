@@ -1,4 +1,4 @@
-package com.pms.project.web;
+package com.pms.project.controller;
 
 import java.util.List;
 
@@ -25,6 +25,6 @@ public class ProjectController {
 	
 	@GetMapping("/temptest")
 	public String template() {
-		return "index";
+		return "/project/project";
 	}
 }
