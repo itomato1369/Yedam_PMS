@@ -23,7 +23,7 @@ public class UserEntity {
 	@Column(name = "passwd", nullable = false)
 	private String passwd;
 
-	@Column(name = "user_name", nullable = false)
+	@Column(name = "username", nullable = false)
 	private String username;
 
 	// 공통코드 : 1 / 0
@@ -35,7 +35,7 @@ public class UserEntity {
 	private Integer status;
 
 	// 등록할 땐 null
-	@Column(name = "lastlogin", nullable = false)
+	@Column(name = "lastlogin", nullable = true)
 	private LocalDateTime lastlogin;
 
 	@Column(name = "createtime", nullable = false)

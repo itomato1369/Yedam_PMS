@@ -32,6 +32,14 @@ public class UserController {
 		if (bindingResult.hasErrors()) {
 			return "user/registerForm";
 		}
-		return "";
+
+		try {
+			userService.register(userDto);
+		} catch (Exception e) {
+			bindingResult.rejectValue("userId", "newUserErr", e.getMessage());
+			return "user/registerForm";
+		}
+		
+		return "redirect:/";
 	}
 }
