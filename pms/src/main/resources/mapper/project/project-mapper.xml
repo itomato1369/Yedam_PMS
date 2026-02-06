@@ -1,7 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pms.project.mapper.ProjectMapper">
-	<select id="selectAll" resultType="ProjectDTO">
-		select * from project
-	</select>
+
+    <resultMap id="projectMap" type="com.pms.project.dto.ProjectDTO">
+        <id property="projectNo" column="project_no"/>
+        <collection property="childProjects" column="project_no" 
+                    javaType="java.util.List" ofType="com.pms.project.dto.ChildProjectDTO"
+                    select="selectImmediateChildren"/>
+    </resultMap>
+
+    <select id="selectAllProjects" resultMap="projectMap">
+        SELECT 
+            p.project_no,
+            p.project_name,
+            p.project_desc,
+            -- 1. 통합 인원수 (삭제 사용자 제외)
+            (SELECT COUNT(DISTINCT m.user_id)
+             FROM g_project gp
+             JOIN members m ON gp.group_no = m.groupid
+             JOIN users u ON m.user_id = u.user_id
+             WHERE u.status != 190
+               AND gp.project_no IN (
+                   SELECT project_no FROM project 
+                   START WITH project_no = p.project_no
+                   CONNECT BY PRIOR project_no = parent_project_no
+               )) AS member_count,
+            -- 2. 통합 일감수 (중단 일감 제외)
+            (SELECT COUNT(*)
+             FROM job j
+             WHERE j.job_status_no != 3
+               AND j.project_no IN (
+                   SELECT project_no FROM project 
+                   START WITH project_no = p.project_no
+                   CONNECT BY PRIOR project_no = parent_project_no
+               )) AS total_job_count
+        FROM project p
+        WHERE p.status != 390
+          AND (p.project_no IN (
+              SELECT gp.project_no FROM g_project gp 
+              JOIN members m ON gp.group_no = m.groupid 
+              WHERE m.user_id = #{userId}
+          ) OR p.public_yn = 1)
+    </select>
+
+    <select id="selectImmediateChildren" resultType="com.pms.project.dto.ChildProjectDTO">
+        SELECT project_no, project_name, project_desc
+        FROM project
+        WHERE parent_project_no = #{projectNo} AND status != 390
+    </select>
 </mapper>

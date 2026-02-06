@@ -1,20 +1,24 @@
 package com.pms.project.dto;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Getter
+@ToString @Getter @Setter
 @RequiredArgsConstructor
 public class ProjectDTO {
-	private final int projectNo;             
-	private String projectName; 
-	/*
-	 * private String userId; private String projectDesc; private String
-	 * projectHome; private String projectCode;
-	 */     
-	/*
-	 * --PROJECT_CODE VARCHAR2(255) --CREATE_AT TIMESTAMP(6) --UPDATE_AT
-	 * TIMESTAMP(6) --PARENT_MEMBER_YN NUMBER(1) --PUBLIC_YN NUMBER(1) --STATUS
-	 * NUMBER --PARENT_PROJECT_NO NUMBER
-	 */
+    private Long projectNo;
+    private String projectName;
+    private String projectDesc;
+    
+    // 계층 구조용
+    private List<ChildProjectDTO> childProjects; 
+    
+    // 집계 데이터
+    private int memberCount;       // 하위 포함 중복제거 인원
+    private int totalJobCount;     // 하위 포함 중복제거 일감
+    //private double actualProgress; // 실제 가중치 진척도
 }

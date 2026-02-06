@@ -58,15 +58,14 @@
         </div>
     </div>
 </div>
-
 <!--/* Card */-->
 <div class="card mb-3 shadow-sm" th:each="project, stats : ${projects}">
 	<div class="card-body d-flex justify-content-between align-items-center flex-wrap">
 	    
-	    <!--/* Project Info: Title, ChildProject , PM-flag */-->
+	    <!--/* Left-프로젝트 타이틀: 프로젝트 제목/설명, 하위프로젝트 들의 제목/설명 , '나'의 PM여부 */-->
 	    <div class="project-info ms-3">
 		    <h5 class="card-title fw-bold text-primary mb-0" th:text="${project.projectName}"></h5>
-		    <h5 class="card-title text-medium-emphasis mb-2">parent-project-description</h5>
+		    <h5 class="card-title text-medium-emphasis mb-2" th:text="${project.projectDesc}"></h5>
 			
 		    <div class="border-start border-secondary border-4 ps-3 ">
 		        <p class="card-text fw-bold text-primary mb-0">child-project</p>
@@ -74,20 +73,22 @@
 		    </div>
 		</div>
 	
+		<!--/* Right-프로젝트 상세: 일감 총 갯수, 소속 인원수, 예상진척도 대비 실제 진척도 */-->
 	    <div class="project-stats d-flex gap-4 gap-md-5 text-end mt-2 mt-md-0 me-3">
 	        
 	        <div class="stat-item">
 	            <div class="stat-title text-secondary small">
-	                이슈 수 <span class="text-success fw-bold fs-4">1728개</span>
+	                일감 수 <span class="text-success fw-bold fs-4" th:text="${project.totalJobCount}"></span>개
 	            </div>
 	            <div class="stat-desc text-muted small" style="font-size: 0.9rem;">
-	             null 찍히는 이유가?
+	             <!-- TODO:여기에 최신으로 추가된 일감이나 최신으로 갱신된 일감에 대한 정보 -->
+	             feat: 관리페이지 완성
 	         </div>
 	     </div>
 	
 	     <div class="stat-item">
 	         <div class="stat-title text-secondary small">
-	             참여 인원 <span class="text-warning fw-bold fs-4">5명</span>
+	             참여 인원 <span class="text-warning fw-bold fs-4" th:text="${project.memberCount}"></span>명
 	         </div>
 	         <div class="stat-desc text-muted small" style="font-size: 0.9rem;">
 	             배진욱 외 4명
