@@ -2,10 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pms.work.mapper.WorkMapper">
 	<!-- 소요시간 등록 INSERT 파라미터 타입이 WorkInsertDto 객체 하나다! -->
-	<insert id="insertWorkEntry" parameterType="">
-
-
+	<insert id="insertWorkEntries" parameterType="WorkInsertDto">
+		INSERT INTO work_entries
+		(
+		work_entries_no
+		, workers
+		, work_date
+		, work_time
+		, work_content
+		, job_id
+		, work_details_no
+		)
+		VALUES
+		(
+		work_entries_seq.NEXTVAL
+		, #{managerId}
+		, #{workDate}
+		, #{workTime}
+		, #{workContent}
+		, #{jobId}
+		, #{workDetailsNo}
+		)
 	</insert>
-
-
 </mapper>
