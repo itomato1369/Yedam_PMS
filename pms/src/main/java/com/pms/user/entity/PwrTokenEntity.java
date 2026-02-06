@@ -22,13 +22,13 @@ public class PwrTokenEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pw_reset_seq")
-	@SequenceGenerator(name = "pw_reset_seq", sequenceName = "PW_RESET_TOKEN_SEQ")
+	@SequenceGenerator(name = "pw_reset_seq", sequenceName = "PW_RESET_TOKEN_SEQ", allocationSize = 1)
 	private Integer tokenId;
 
-	@Column(nullable = false)
+	@Column(nullable = false, length = 50)
 	private String userId;
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false, unique = true, length = 100)
 	private String tokenValue;
 
 	@Column(nullable = false)

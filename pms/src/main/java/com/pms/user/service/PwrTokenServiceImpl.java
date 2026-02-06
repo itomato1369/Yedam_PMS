@@ -48,7 +48,7 @@ public class PwrTokenServiceImpl implements PwrTokenService {
 	// 토큰 확인 후 PW 변경
 	@Override
 	@Transactional
-	public void changePw(String token, String encryptedPw) {
+	public void updatePwService(String token, String encryptedPw) {
 
 		PwrTokenEntity pwrToken = pwrTokenRepository.findByTokenValue(token).filter(t -> !t.tokenTime())
 				.orElseThrow(() -> new IllegalArgumentException("토큰이 존재하지 않습니다."));
@@ -57,8 +57,9 @@ public class PwrTokenServiceImpl implements PwrTokenService {
 				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
 		// TODO : 시큐리티 구현 후 암호화 할 것
-		user.updatePw(encryptedPw);
-
+		user.updatePwEntity(encryptedPw);
+		
+		// PW 변경 후 DB에서 토큰 삭제
 		pwrTokenRepository.delete(pwrToken);
 	}
 

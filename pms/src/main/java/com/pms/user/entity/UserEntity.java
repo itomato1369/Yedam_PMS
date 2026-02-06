@@ -57,7 +57,7 @@ public class UserEntity {
 	}
 	
 	// 더티 체킹
-	public void updatePw(String encrytedPw) {
+	public void updatePwEntity(String encrytedPw) {
 		this.passwd = encrytedPw;
 	}
 
