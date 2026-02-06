@@ -2,18 +2,17 @@ package com.pms.setting.projects.entity;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.Setter;
+
 
 @Entity
 @Table(name = "PROJECT")
-@Getter
+@Getter @Setter
 public class ProjectsEntity {
 
     @Id
@@ -23,14 +22,33 @@ public class ProjectsEntity {
     @Column(name = "PROJECT_NAME")
     private String projectName;
 
-    // 기존 Integer status 대신 CommonEntity와 연관관계를 맺습니다.
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "STATUS") // DB의 STATUS 컬럼이 COMMON_NO를 가리킴
-    private CommonEntity status; 
+    @Column(name = "USER_ID")
+    private String userId;  // 프로젝트 생성자
+
+    @Column(name = "PROJECT_DESC")
+    private String projectDesc;
+
+    @Column(name = "PROJECT_HOME")
+    private String projectHome;
+
+    @Column(name = "PROJECT_CODE")
+    private String projectCode;
 
     @Column(name = "CREATE_AT")
     private LocalDateTime createAt;
 
+    @Column(name = "UPDATE_AT")
+    private LocalDateTime updateAt;
+
+    @Column(name = "PARENT_MEMBER_YN")
+    private Integer parentMemberYn;  // 상위 프로젝트 멤버 상속 여부
+
     @Column(name = "PUBLIC_YN")
-    private Integer publicYn;
+    private Integer publicYn;  // 공개 프로젝트 여부
+
+    @Column(name="STATUS")
+    private Integer status;
+    
+    @Column(name = "PARENT_PROJECT_NO")
+    private Long parentProjectNo;  // 계층 구조용
 }

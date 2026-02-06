@@ -11,16 +11,13 @@ import com.pms.setting.projects.entity.ProjectsEntity;
 
 @Repository
 public interface ProjectsRepository extends JpaRepository<ProjectsEntity, Long> {
-    
-    @Query("""
-        SELECT p 
-        FROM ProjectsEntity p 
-        JOIN FETCH p.status s 
-        WHERE (:status IS NULL OR s.commonNo = :status)
-          AND (:keyword IS NULL OR :keyword = '' OR p.projectName LIKE %:keyword%)
-        """)
-    List<ProjectsEntity> search(
-        @Param("status") Long status, // status 번호로 필터링
-        @Param("keyword") String keyword
-    );
+	@Query("""
+		    SELECT p FROM ProjectsEntity p
+		    WHERE (:status IS NULL OR p.status = :status)
+		      AND (:keyword IS NULL OR :keyword = '' OR p.projectName LIKE %:keyword%)
+		""")
+		List<ProjectsEntity> search(
+		        @Param("status") Integer status, 
+		        @Param("keyword") String keyword
+		);
 }
