@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.pms.setting.projects.dto.ProjectDto;
+import com.pms.setting.projects.dto.SettingProjectDto;
 import com.pms.setting.projects.entity.CommonEntity;
 import com.pms.setting.projects.entity.ProjectsEntity;
 import com.pms.setting.projects.repository.CommonRepository;
@@ -22,7 +22,7 @@ public class ProjectsServiceImpl implements ProjectsService {
     private final CommonRepository commonRepository;
 
     @Override
-    public List<ProjectDto> getAllProjects() {
+    public List<SettingProjectDto> getAllProjects() {
         // [수정] 전체 조회 시에도 삭제된(390) 프로젝트는 제외
         return projectsRepository.findAll().stream()
                 .filter(p -> p.getStatus() == null || p.getStatus().getCommonNo() != 390L)
@@ -36,7 +36,7 @@ public class ProjectsServiceImpl implements ProjectsService {
     }
 
     @Override
-    public List<ProjectDto> searchProjects(Integer status, String keyword) {
+    public List<SettingProjectDto> searchProjects(Integer status, String keyword) {
         Long statusFilter = null;
         Integer publicYnFilter = null;
 
@@ -59,8 +59,8 @@ public class ProjectsServiceImpl implements ProjectsService {
         projectsRepository.updateStatusToDelete(projectNo);
     }
     
-    private ProjectDto convertToDto(ProjectsEntity p) {
-        ProjectDto dto = new ProjectDto();
+    private SettingProjectDto convertToDto(ProjectsEntity p) {
+        SettingProjectDto dto = new SettingProjectDto();
         dto.setProjectNo(p.getProjectNo());
         dto.setProjectName(p.getProjectName());
         dto.setCreateAt(p.getCreateAt());
