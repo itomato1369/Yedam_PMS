@@ -10,5 +10,5 @@ import com.pms.setting.projects.entity.CommonEntity;
 @Repository
 public interface CommonRepository extends JpaRepository<CommonEntity, Long> {
     // 특정 부모 코드(예: 프로젝트 상태군) 아래의 코드값만 조회
-    List<CommonEntity> findByParentCommonNo(Long parentNo);
+	List<CommonEntity> findByParentCommonNoAndDisplayYn(Long parentNo, String displayYn);
 }

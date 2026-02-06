@@ -11,4 +11,7 @@ public interface ProjectsService {
     List<ProjectDto> searchProjects(Integer status, String keyword);
     
     List<CommonEntity> getStatusList();
+
+    // 논리 삭제 기능 추가!
+    void logicalDelete(Long projectNo); 
 }
