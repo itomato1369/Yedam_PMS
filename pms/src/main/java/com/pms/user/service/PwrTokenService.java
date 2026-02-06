@@ -6,7 +6,7 @@ public interface PwrTokenService {
 	public void sendResetMail(String userId);
 
 	// 링크 클릭 확인
-	public boolean checkedToken(String token);
+	public boolean checkToken(String token);
 
 	// 비밀번호 변경
 	public void changePw(String token, String newPassword);
