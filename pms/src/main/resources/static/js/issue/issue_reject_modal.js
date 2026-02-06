@@ -39,6 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // 반려 사유 입력하기 시작하면 에러 메세지 사라짐
+  // input 이벤트는 값을 입력하기 시작하는 순간
   reasonInput.addEventListener("input", function () {
     errMsg.classList.add("d-none");
   });

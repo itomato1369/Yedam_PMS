@@ -114,9 +114,10 @@
 					<label class="form-label">진척도</label> <select class="form-select"
 						name="progress">
 						<option value="">선택</option>
-						<option th:each="p : ${#numbers.sequence(1, 10)}" th:value="${p}"
+						<option th:each="p : ${#numbers.sequence(0, 10)}" th:value="${p}"
 							th:text="${(p * 10) + '%'}"></option>
 					</select>
+					<div class="form-text text-muted">처음 등록하는 일감인 경우 진척도를 0으로 설정해 주세요</div>
 				</div>
 			</div>
 

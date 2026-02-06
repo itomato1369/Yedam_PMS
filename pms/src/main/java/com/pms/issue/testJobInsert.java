@@ -16,9 +16,9 @@ public class testJobInsert {
 		return "issue/issue_update";
 	}
 	
-	@GetMapping("issuedetails")
+	@GetMapping("issueinfo")
 	public String issuedetails() {
-		return "issue/issue_details";
+		return "issue/issue_info";
 	}
 	
 	@GetMapping("issuedetails/comments")
@@ -30,14 +30,10 @@ public class testJobInsert {
 	public String issueHistory() {
 		return "common/fragments/issue/issue_hisotry :: IssueHistoryArea";
 	}
-	// 소요시간 등록
-	@GetMapping("workinsert")
-	public String workinsert() {
-		return "work/work_insert";
+	@GetMapping("issuelist")
+	public String issueList() {
+		return "issue/issue_list";
 	}
-	
-	
-	
-	
+
 	
 }
