@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org/"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>일감 전체 조회</title>
+</head>
+<body>
+	<div class="container">
+		<div>
+			<label>.. 프로젝트의 일감 전체 조회</label>
+		</div>
+		<div>
+			<div class="dropdown">
+				<button class="btn btn-secondary dropdown-toggle" type="button"
+					data-bs-toggle="dropdown" aria-expanded="false">검색조건 추가</button>
+				<ul class="dropdown-menu">
+					<li><a class="dropdown-item" href="#">제목</a></li>
+					<li><a class="dropdown-item" href="#">일감번호</a></li>
+					<li><a class="dropdown-item" href="#">상태</a></li>
+					<li><a class="dropdown-item" href="#">우선순위</a></li>
+					<li><a class="dropdown-item" href="#">담당자</a></li>
+					<li><a class="dropdown-item" href="#">일감 시작날짜</a></li>
+					<li><a class="dropdown-item" href="#">일감 마감날짜</a></li>
+					<li><a class="dropdown-item" href="#">진척도</a></li>
+
+				</ul>
+			</div>
+		</div>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th scope="col">일감번호</th>
+					<th scope="col">제목</th>
+					<th scope="col">상태</th>
+					<th scope="col">우선순위</th>
+					<th scope="col">담당자</th>
+					<!-- 수정하기 버튼/ 상세조회 버튼 -->
+					<th scope="col">수정/상세</th>
+				</tr>
+			</thead>
+			<tbody>
+				
+			</tbody>
+		</table>
+	</div>
+
+</body>
+</html>
