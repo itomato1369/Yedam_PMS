@@ -20,18 +20,18 @@ public interface ProjectsRepository extends JpaRepository<ProjectsEntity, Long> 
     @Query("UPDATE ProjectsEntity p SET p.status.commonNo = 390 WHERE p.projectNo = :projectNo")
     void updateStatusToDelete(@Param("projectNo") Long projectNo);
     
-	@Query("""
-		    SELECT p 
-		    FROM ProjectsEntity p 
-		    LEFT JOIN FETCH p.status s 
-		    WHERE s.commonNo != 390
-		      AND (:status IS NULL OR s.commonNo = :status)
-		      AND (:publicYn IS NULL OR p.publicYn = :publicYn)
-		      AND (:keyword IS NULL OR :keyword = '' OR p.projectName LIKE CONCAT('%', :keyword, '%'))
-		    """)
-		List<ProjectsEntity> search(
-		    @Param("status") Long status, 
-		    @Param("publicYn") Integer publicYn, 
-		    @Param("keyword") String keyword
-		);
+    @Query("""
+    	    SELECT p 
+    	    FROM ProjectsEntity p 
+    	    LEFT JOIN FETCH p.status s 
+    	    WHERE (:status IS NULL OR s.commonNo = :status)
+    	      AND (:status IS NOT NULL OR s.commonNo != 390) 
+    	      AND (:publicYn IS NULL OR p.publicYn = :publicYn)
+    	      AND (:keyword IS NULL OR :keyword = '' OR p.projectName LIKE CONCAT('%', :keyword, '%'))
+    	    """)
+    	List<ProjectsEntity> search(
+    	    @Param("status") Long status, 
+    	    @Param("publicYn") Integer publicYn, 
+    	    @Param("keyword") String keyword
+    	);
 }
