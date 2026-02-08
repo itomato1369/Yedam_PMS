@@ -7,12 +7,12 @@
 * Licensed under MIT (https://github.com/coreui/coreui-free-bootstrap-admin-template/blob/main/LICENSE)
 -->
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/"
-				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-				layout:decorate="~{common/layouts/default_layout}"
-				layout:fragment="Content">
+            xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+            layout:decorate="~{common/layouts/default_layout}"
+            layout:fragment="Content">
 
 <div class="mb-2">
-	<!--/* row-header */-->
+   <!--/* row-header */-->
     <div class="d-flex justify-content-between align-items-center mb-5">
         <div class="d-flex align-items-center">
             <div class="position-relative">
@@ -20,8 +20,8 @@
             </div>
         </div>
 
-		<!--/* pm/admin Only */-->
-		<!--/* ProjectAdmin buttons : add-project, modify-project */-->
+      <!--/* pm/admin Only */-->
+      <!--/* ProjectAdmin buttons : add-project, modify-project */-->
         <div class="d-flex align-items-center gap-4">
             <div class="d-flex align-items-center gap-2">
                 <i class="cil-plus text-dark" style="font-size: 1.5rem; font-weight: bold;"></i>
@@ -35,7 +35,7 @@
         </div>
     </div>
 
-	<!--/* search-menu */-->
+   <!--/* search-menu */-->
     <div class="card bg-transparent shadow-none border-0">
         <div class="card-body py-4 px-0 d-flex flex-wrap justify-content-between align-items-center gap-3">
             
@@ -60,54 +60,75 @@
 </div>
 <!--/* Card */-->
 <div class="card mb-3 shadow-sm" th:each="project, stats : ${projects}">
-	<div class="card-body d-flex justify-content-between align-items-center flex-wrap">
-	    
-	    <!--/* Left-프로젝트 타이틀: 프로젝트 제목/설명, 하위프로젝트 들의 제목/설명 , '나'의 PM여부 */-->
-	    <div class="project-info ms-3">
-		    <h5 class="card-title fw-bold text-primary mb-0" th:text="${project.projectName}"></h5>
-		    <h5 class="card-title text-medium-emphasis mb-2" th:text="${project.projectDesc}"></h5>
-			
-		    <div class="border-start border-secondary border-4 ps-3 ">
-		        <p class="card-text fw-bold text-primary mb-0">child-project</p>
-		        <p class="card-text text-medium-emphasis mb-0">child-project-description</p> 
-		    </div>
-		</div>
-	
-		<!--/* Right-프로젝트 상세: 일감 총 갯수, 소속 인원수, 예상진척도 대비 실제 진척도 */-->
-	    <div class="project-stats d-flex gap-4 gap-md-5 text-end mt-2 mt-md-0 me-3">
-	        
-	        <div class="stat-item">
-	            <div class="stat-title text-secondary small">
-	                일감 수 <span class="text-success fw-bold fs-4" th:text="${project.totalJobCount}"></span>개
-	            </div>
-	            <div class="stat-desc text-muted small" style="font-size: 0.9rem;">
-	             <!-- TODO:여기에 최신으로 추가된 일감이나 최신으로 갱신된 일감에 대한 정보 -->
-	             feat: 관리페이지 완성
-	         </div>
-	     </div>
-	
-	     <div class="stat-item">
-	         <div class="stat-title text-secondary small">
-	             참여 인원 <span class="text-warning fw-bold fs-4" th:text="${project.memberCount}"></span>명
-	         </div>
-	         <div class="stat-desc text-muted small" style="font-size: 0.9rem;">
-	             배진욱 외 4명
-	         </div>
-	     </div>
-	
-	     <div class="stat-item">
-	         <div class="stat-title text-secondary small">
-	             진행률 <span class="text-danger fw-bold fs-4">15.9%</span>
-	         </div>
-	         <div class="stat-desc text-muted small" style="font-size: 0.9rem;">
-	             DB설계 진행중
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-<script>
-	
-</script>
-</html>
+   <div class="card-body d-flex justify-content-between align-items-center flex-wrap">
+       
+       <!--/* Left-프로젝트 타이틀: 프로젝트 제목/설명, 하위프로젝트 들의 제목/설명 , '나'의 PM여부 */-->
+              <div class="project-info ms-3">
+                 <h5 class="card-title fw-bold text-primary mb-0" th:text="${project.projectName}"></h5>
+                 <h5 class="card-title text-medium-emphasis mb-2" th:text="${project.projectDesc}"></h5>
+                
+                           <div>
+                                    <th:block th:insert="~{project/list :: projectHierarchy(projectsToDisplay=${project.childProjects}, level=0)}"></th:block>
+                           </div>
+                       </div>
+                    
+                       <!--/* Right-프로젝트 상세: 일감 총 갯수, 소속 인원수, 예상진척도 대비 실제 진척도 */-->
+                        <div class="project-stats d-flex gap-4 gap-md-5 text-end mt-2 mt-md-0 me-3">
+                            
+                            <div class="stat-item">
+                                <div class="stat-title text-secondary small">
+                                    일감 수 <span class="text-success fw-bold fs-4" th:text="${project.totalJobCount}"></span>개
+                                </div>
+                                <div class="stat-desc text-muted small" style="font-size: 0.9rem;" th:if="${project.latestJobContent}">
+                                 <!-- TODO:여기에 최신으로 추가된 일감이나 최신으로 갱신된 일감에 대한 정보 -->
+                                 <span th:text="${project.latestJobContent}"></span>
+                                </div>
+                         </div>
+                    
+                         <div class="stat-item">
+                             <div class="stat-title text-secondary small">
+                                 참여 인원 <span class="text-warning fw-bold fs-4" th:text="${project.memberCount}"></span>명
+                             </div>
+                             <div class="stat-desc text-muted small" style="font-size: 0.9rem;">
+                                  <span th:if="${project.hasLoginUserJoined and project.memberCount > 1}">
+                                     login-user 외 <span th:text="${project.memberCount - 1}"></span>명
+                                  </span>
+                                  <span th:unless="${project.hasLoginUserJoined and project.memberCount > 1}">
+                                     <span th:text="${project.memberCount}"></span>명
+                                  </span>
+                                    </div>
+                                </div>
+                           
+                                <div class="stat-item">
+                                    <div class="stat-title text-secondary small">
+                                        진행률 <span class="text-danger fw-bold fs-4">??.?%</span>
+                                    </div>
+                                    <div class="stat-desc text-muted small" style="font-size: 0.9rem;" th:if="${project.latestJobTitle}">
+                                        <span th:text="${project.latestJobTitle}"></span>
+                                 </div>
+                              </div>      </div>
+                    </div>
+                 </div>
+                 
+                                     <th:block th:fragment="projectHierarchy(projectsToDisplay, level)">
+                 
+                                         <div th:each="proj : ${projectsToDisplay}" th:with="newLevel = ${level + 1}"
+                 
+                                              class="border-start border-secondary border-4" th:style="'margin-left: ' + (${level} * 15) + 'px; padding-left: 15px;'">
+                 
+                                             <p class="card-text fw-bold text-primary mb-0" th:text="${proj.projectName}"></p>
+                 
+                                             <p class="card-text text-medium-emphasis mb-0" th:text="${proj.projectDesc}"></p>
+                 
+                                             <th:block th:if="${not #lists.isEmpty(proj.childProjects)}">
+                 
+                                                 <th:block th:insert="~{project/list :: projectHierarchy(projectsToDisplay=${proj.childProjects}, level=${newLevel})}"></th:block>
+                 
+                                             </th:block>
+                 
+                                         </div>
+                 
+                                     </th:block>                 <script>
+                    
+                 </script>
+                 </html>
