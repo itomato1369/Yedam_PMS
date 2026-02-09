@@ -1,7 +1,147 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pms.project.mapper.ProjectMapper">
-	<select id="selectAll" resultType="ProjectDTO">
-		select * from project
-	</select>
+
+     <resultMap id="projectMap" type="ProjectSelectDTO">
+            <id property="projectNo" column="project_no"/>
+            <result property="latestJobContent" column="latest_job_content"/>
+            <result property="latestJobTitle" column="latest_job_title"/>
+            <result property="hasLoginUserJoined" column="has_login_user_joined"/>
+            <collection property="childProjects" column="project_no"
+                        javaType="java.util.List" ofType="ProjectSelectDTO"
+                        select="selectImmediateChildren"/>
+        </resultMap>
+
+     <select id="selectUserProjects" resultMap="projectMap">
+             SELECT
+                 p.project_no,
+                 p.project_name,
+                 p.project_desc,
+                 -- 1. 통합 인원수 (삭제 사용자 제외)
+                 (SELECT COUNT(DISTINCT m.user_id)
+                  FROM g_project gp
+                  JOIN members m ON gp.group_no = m.groupid
+                 JOIN users u ON m.user_id = u.user_id
+                 WHERE u.status != 190
+                   AND gp.project_no IN (
+                       SELECT project_no FROM project
+                       START WITH project_no = p.project_no
+                       CONNECT BY PRIOR project_no = parent_project_no
+                   )) AS member_count,
+                -- 2. 통합 일감수 (중단 일감 제외)
+                (SELECT COUNT(*)
+                 FROM job j
+                 WHERE j.job_status_no != 3
+                   AND j.project_no IN (
+                       SELECT project_no FROM project
+                       START WITH project_no = p.project_no
+                       CONNECT BY PRIOR project_no = parent_project_no
+                   )) AS total_job_count,
+                -- 3. 최신 일감 내용
+                (SELECT content
+                 FROM (
+                     SELECT j.content, j.project_no,
+                            ROW_NUMBER() OVER (PARTITION BY j.project_no ORDER BY j.add_date DESC, j.job_no DESC) as rn
+                     FROM job j
+                 )
+                 WHERE rn = 1 AND project_no = p.project_no) AS latest_job_content,
+                -- 4. 최신 일감 제목
+                (SELECT title
+                 FROM (
+                     SELECT j.title, j.project_no,
+                            ROW_NUMBER() OVER (PARTITION BY j.project_no ORDER BY j.add_date DESC, j.job_no DESC) as rn
+                     FROM job j
+                 )
+                 WHERE rn = 1 AND project_no = p.project_no) AS latest_job_title,
+                -- 5. 로그인 사용자가 프로젝트에 참여했는지 여부
+                (SELECT CASE WHEN COUNT(m.user_id) > 0 THEN 1 ELSE 0 END
+                 FROM members m
+                 JOIN g_project gp ON m.groupid = gp.group_no
+                 WHERE gp.project_no = p.project_no
+                 AND m.user_id = #{userId}) AS has_login_user_joined
+            FROM project p
+            WHERE p.status != 390 -- 동적쿼리를 통해 관리자인경우에는 조건이 적용되지않도록 수정
+              AND (p.project_no IN (
+                  SELECT gp.project_no FROM g_project gp
+                  JOIN members m ON gp.group_no = m.groupid
+                  WHERE m.user_id = #{userId}
+              ) OR p.public_yn = 1)
+              AND (p.parent_project_no = 0 OR p.parent_project_no IS NULL) -- 최상위 프로젝트만 조회 (parent_project_no가 0이거나 NULL인 경우)
+            ORDER BY p.create_at ASC -- 생성일 기준 오름차순 정렬
+        </select>
+    
+    <select id="selectImmediateChildren" resultMap="projectMap">
+            SELECT project_no, project_name, project_desc
+            FROM project
+            WHERE parent_project_no = #{projectNo} AND status != 390
+        </select>
+	
+	<select id="selectProjectsByOptions" parameterType="com.pms.project.dto.ProjectSearchDTO" resultType="ProjectSelectDTO">
+        SELECT
+            p.project_no,
+            p.project_name,
+            p.project_desc,
+            -- 1. 통합 인원수 (삭제 사용자 제외)
+            (SELECT COUNT(DISTINCT m.user_id)
+             FROM g_project gp
+             JOIN members m ON gp.group_no = m.groupid
+             JOIN users u ON m.user_id = u.user_id
+             WHERE u.status != 190
+               AND gp.project_no IN (
+                   SELECT project_no FROM project
+                   START WITH project_no = p.project_no
+                   CONNECT BY PRIOR project_no = parent_project_no
+               )) AS member_count,
+            -- 2. 통합 일감수 (중단 일감 제외)
+            (SELECT COUNT(*)
+             FROM job j
+             WHERE j.job_status_no != 3
+               AND j.project_no IN (
+                   SELECT project_no FROM project
+                   START WITH project_no = p.project_no
+                   CONNECT BY PRIOR project_no = parent_project_no
+               )) AS total_job_count,
+            -- 3. 최신 일감 내용
+            (SELECT content
+             FROM (
+                 SELECT j.content, j.project_no,
+                        ROW_NUMBER() OVER (PARTITION BY j.project_no ORDER BY j.add_date DESC, j.job_no DESC) as rn
+                 FROM job j
+             )
+             WHERE rn = 1 AND project_no = p.project_no) AS latest_job_content,
+            -- 4. 최신 일감 제목
+            (SELECT title
+             FROM (
+                 SELECT j.title, j.project_no,
+                        ROW_NUMBER() OVER (PARTITION BY j.project_no ORDER BY j.add_date DESC, j.job_no DESC) as rn
+                 FROM job j
+             )
+             WHERE rn = 1 AND project_no = p.project_no) AS latest_job_title,
+            -- 5. 로그인 사용자가 프로젝트에 참여했는지 여부 - 현재 로그인된 사용자 정보가 필요
+            (SELECT CASE WHEN COUNT(m.user_id) > 0 THEN 1 ELSE 0 END
+             FROM members m
+             JOIN g_project gp ON m.groupid = gp.group_no
+             WHERE gp.project_no = p.project_no
+             AND m.user_id = #{currentUserId}) AS has_login_user_joined
+        FROM project p
+        <where>
+            AND p.status != 390
+            <if test="projectName != null and projectName != ''">
+                AND p.project_name LIKE '%' || #{projectName} || '%'
+            </if>
+            <if test="projectStatus != null">
+                AND p.status = #{projectStatus}
+            </if>
+            <if test="projectAssignee != null and projectAssignee != ''">
+                AND p.user_id = #{projectAssignee}
+            </if>
+            <!-- 검색할 때도 사용자의 접근 권한을 고려해야 함 -->
+            AND (p.project_no IN (
+                  SELECT gp.project_no FROM g_project gp
+                  JOIN members m ON gp.group_no = m.groupid
+                  WHERE m.user_id = #{currentUserId}
+              ) OR p.public_yn = 1)
+        </where>
+        ORDER BY p.create_at ASC
+    </select>
 </mapper>

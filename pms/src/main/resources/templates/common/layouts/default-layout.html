@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <title></title>
-<th:block th:replace="~{common/configs/default_configs :: BootStrap}"></th:block>
+<th:block th:replace="~{common/configs/default-configs :: BootStrap}"></th:block>
 <style>
   .simplebar-scrollbar {
     display: none !important;
@@ -23,9 +23,9 @@
 </style>
 </head>
 <body> <!--/* 주석 */-->
-<div th:replace="~{common/fragments/default_sidebar :: DefaultSidebar}"></div>
+<div th:replace="~{common/fragments/default-sidebar :: DefaultSidebar}"></div>
 <div class="wrapper d-flex flex-column min-vh-100">
-	<div th:replace="~{common/fragments/default_header :: DefaultHeader}"></div>
+	<div th:replace="~{common/fragments/default-header :: DefaultHeader}"></div>
 	<div class="body flex-grow-1">
       	<div class="container-lg px-4">
 	      	<div layout:fragment="Content"></div>
