@@ -55,5 +55,10 @@ public class UserEntity {
 		this.createtime = createtime;
 		this.email = email;
 	}
+	
+	// 더티 체킹
+	public void updatePwEntity(String encrytedPw) {
+		this.passwd = encrytedPw;
+	}
 
 }
