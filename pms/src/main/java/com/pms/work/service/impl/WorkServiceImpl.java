@@ -1,9 +1,13 @@
 package com.pms.work.service.impl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.pms.work.dto.WorkDetailsDto;
 import com.pms.work.dto.WorkInsertDto;
+import com.pms.work.dto.WorkSelectDto;
 import com.pms.work.mapper.WorkMapper;
 import com.pms.work.service.WorkService;
 
@@ -16,6 +20,13 @@ import lombok.RequiredArgsConstructor;
 public class WorkServiceImpl implements WorkService {
 	// mapper와 연결
 	private final WorkMapper workMapper;
+	
+	// 소요시간 전체 조회
+	@Override
+	public List<WorkSelectDto> findAllWorkEntries() {
+		return workMapper.selectWorkEntries();
+	};
+	
 
 	// 소요시간 등록
 	@Override
@@ -37,5 +48,13 @@ public class WorkServiceImpl implements WorkService {
 		workMapper.insertWorkEntries(workInsertDto);
 
 	}
+	
+	
+	// 작업분류 조회
+		@Override
+		public List<WorkDetailsDto> findWorkDetails() {
+			return workMapper.selectWorkDetails();
+		};
+	
 
 }

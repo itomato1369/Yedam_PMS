@@ -7,21 +7,23 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Getter;
 import lombok.Setter;
-/*
- * Data라고 하면 toString , equals, hashCode, RequiredArgsConstructor 
- * 쓸데없이 다 생성해버려서 심각한 정보노출 위험
- * */
+
 @Getter
 @Setter
-@Alias("WorkInsertDto")
-public class WorkInsertDto {
-	
-	private Integer jobId; // FK
-	private String managerId;
+@Alias("WorkSelectDto")
+public class WorkSelectDto {
+	private Integer workEntriesNo;
+	private String workers;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date workDate;
 	private Integer workTime;
 	private String workContent;
-	private Integer workDetailsNo;
+	private Integer progress; // 일감 진척도
+	private Integer jobId; // 일감 번호
+	private String title;  // 일감 제목
+	private Integer workDetailsNo; 
+	private String workType; 
+	
+	
 
 }

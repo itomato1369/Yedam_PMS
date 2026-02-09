@@ -28,13 +28,13 @@
 			<div class="row mb-3">
 				<div class="col-md-6">
 					<label class="form-label">소요시간 등록할 일감 번호</label> <input type="text"
-						class="form-control" id="jobID" name="jobID" readonly />
+						class="form-control" id="jobID" name="jobId" />
 				</div>
 
-				<!-- 해당 일감 담당자의 정보를 불러옴 -->
+				<!-- 일감번호를 가져오면 해당 일감 담당자의 정보도 같이 불러옴 -->
 				<div class="col-md-6">
 					<label class="form-label">담당자</label> <input type="text"
-						class="form-control" id="managerId" name="managerId" readonly />
+						class="form-control" id="managerId" name="managerId" />
 				</div>
 			</div>
 
@@ -43,7 +43,7 @@
 				<div class="col-md-6">
 					<label class="form-label">작업일자</label><input type="text"
 						class="form-control datepicker" id="workDate" name="workDate"
-						placeholder="실제 근무한 날짜 선택" readonly />
+						placeholder="실제 근무한 날짜 선택"  />
 				</div>
 
 				<!-- 근무시간 -->
@@ -66,17 +66,17 @@
 				<!-- 작업분류 -->
 				<div class="col-md-6">
 					<label class="form-label">작업분류</label> <select class="form-select"
-						name="workType">
+						name="workDetailsNo">
 						<option value="">선택</option>
-						<option th:each="status : ${statusList}" th:value="${status}"
-							th:text="${status}"></option>
+						<option th:each="status : ${statusList}" th:value="${status.workDetailsNo}"
+							th:text="${status.workType}"></option>
 					</select>
 				</div>
 
 				<!-- 소요시간 등록할 일감의 진척도를 불러옴 -->
 				<div class="col-md-6">
 					<label class="form-label">진척도</label> <input type="text"
-						class="form-control" id="progress" name="progress" readonly />
+						class="form-control" id="progress" name="progress" />
 				</div>
 			</div>
 

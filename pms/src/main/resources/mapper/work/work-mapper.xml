@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pms.work.mapper.WorkMapper">
+    <!-- 소요시간 전체 조회 -->
+	<select id="selectWorkEntries" resultType="WorkSelectDto">
+		SELECT
+		 we.work_entries_no
+		 , we.workers
+		 , we.work_date
+		 , we.work_time
+		 , we.work_content
+		 , we.job_id
+		 , j.title
+		 , we.work_details_no
+		 , wd.work_type
+		FROM 
+		  work_entries we
+		JOIN 
+		  job j
+		ON 
+		  we.job_id = j.job_no
+		LEFT JOIN 
+		  work_details wd
+		ON 
+		  we.work_details_no = wd.work_details_no
+		ORDER BY 
+		  we.work_entries_no DESC
+	</select>
 	<!-- 소요시간 등록 INSERT 파라미터 타입이 WorkInsertDto 객체 하나다! -->
 	<insert id="insertWorkEntries" parameterType="WorkInsertDto">
 		INSERT INTO work_entries
@@ -24,4 +49,11 @@
 		, #{workDetailsNo}
 		)
 	</insert>
+	
+	<!-- 작업분류 조회 -->
+	<select id="selectWorkDetails" resultType="WorkDetailsDto">
+	SELECT work_details_no
+	     , work_type
+	FROM work_details
+	</select>
 </mapper>
