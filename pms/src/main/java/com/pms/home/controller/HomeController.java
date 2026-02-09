@@ -18,6 +18,6 @@ public class HomeController {
 	public String home(Model model) {
 		HomeDto dtoList = homeService.loadMainPage();
 		model.addAttribute("list", dtoList);
-		return "/home/home_index.html";
+		return "/home/home-index.html";
 	}
 }

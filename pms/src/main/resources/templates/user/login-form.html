@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{common/layouts/default_layout}" layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>로그인</title>
+</head>
+<body>
+
+	<h2>로그인</h2>
+	<div th:if="${msg}" style="color: blue;">
+		<p th:text="${msg}"></p>
+		<button th:if="${testToken}" th:onclick="|location.href='@{/user/pwResetLink(token=${testToken})}'|">비밀번호 재설정 테스트 버튼</button>
+	</div>
+
+	<div th:if="${param.error}" style="color: red; margin-bottom: 10px;">아이디 또는 비밀번호가 올바르지 않습니다.</div>
+
+	<form th:action="@{/user/login}" th:object="${loginDto}" method="post">
+		<div>
+			<label for="userId">유저 ID</label><br>
+			<input type="text" th:field="*{userId}" id="userId" placeholder="아이디를 입력하세요">
+		</div>
+
+		<br>
+
+		<div>
+			<label for="password">비밀번호</label><br>
+			<input type="password" th:field="*{password}" id="password" placeholder="비밀번호를 입력하세요">
+		</div>
+
+		<br>
+
+		<div>
+			<button type="submit">로그인</button>
+			<button type="button" th:onclick="|location.href='@{/user/new}'|">회원가입</button>
+			<button type="button" th:onclick="|location.href='@{/user/pwResetPage}'|">비밀변호 변경</button>
+		</div>
+
+	</form>
+
+</body>
+</html>
