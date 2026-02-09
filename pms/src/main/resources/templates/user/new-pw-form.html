@@ -12,7 +12,7 @@
 		<p th:text="${error}"></p>
 	</div>
 
-	<form th:action="@{/user/pw-reset}" method="post">
+	<form th:action="@{/user/pw}" method="post">
 		<input type="hidden" name="token" th:value="${token}">
 
 		<div>

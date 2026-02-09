@@ -28,7 +28,7 @@ public class UserDto {
 	@NotNull
 	private Integer admin;
 
-	private Integer status = 110;
+	private Integer status = 120;
 
 	@NotBlank
 	@Email

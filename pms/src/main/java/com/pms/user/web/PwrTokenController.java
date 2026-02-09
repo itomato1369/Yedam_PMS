@@ -19,32 +19,33 @@ public class PwrTokenController {
 
 	private final PwrTokenService pwrTokenService;
 
-	@GetMapping("/pw-reset-page")
+	@GetMapping("/pwResetPage")
 	public String resetForm(Model model) {
-		return "user/pw_reset_form";
+		return "user/pw-reset-form";
 	}
 
 	// 이메일 발송
-	@PostMapping("/pw-reset-send")
+	@PostMapping("/pwResetSend")
 	public String sendResetMail(@RequestParam("userId") String userId, RedirectAttributes rttr) {
 		try {
-			pwrTokenService.sendResetMail(userId);
+			String testToken = pwrTokenService.sendResetMail(userId);
 			rttr.addFlashAttribute("msg", "재설정 메일이 발송되었습니다. 유효 시간은 5분입니다.");
+			rttr.addFlashAttribute("testToken", testToken);
 			return "redirect:/user/login";
 		} catch (Exception e) {
-			rttr.addFlashAttribute("error", "PW 변경 중 오류가 발생하였습니다.");
-			return "redirect:/user/pw-reset-page";
+			rttr.addFlashAttribute("error", "메일 발송 중 오류가 발생하였습니다.");
+			return "redirect:/user/pwResetPage";
 		}
 	}
 
 	// 이메일 링크
-	@GetMapping("/pw-reset-link")
+	@GetMapping("/pwResetLink")
 	public String checkToken(@RequestParam("token") String token, Model model, RedirectAttributes rttr) {
 		boolean checkedToken = pwrTokenService.checkToken(token);
-
+		
 		if (!checkedToken) {
 			rttr.addFlashAttribute("error", "유효하지 않거나 만료된 토큰입니다.");
-			return "redirect:/user/pw-reset-page";
+			return "redirect:/user/pwResetPage";
 		}
 
 		model.addAttribute("token", token);
@@ -52,16 +53,17 @@ public class PwrTokenController {
 	}
 
 	// PW 변경
-	@PostMapping("/pw-reset")
+	@PostMapping("/pw")
 	public String updatePwProcess(@RequestParam("token") String token, @RequestParam("newPw") String newPw,
 			RedirectAttributes rttr) {
+		
 		try {
-			pwrTokenService.updatePwService(token, newPw);
+			pwrTokenService.modifyPwService(token, newPw);
 			rttr.addFlashAttribute("msg", "PW가 성공적으로 변경되었습니다.");
 			return "redirect:/user/login";
 		} catch (Exception e) {
 			rttr.addFlashAttribute("error", "PW 변경 중 오류가 발생하였습니다.");
-			return "redirect:/user/pw-reset-page";
+			return "redirect:/user/pwResetPage";
 		}
 	}
 
