@@ -1,5 +1,6 @@
 package com.pms.project.service;
 
+import com.pms.project.dto.ProjectSearchDTO;
 import java.util.List;
 
 import com.pms.project.dto.ProjectSelectDTO;
@@ -16,5 +17,5 @@ public interface ProjectService {
     List<ProjectSelectDTO> findAdminProjects();
     List<ProjectSelectDTO> findUserProjects(String userId);
     
-    List<ProjectSelectDTO> findProjectByOptions(ProjectSelectDTO projectDTO);
+    List<ProjectSelectDTO> findProjectByOptions(ProjectSearchDTO searchDTO);
 }

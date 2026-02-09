@@ -1,5 +1,6 @@
 package com.pms.project.mapper;
 
+import com.pms.project.dto.ProjectSearchDTO;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -11,6 +12,6 @@ public interface ProjectMapper {
     List<ProjectSelectDTO> selectAdminProjects();
     List<ProjectSelectDTO> selectUserProjects(@Param("userId") String userId);
     
-    
-    List<ProjectSelectDTO> selectProjectsByOptions();
+    // 사용자의 검색결과를 바탕으로하는 프로젝트 목록 조회 (통계 포함) 
+    List<ProjectSelectDTO> selectProjectsByOptions(ProjectSearchDTO searchDTO);
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.pms.project.dto.ProjectSearchDTO;
 import com.pms.project.dto.ProjectSelectDTO;
 import com.pms.project.mapper.ProjectMapper;
 import com.pms.project.service.ProjectService;
@@ -25,15 +26,16 @@ public class ProjectServiceImpl implements ProjectService {
         return projects;
     }
     
-    @Override
-    public List<ProjectSelectDTO> findProjectByOptions(ProjectSelectDTO projectDTO){
-    	
-    	return null;
-    }
 
 	@Override
 	public List<ProjectSelectDTO> findAdminProjects() {
 		List<ProjectSelectDTO> projects = projectMapper.selectAdminProjects();
 		return projects;
+	}
+
+
+	@Override
+	public List<ProjectSelectDTO> findProjectByOptions(ProjectSearchDTO searchDTO) {
+		return projectMapper.selectProjectsByOptions(searchDTO);
 	}
 }

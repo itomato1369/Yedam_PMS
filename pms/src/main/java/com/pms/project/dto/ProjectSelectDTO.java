@@ -20,8 +20,8 @@ public class ProjectSelectDTO {
     private List<ProjectSelectDTO> childProjects; 
     
     // 집계 데이터
-    private int memberCount;       // 하위 포함 중복제거 인원
-    private int totalJobCount;     // 하위 포함 중복제거 일감
+    private Integer memberCount;       // 하위 포함 중복제거 인원
+    private Integer totalJobCount;     // 하위 포함 중복제거 일감
     
     private String latestJobContent; // 최신 일감 내용
     private String latestJobTitle;   // 최신 일감 제목

@@ -3,8 +3,10 @@ package com.pms.project.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute; // 추가
 
 import com.pms.project.common.mapper.ProjectCommonStatusMapper;
+import com.pms.project.dto.ProjectSearchDTO; // 추가
 import com.pms.project.service.ProjectService;
 
 import lombok.RequiredArgsConstructor;
@@ -18,18 +20,27 @@ public class ProjectController {
     private final ProjectCommonStatusMapper projectCommonStatusMapper;
     
     @GetMapping("/projects")
-    public String listProjects(Model model) {
+    public String listProjects(Model model, @ModelAttribute ProjectSearchDTO searchDTO) {
         // 실제 운영 시에는 세션 또는 SecurityContext에서 userId를 가져옴
         String currentUserId = "song";
-        // 관리자인 경우 관리자용 매퍼 조회쿼리 / 관리자가아니면 userid 써서 조회하는쿼리
-		/*
-		 * if ("내가관리자라면".equals("asdfsdaf")) {
-		 * 
-		 * }else { model.addAttribute("projects",
-		 * projectService.findProjectList(currentUserId)); }
-		 */
-        model.addAttribute("projects", projectService.findUserProjects(currentUserId));
+        
+        // 검색 조건이 있는지 확인 (projectName, projectStatus, projectAssignee 중 하나라도 값이 있으면 검색 조건으로 간주)
+        boolean hasSearchCriteria = searchDTO.getProjectName() != null && !searchDTO.getProjectName().isEmpty() ||
+                                    searchDTO.getProjectStatus() != null ||
+                                    searchDTO.getProjectAssignee() != null && !searchDTO.getProjectAssignee().isEmpty();
+
+        if (hasSearchCriteria) {
+            // 검색 조건이 있으면 검색 결과 반환
+            // 현재 로그인 사용자 ID를 searchDTO에 추가하여 쿼리에서 활용 (예: has_login_user_joined 필드)
+            searchDTO.setCurrentUserId(currentUserId); // ProjectSearchDTO에 currentUserId 필드 추가 필요
+            model.addAttribute("projects", projectService.findProjectByOptions(searchDTO));
+        } else {
+            // 검색 조건이 없으면 사용자 프로젝트 전체 목록 반환
+            model.addAttribute("projects", projectService.findUserProjects(currentUserId));
+        }
+        
         model.addAttribute("commons" , projectCommonStatusMapper.selectProjectCommonStatusAll());
+        model.addAttribute("searchDTO", searchDTO); // 검색 폼의 값 유지를 위해 모델에 추가
         
         return "project/list";
     }
