@@ -14,6 +14,7 @@ import com.pms.work.service.WorkService;
 import lombok.RequiredArgsConstructor;
 
 
+
 @Service
 // field에 final 있으면 생성자 주입
 @RequiredArgsConstructor
@@ -23,15 +24,14 @@ public class WorkServiceImpl implements WorkService {
 	
 	// 소요시간 전체 조회
 	@Override
-	public List<WorkSelectDto> findAllWorkEntries() {
-		return workMapper.selectWorkEntries();
+	public List<WorkSelectDto> findAllWorkEntries(WorkSelectDto workSelectDto) {
+		return workMapper.selectWorkEntries(workSelectDto);
 	};
 	
-
 	// 소요시간 등록
 	@Override
 	@Transactional
-	public void registerWorkEntries(WorkInsertDto workInsertDto) {
+	public void addWorkEntries(WorkInsertDto workInsertDto) {
 		// 등록된 일감에 대한 소요시간만 작성할 수 있다
 		if (workInsertDto.getJobId() == null) {
 			/*

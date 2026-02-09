@@ -23,9 +23,30 @@
 		  work_details wd
 		ON 
 		  we.work_details_no = wd.work_details_no
+		<where>
+		  <if test="jobId != null and jobId != 0">
+		 AND we.job_id = #{jobId}
+		  </if>
+		  <if test="title !=null and title !=''">
+		  AND j.title LIKE '%' || #{title} || '%'
+		  </if>
+		  <if test="workers !=null and workers !=''">
+		   AND we.workers = #{workers}
+		  </if>
+		  <if test="workDate !=null">
+		  AND we.work_date = #{workDate}
+		  </if>
+		  <if test="workDetailsNo !=null and workDetailsNo !=''">
+		  AND we.work_details_no = #{workDetailsNo}
+		  </if>
+		  <if test="workContent !=null and workContent !=''">
+		  AND we.work_content LIKE '%' || #{workContent} || '%'
+		  </if>
+		</where>
 		ORDER BY 
 		  we.work_entries_no DESC
 	</select>
+	
 	<!-- 소요시간 등록 INSERT 파라미터 타입이 WorkInsertDto 객체 하나다! -->
 	<insert id="insertWorkEntries" parameterType="WorkInsertDto">
 		INSERT INTO work_entries

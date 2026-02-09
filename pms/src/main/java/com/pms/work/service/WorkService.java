@@ -8,11 +8,10 @@ import com.pms.work.dto.WorkSelectDto;
 
 public interface WorkService {
 	// 소요시간 전체 조회
-	List<WorkSelectDto> findAllWorkEntries();
-
+	List<WorkSelectDto> findAllWorkEntries(WorkSelectDto workSelectDto);
 	
 	// 소요시간 등록 매개변수 타입은 WorkInsertDto
-	void registerWorkEntries(WorkInsertDto workInsertDto);
+	void addWorkEntries(WorkInsertDto workInsertDto);
 	
 	// 작업분류 조회
 	List<WorkDetailsDto> findWorkDetails();
