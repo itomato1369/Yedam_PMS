@@ -1,16 +1,16 @@
-<th:block th:fragment="IssueSubmitModal">
+<th:block th:fragment="WorkSubmitModal">
 <!-- 확인 Modal -->
 
 	<link rel="stylesheet" th:href="@{/css/modal.css}" />
-	<div class="modal fade" id="issueSubmitModal" tabindex="-1"
-		aria-labelledby="issueSubmitModalLabel" aria-hidden="true">
+	<div class="modal fade" id="workSubmitModal" tabindex="-1"
+		aria-labelledby="workSubmitModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="issueSubmitModalLabel">재확인</h5>
+					<h5 class="modal-title" id="workSubmitModalLabel">재확인</h5>
 				</div>
 
-				<div class="modal-body">전송하시겠습니까?</div>
+				<div class="modal-body">소요시간을 등록 하시겠습니까?</div>
 
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
@@ -21,7 +21,7 @@
 			</div>
 		</div>
 	</div>
-	<script th:src="@{/js/issue/issue_submit_modal.js}"></script>
+	<script th:src="@{/js/work/workSubmitModal.js}"></script>
 
 
 

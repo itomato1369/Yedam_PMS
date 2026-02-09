@@ -1,12 +1,12 @@
 <!-- 담당자 선택 Modal -->
-<th:block th:fragment="reportSelectModal">
+<th:block th:fragment="UserSelectModal">
 	<link rel="stylesheet" th:href="@{/css/modal.css}" />
-	<div class="modal fade" id="reportSelectModal" tabindex="-1"
-		aria-labelledby="reportSelectModalLabel" aria-hidden="true">
+	<div class="modal fade" id="userSelectModal" tabindex="-1"
+		aria-labelledby="userSelectModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="reportSelectModalLabel">보고할 대상 선택</h5>
+					<h5 class="modal-title" id="userSelectModalLabel">담당자 선택</h5>
 				</div>
 
 				<div class="modal-body">
@@ -25,5 +25,5 @@
 			</div>
 		</div>
 	</div>
-	<script th:src="@{/js/issue/user_select_modal.js}"></script>
+	<script th:src="@{/js/issue/userSelectModal.js}"></script>
 </th:block>

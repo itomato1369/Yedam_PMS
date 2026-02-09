@@ -17,15 +17,15 @@
 <!-- 3. 한국어 캘린더-->
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/locales/bootstrap-datepicker.ko.min.js"></script>
-<title>일감 수정</title>
+<title>일감 등록</title>
 </head>
 <body>
 	<div class="container">
-		<form id="issueUpdate" enctype="multipart/form-data" method="post">
+		<form id="issueInsert" enctype="multipart/form-data" method="post">
 			<!-- 제목 -->
 			<div class="mb-3">
 				<label class="form-label">제목</label> <input type="text"
-					class="form-control mt-2" name="title" />
+					class="form-control mt-2" name="title" placeholder="제목을 입력하세요" />
 			</div>
 
 			<!-- 상태 -->
@@ -55,8 +55,8 @@
 			<div class="mb-3">
 				<label class="form-label">상세 설명</label>
 				<div class="form-floating">
-					<textarea class="form-control" id="floatingTextarea2"
-						style="height: 100px" name="content"></textarea>
+					<textarea class="form-control" placeholder="상세 설명을 입력하세요"
+						id="floatingTextarea2" style="height: 100px" name="content"></textarea>
 					<label for="floatingTextarea2"></label>
 				</div>
 			</div>
@@ -114,9 +114,10 @@
 					<label class="form-label">진척도</label> <select class="form-select"
 						name="progress">
 						<option value="">선택</option>
-						<option th:each="p : ${#numbers.sequence(1, 10)}" th:value="${p}"
+						<option th:each="p : ${#numbers.sequence(0, 10)}" th:value="${p}"
 							th:text="${(p * 10) + '%'}"></option>
 					</select>
+					<div class="form-text text-muted">처음 등록하는 일감인 경우 진척도를 0으로 설정해 주세요</div>
 				</div>
 			</div>
 
@@ -136,59 +137,34 @@
 					<div class="d-flex gap-5">
 						<div class="form-check">
 							<input class="form-check-input" type="radio" name="publicRole"
-								id="public" value="public" /> <label class="form-check-label"
-								for="public">전체공개</label>
+								id="public" value="public" /> <label
+								class="form-check-label" for="public">전체공개</label>
 						</div>
 						<div class="form-check">
 							<input class="form-check-input" type="radio" name="publicRole"
-								id="private" value="private" /> <label class="form-check-label"
-								for="private">일부공개</label>
+								id="private" value="private" /> <label
+								class="form-check-label" for="private">일부공개</label>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<!-- 수정버튼 -->
+			<!-- 전송 -->
 			<div class="row md-3">
-				<div class="d-flex gap-2">
-					<button type="button" class="btn btn-danger flex-fill text-white"
-						data-bs-toggle="modal" data-bs-target="#issueRejectModal">
-						반려</button>
-					<button type="button" class="btn btn-primary flex-fill"
-						data-bs-toggle="modal" data-bs-target="#issueUpdateModal">
-						수정</button>
-				</div>
+				<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+					data-bs-target="#issueSubmitModal">등록</button>
 			</div>
 		</form>
-		<!-- form 태그 바깥 부가 기능 영역 Card영역 -->
-		<div class="card">
-			<div class="card-body">
-				<div class="d-flex gap-2 mb-3">
-					<button type="button" class="btn btn-secondary" id="historyButton">
-						수정이력</button>
-					<button type="button" class="btn btn-secondary" id="commentButton">
-						댓글</button>
-					<a href="/workinsert" class="btn btn-secondary">소요시간 등록</a>
-					<button type="button" class="btn btn-primary">보고하기</button>
-				</div>
-				<!-- grid 영역 -->
-				<div id="subContentArea"></div>
-			</div>
-		</div>
 	</div>
 
 	<!-- 모달 fragment 호출 ~{템플릿 재사용 fragment 호출 조각 표현식} -->
 	<th:block
-		th:replace="~{common/fragments/issue/user_select_modal :: UserSelectModal}"></th:block>
+		th:replace="~{common/fragments/issue/user-select-modal :: UserSelectModal}"></th:block>
 	<th:block
-		th:replace="~{common/fragments/issue/issue_select_modal :: IssueSelectModal}"></th:block>
+		th:replace="~{common/fragments/issue/issue-select-modal :: IssueSelectModal}"></th:block>
 	<th:block
-		th:replace="~{common/fragments/issue/issue_update_modal :: IssueUpdateModal}"></th:block>
-	<th:block
-		th:replace="~{common/fragments/issue/issue_reject_modal :: IssueRejectModal}"></th:block>
+		th:replace="~{common/fragments/issue/issue-submit-modal :: IssueSubmitModal}"></th:block>
 
-	<script th:src="@{/js/issue/issue_insert.js}"></script>
-	<script th:src="@{/js/issue/issue_update.js}"></script>
-	<script th:src="@{/js/issue/issue_comment.js}"></script>
+	<script th:src="@{/js/issue/issueInsert.js}"></script>
 </body>
 </html>

@@ -20,7 +20,7 @@
 			<button type="button" class="btn-close btn-remove"
 				data-target="field-jobTitle"></button>
 		</div>
-		<input type="text" name="jobId" class="form-control form-control-sm"
+		<input type="text" name="title" class="form-control form-control-sm"
 			placeholder="일감 제목을 입력하세요">
 	</div>
 </div>
@@ -47,7 +47,7 @@
 				data-target="field-workDate"></button>
 		</div>
 		<input type="date" name="workDate"
-			class="form-control form-control-sm" placeholder="작업일시를 선택하세요">
+			class="form-control form-control-sm datepicker " placeholder="작업일시를 선택하세요">
 	</div>
 </div>
 <!-- 소요시간 작업분류 -->
@@ -80,4 +80,5 @@
 			class="form-control form-control-sm" placeholder="내용 키워드">
 	</div>
 </div>
+<script th:src="@{/js/work/workInsert.js}"></script>
 

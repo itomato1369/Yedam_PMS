@@ -26,16 +26,15 @@ public class WorkController {
 		model.addAttribute("statusList", statusList);
 		// 검색한 결과를 담아 보냄
 		model.addAttribute("workEntriesList" ,workService.findAllWorkEntries(workSelectDto));
-		return "work/work_list";
+		return "work/work-list";
 	}
 	
-
 
 	// 소요시간 등록 화면 + 작업분류의 이름 가져오기
 	@GetMapping("/workinsert")
 	public String workInsertPage(Model model) {
 		model.addAttribute("statusList", workService.findWorkDetails());
-		return "work/work_insert";
+		return "work/work-insert";
 	}
 
 	// 쇼요시간 등록 기능
@@ -50,12 +49,7 @@ public class WorkController {
 
 	@GetMapping("workupdate")
 	public String workupdate() {
-		return "work/work_update";
-	}
-
-	@GetMapping("workinfo")
-	public String workinfo() {
-		return "work/work_info";
+		return "work/work-update";
 	}
 
 
