@@ -2,7 +2,7 @@ package com.pms.project.service;
 
 import java.util.List;
 
-import com.pms.project.dto.ProjectDTO;
+import com.pms.project.dto.ProjectSelectDTO;
 
 /**
  * 프로젝트 관리 비즈니스 로직 인터페이스
@@ -13,5 +13,7 @@ public interface ProjectService {
      * @param userId 현재 로그인한 사용자 ID
      * @return 프로젝트 목록
      */
-    List<ProjectDTO> getProjectList(String userId);
+    List<ProjectSelectDTO> findProjectList(String userId);
+    
+    List<ProjectSelectDTO> findProjectByOptions(ProjectSelectDTO projectDTO);
 }

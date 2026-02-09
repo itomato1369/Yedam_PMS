@@ -2,17 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pms.project.mapper.ProjectMapper">
 
-     <resultMap id="projectMap" type="com.pms.project.dto.ProjectDTO">
+     <resultMap id="projectMap" type="ProjectSelectDTO">
             <id property="projectNo" column="project_no"/>
             <result property="latestJobContent" column="latest_job_content"/>
             <result property="latestJobTitle" column="latest_job_title"/>
             <result property="hasLoginUserJoined" column="has_login_user_joined"/>
             <collection property="childProjects" column="project_no"
-                        javaType="java.util.List" ofType="com.pms.project.dto.ProjectDTO"
+                        javaType="java.util.List" ofType="ProjectSelectDTO"
                         select="selectImmediateChildren"/>
         </resultMap>
 
-     <select id="selectAllProjects" resultMap="projectMap">
+     <select id="selectProjectsAll" resultMap="projectMap">
              SELECT
                  p.project_no,
                  p.project_name,
@@ -60,7 +60,7 @@
                  WHERE gp.project_no = p.project_no
                  AND m.user_id = #{userId}) AS has_login_user_joined
             FROM project p
-            WHERE p.status != 390
+            WHERE p.status != 390 -- 동적쿼리를 통해 관리자인경우에는 조건이 적용되지않도록 수정
               AND (p.project_no IN (
                   SELECT gp.project_no FROM g_project gp
                   JOIN members m ON gp.group_no = m.groupid

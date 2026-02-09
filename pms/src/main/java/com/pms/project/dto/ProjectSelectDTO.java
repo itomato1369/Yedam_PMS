@@ -7,15 +7,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@ToString @Getter @Setter
+@ToString 
+@Getter 
+@Setter
 @RequiredArgsConstructor
-public class ProjectDTO {
+public class ProjectSelectDTO {
     private Long projectNo;
     private String projectName;
     private String projectDesc;
     
     // 계층 구조용
-    private List<ProjectDTO> childProjects; 
+    private List<ProjectSelectDTO> childProjects; 
     
     // 집계 데이터
     private int memberCount;       // 하위 포함 중복제거 인원

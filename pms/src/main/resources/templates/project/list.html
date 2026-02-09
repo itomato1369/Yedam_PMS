@@ -19,7 +19,6 @@
                 <h2 class="fw-bold m-0 text-dark">프로젝트</h2>
             </div>
         </div>
-
       <!--/* pm/admin Only */-->
       <!--/* ProjectAdmin buttons : add-project, modify-project */-->
         <div class="d-flex align-items-center gap-4">
@@ -43,9 +42,7 @@
                 <input type="text" class="form-control" placeholder="프로젝트명" readonly style="max-width: 200px;">
                 <select class="form-select" style="max-width: 150px;">
                     <option value="" disabled selected hidden>상태</option>
-                    <option value="1">진행중</option>
-                    <option value="2">완료</option>
-                    <option value="3">보류</option>
+                    <option th:each="common, stats : ${commons}" th:value="${common.commonNo}" th:text="${common.commonName}"></option>
                 </select>
                 <input type="text" class="form-control" placeholder="담당자" readonly style="max-width: 200px;">
             </div>
@@ -108,27 +105,16 @@
                                  </div>
                               </div>      </div>
                     </div>
-                 </div>
-                 
-                                     <th:block th:fragment="projectHierarchy(projectsToDisplay, level)">
-                 
-                                         <div th:each="proj : ${projectsToDisplay}" th:with="newLevel = ${level + 1}"
-                 
-                                              class="border-start border-secondary border-4" th:style="'margin-left: ' + (${level} * 15) + 'px; padding-left: 15px;'">
-                 
-                                             <p class="card-text fw-bold text-primary mb-0" th:text="${proj.projectName}"></p>
-                 
-                                             <p class="card-text text-medium-emphasis mb-0" th:text="${proj.projectDesc}"></p>
-                 
-                                             <th:block th:if="${not #lists.isEmpty(proj.childProjects)}">
-                 
-                                                 <th:block th:insert="~{project/list :: projectHierarchy(projectsToDisplay=${proj.childProjects}, level=${newLevel})}"></th:block>
-                 
-                                             </th:block>
-                 
-                                         </div>
-                 
-                                     </th:block>                 <script>
-                    
-                 </script>
-                 </html>
+</div>
+	<th:block th:fragment="projectHierarchy(projectsToDisplay, level)">
+		<div th:each="proj : ${projectsToDisplay}" th:with="newLevel = ${level + 1}" class="border-start border-secondary border-4" th:style="'margin-left: ' + (${level} * 15) + 'px; padding-left: 15px;'">
+			<p class="card-text fw-bold text-primary mb-0" th:text="${proj.projectName}"></p>
+			<p class="card-text text-medium-emphasis mb-0" th:text="${proj.projectDesc}"></p>
+			<th:block th:if="${not #lists.isEmpty(proj.childProjects)}">
+				<th:block th:insert="~{project/list :: projectHierarchy(projectsToDisplay=${proj.childProjects}, level=${newLevel})}"></th:block>
+			</th:block>
+		</div>
+	</th:block>
+	<script>
+	</script>
+</html>
