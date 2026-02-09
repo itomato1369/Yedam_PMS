@@ -22,24 +22,24 @@ public class UserController {
 	private final UserService userService;
 
 	// 유저 등록
-	@GetMapping("/newUser")
+	@GetMapping("/new")
 	public String newUserForm(Model model) {
 		model.addAttribute("userDto", new UserDto());
-		return "user/registerForm";
+		return "user/register-form";
 	}
 
-	@PostMapping("/newUser")
+	@PostMapping("")
 	public String register(@Valid @ModelAttribute("userDto") UserDto userDto, BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
-			return "user/registerForm";
+			return "user/register-form";
 		}
 
 		try {
 			userService.addUser(userDto);
 		} catch (Exception e) {
 			bindingResult.rejectValue("userId", "newUserErr", e.getMessage());
-			return "user/registerForm";
+			return "user/register-form";
 		}
 		return "redirect:/";
 	}
@@ -52,6 +52,6 @@ public class UserController {
 			return "redirect:/";
 		}
 		model.addAttribute("loginDto", new LoginDto());
-		return "user/loginForm";
+		return "user/login-form";
 	}
 }

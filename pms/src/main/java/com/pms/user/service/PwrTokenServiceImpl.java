@@ -47,7 +47,7 @@ public class PwrTokenServiceImpl implements PwrTokenService {
 	// 토큰 확인 후 PW 변경
 	@Override
 	@Transactional
-	public void updatePwService(String token, String newPw) {
+	public void modifyPwService(String token, String newPw) {
 
 		PwrTokenEntity pwrToken = pwrTokenRepository.findByTokenValue(token).filter(t -> !t.tokenTime())
 				.orElseThrow(() -> new IllegalArgumentException("토큰이 존재하지 않습니다."));

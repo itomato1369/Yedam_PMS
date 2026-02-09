@@ -9,5 +9,5 @@ public interface PwrTokenService {
 	public boolean checkToken(String token);
 
 	// 비밀번호 변경
-	public void updatePwService(String token, String newPassword);
+	public void modifyPwService(String token, String newPassword);
 }
