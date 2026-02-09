@@ -9,10 +9,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.pms.user.entity.UserEntity;
 import com.pms.user.service.UserService;
 
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -38,7 +36,7 @@ public class UserController {
 		}
 
 		try {
-			userService.register(userDto);
+			userService.addUser(userDto);
 		} catch (Exception e) {
 			bindingResult.rejectValue("userId", "newUserErr", e.getMessage());
 			return "user/registerForm";
@@ -49,10 +47,11 @@ public class UserController {
 	// 로그인
 	@GetMapping("/login")
 	public String login(Model model, Authentication authentication) {
-		// 로그인했다면 메인으로
+		// 로그인상태면 메인으로
 		if (authentication != null && authentication.isAuthenticated()) {
 			return "redirect:/";
 		}
+		userService.modifyDateUpdate(null);
 		model.addAttribute("loginDto", new LoginDto());
 		return "user/loginForm";
 	}

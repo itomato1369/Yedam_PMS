@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public void register(UserDto userDto) {
+	public void addUser(UserDto userDto) {
 		String userId = userDto.getUserId().trim();
 		String encodedPw = passwordEncoder.encode(userDto.getPassword());
 
@@ -35,17 +35,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public UserEntity login(String userId, String password) {
-
-		UserEntity user = userRepository.findById(userId)
-				.orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 올바르지 않습니다."));
-
-		if (!passwordEncoder.matches(password, user.getPasswd())) {
-			throw new IllegalArgumentException("아이디 또는 비밀번호가 올바르지 않습니다.");
-		}
-
+	public void modifyDateUpdate(String userId) {
 		userRepository.updateLastLogin(userId, LocalDateTime.now());
-		return user;
 	}
 
 }

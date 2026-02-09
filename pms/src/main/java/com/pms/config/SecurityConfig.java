@@ -8,9 +8,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.pms.user.service.UserService;
+
+import lombok.RequiredArgsConstructor;
+
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+	private final UserService userService;
 
 	@Bean
 	PasswordEncoder passwordEncoder() {
@@ -26,7 +33,17 @@ public class SecurityConfig {
 					.anyRequest().authenticated()
 					)
 			.formLogin(form -> form
-					.loginPage("/user/login").permitAll()
+					.loginPage("/user/login")
+					.loginProcessingUrl("/user/login")
+					.usernameParameter("userId")
+					.passwordParameter("password")
+					.successHandler((req, res, authentication) -> {
+						// 로그인 성공 핸들러
+						String userId = authentication.getName();
+						userService.modifyDateUpdate(userId);
+						res.sendRedirect("/");
+					})
+					.permitAll()
 					)
 			.logout(logout -> logout
 					.logoutSuccessUrl("/user/logout")
