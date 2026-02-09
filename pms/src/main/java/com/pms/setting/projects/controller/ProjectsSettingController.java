@@ -18,12 +18,12 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/")
+@RequestMapping("/settings")
 public class ProjectsSettingController {
 
     private final ProjectsService projectsService;
 
-    @GetMapping("/settings")
+    @GetMapping("/")
     public String projectList(Model model) {
         model.addAttribute("projects", projectsService.getAllProjects());
         model.addAttribute("statusList", projectsService.getStatusList()); 
