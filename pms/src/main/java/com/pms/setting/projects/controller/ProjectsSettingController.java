@@ -27,7 +27,7 @@ public class ProjectsSettingController {
     public String projectList(Model model) {
         model.addAttribute("projects", projectsService.getAllProjects());
         model.addAttribute("statusList", projectsService.getStatusList()); 
-        return "settings"; 
+        return "settings/settings"; 
     }
     
     @GetMapping("/api/projects/search")

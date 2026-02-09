@@ -2,8 +2,8 @@ package com.pms.setting.projects.service;
 
 import java.util.List;
 
+import com.pms.setting.common.entity.CommonEntity;
 import com.pms.setting.projects.dto.SettingProjectDto;
-import com.pms.setting.projects.entity.CommonEntity;
 
 public interface ProjectsService {
     List<SettingProjectDto> getAllProjects();

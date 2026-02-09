@@ -32,22 +32,18 @@ public interface UsersRepository extends JpaRepository<UsersEntity, String> {
     	        u.email
     	    )
     	    FROM UsersEntity u
+    	    WHERE u.status != 190
     	""")
     	List<UsersResponseDto> findAllUsers();
     
     @Query("""
     	    SELECT new com.pms.setting.users.dto.UsersResponseDto(
-    	        u.userId,
-    	        u.username,
-    	        u.admin,
-    	        u.status,
-    	        u.lastLogin,
-    	        u.createTime,
-    	        u.email
+    	        u.userId, u.username, u.admin, u.status, u.lastLogin, u.createTime, u.email
     	    )
     	    FROM UsersEntity u
     	    WHERE (:status IS NULL OR u.status = :status)
-    	      AND (:keyword IS NULL OR u.username LIKE %:keyword%)
+    	      AND (:keyword IS NULL OR u.username LIKE CONCAT('%', :keyword, '%'))
+    	      AND u.status != 190
     	""")
     	List<UsersResponseDto> searchUsers(Integer status, String keyword);
 }

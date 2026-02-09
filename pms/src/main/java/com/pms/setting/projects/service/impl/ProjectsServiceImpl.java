@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.pms.setting.common.entity.CommonEntity;
+import com.pms.setting.common.repository.CommonRepository;
 import com.pms.setting.projects.dto.SettingProjectDto;
-import com.pms.setting.projects.entity.CommonEntity;
 import com.pms.setting.projects.entity.ProjectsEntity;
-import com.pms.setting.projects.repository.CommonRepository;
 import com.pms.setting.projects.repository.ProjectsRepository;
 import com.pms.setting.projects.service.ProjectsService;
 
@@ -34,7 +34,7 @@ public class ProjectsServiceImpl implements ProjectsService {
     }
     @Override
     public List<CommonEntity> getStatusList() {
-        return commonRepository.findByParentCommonNoAndDisplayYn(300L, "Y");
+        return commonRepository.findByParent_CommonNoAndDisplayYn(300L, "Y");
     }
 
     @Override

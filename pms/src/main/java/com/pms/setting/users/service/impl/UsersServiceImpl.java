@@ -36,7 +36,12 @@ public class UsersServiceImpl implements UsersService {
     
     @Override
     public List<UsersResponseDto> searchUsers(Integer status, String keyword) {
-        if (keyword != null && keyword.isBlank()) keyword = null;
+        // 검색어가 공백만 있거나 빈 문자열인 경우 null로 처리하여 DB 쿼리가 전체 조회를 하도록 유도
+        if (keyword != null && keyword.trim().isEmpty()) {
+            keyword = null;
+        } else if (keyword != null) {
+            keyword = keyword.trim(); // 앞뒤 공백 제거
+        }
         return usersRepository.searchUsers(status, keyword);
     }
 }
