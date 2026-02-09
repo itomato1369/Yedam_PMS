@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.pms.setting.projects.dto.ProjectDto;
+import com.pms.setting.projects.dto.SettingProjectDto;
 import com.pms.setting.projects.service.ProjectsService;
 
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class ProjectsSettingController {
     
     @GetMapping("/api/projects/search")
     @ResponseBody
-    public List<ProjectDto> searchApi(
+    public List<SettingProjectDto> searchApi(
             @RequestParam(required = false) Integer status,
             @RequestParam(required = false) String keyword
     ) {

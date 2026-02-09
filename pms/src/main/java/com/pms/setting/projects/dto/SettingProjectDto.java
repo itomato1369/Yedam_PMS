@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class ProjectDto {
+public class SettingProjectDto {
     private Long projectNo;
     private String projectName;
     

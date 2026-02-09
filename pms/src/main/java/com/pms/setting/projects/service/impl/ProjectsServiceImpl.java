@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.pms.setting.projects.dto.ProjectDto;
+import com.pms.setting.projects.dto.SettingProjectDto;
 import com.pms.setting.projects.entity.CommonEntity;
 import com.pms.setting.projects.entity.ProjectsEntity;
 import com.pms.setting.projects.repository.CommonRepository;
@@ -38,7 +38,7 @@ public class ProjectsServiceImpl implements ProjectsService {
     }
 
     @Override
-    public List<ProjectDto> searchProjects(Integer status, String keyword) {
+    public List<SettingProjectDto> searchProjects(Integer status, String keyword) {
         Long statusFilter = null;
         Integer publicYnFilter = null;
 
@@ -64,8 +64,8 @@ public class ProjectsServiceImpl implements ProjectsService {
         em.clear();
     }
     
-    private ProjectDto convertToDto(ProjectsEntity p) {
-        ProjectDto dto = new ProjectDto();
+    private SettingProjectDto convertToDto(ProjectsEntity p) {
+        SettingProjectDto dto = new SettingProjectDto();
         dto.setProjectNo(p.getProjectNo());
         dto.setProjectName(p.getProjectName());
         dto.setCreateAt(p.getCreateAt());
