@@ -33,11 +33,13 @@ public class SecurityConfig {
 			.formLogin(form -> form
 					.loginPage("/user/login")
 					.loginProcessingUrl("/user/login")
+					.usernameParameter("userId")
 					.successHandler(loginSucessHandler())
 					.permitAll()
 					)
 			.logout(logout -> logout
-					.logoutSuccessUrl("/user/logout")
+					.logoutUrl("/user/logout")
+					.logoutSuccessUrl("/user/login")
 					.invalidateHttpSession(true)
 					);
 		
