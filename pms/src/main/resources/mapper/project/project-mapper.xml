@@ -12,7 +12,7 @@
                         select="selectImmediateChildren"/>
         </resultMap>
 
-     <select id="selectProjectsAll" resultMap="projectMap">
+     <select id="selectUserProjects" resultMap="projectMap">
              SELECT
                  p.project_no,
                  p.project_name,

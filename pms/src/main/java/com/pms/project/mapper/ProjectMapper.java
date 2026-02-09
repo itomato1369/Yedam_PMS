@@ -8,7 +8,9 @@ import com.pms.project.dto.ProjectSelectDTO;
 @Mapper
 public interface ProjectMapper {
     // 사용자의 프로젝트 목록 조회 (통계 포함)
-    List<ProjectSelectDTO> selectProjectsAll(@Param("userId") String userId);
+    List<ProjectSelectDTO> selectAdminProjects();
+    List<ProjectSelectDTO> selectUserProjects(@Param("userId") String userId);
+    
     
     List<ProjectSelectDTO> selectProjectsByOptions();
 }

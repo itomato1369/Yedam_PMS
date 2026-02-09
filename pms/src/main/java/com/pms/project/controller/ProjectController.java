@@ -28,7 +28,7 @@ public class ProjectController {
 		 * }else { model.addAttribute("projects",
 		 * projectService.findProjectList(currentUserId)); }
 		 */
-        model.addAttribute("projects", projectService.findProjectList(currentUserId));
+        model.addAttribute("projects", projectService.findUserProjects(currentUserId));
         model.addAttribute("commons" , projectCommonStatusMapper.selectProjectCommonStatusAll());
         
         return "project/list";

@@ -13,7 +13,8 @@ public interface ProjectService {
      * @param userId 현재 로그인한 사용자 ID
      * @return 프로젝트 목록
      */
-    List<ProjectSelectDTO> findProjectList(String userId);
+    List<ProjectSelectDTO> findAdminProjects();
+    List<ProjectSelectDTO> findUserProjects(String userId);
     
     List<ProjectSelectDTO> findProjectByOptions(ProjectSelectDTO projectDTO);
 }
