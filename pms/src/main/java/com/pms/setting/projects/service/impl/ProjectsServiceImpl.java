@@ -26,7 +26,7 @@ public class ProjectsServiceImpl implements ProjectsService {
     private final CommonRepository commonRepository;
 
     @Override
-    public List<ProjectDto> getAllProjects() {
+    public List<SettingProjectDto> getAllProjects() {
         return projectsRepository.search(null, null, null)
                 .stream()
                 .map(this::convertToDto)
