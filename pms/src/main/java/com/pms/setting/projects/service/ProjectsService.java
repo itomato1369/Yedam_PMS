@@ -11,7 +11,8 @@ public interface ProjectsService {
     List<SettingProjectDto> searchProjects(Integer status, String keyword);
     
     List<CommonEntity> getStatusList();
-
+    // 잠금,잠금해제 
+    void toggleLock(Long projectNo, Integer targetStatus);
     // 논리 삭제 기능 추가!
     void logicalDelete(Long projectNo); 
 }

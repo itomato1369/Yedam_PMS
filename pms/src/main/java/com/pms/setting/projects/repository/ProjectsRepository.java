@@ -35,4 +35,10 @@ public interface ProjectsRepository extends JpaRepository<ProjectsEntity, Long> 
         @Param("publicYn") Integer publicYn, 
         @Param("keyword") String keyword
     );
+	
+	// ProjectsRepository.java에 추가
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Transactional
+	@Query("UPDATE ProjectsEntity p SET p.status.commonNo = :status WHERE p.projectNo = :projectNo")
+	void updateProjectStatus(@Param("projectNo") Long projectNo, @Param("status") Integer status);
 }

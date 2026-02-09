@@ -56,6 +56,15 @@ public class ProjectsServiceImpl implements ProjectsService {
 
     @Override
     @Transactional
+    public void toggleLock(Long projectNo, Integer targetStatus) {
+        projectsRepository.updateProjectStatus(projectNo, targetStatus);
+        // 영속성 컨텍스트 초기화 (최신 데이터 반영 보장)
+        em.flush();
+        em.clear();
+    }
+    
+    @Override
+    @Transactional
     public void logicalDelete(Long projectNo) {
         projectsRepository.updateStatusToDelete(projectNo);
         

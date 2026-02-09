@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,5 +44,14 @@ public class ProjectsSettingController {
     @ResponseBody
     public void deleteProject(@PathVariable Long projectNo) {
         projectsService.logicalDelete(projectNo);
+    }
+    
+    @PatchMapping("/api/projects/{projectNo}/lock")
+    @ResponseBody
+    public String toggleProjectLock(
+            @PathVariable Long projectNo, 
+            @RequestParam Integer status) {
+        projectsService.toggleLock(projectNo, status);
+        return "SUCCESS";
     }
 }

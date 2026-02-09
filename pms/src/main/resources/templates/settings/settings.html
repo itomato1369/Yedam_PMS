@@ -16,7 +16,8 @@
 						<div class="card-body">
 							<form id="searchForm" class="row g-2">
 								<div class="col-md-3">
-									<select id="projectStatusSelect" name="status" class="form-select">
+									<select id="projectStatusSelect" name="status"
+										class="form-select">
 										<option value="">전체 상태</option>
 										<th:block th:each="status : ${statusList}">
 											<option th:value="${status.commonNo}"
@@ -57,21 +58,24 @@
 										<td th:text="${p.projectNo}"></td>
 										<td class="text-start" th:text="${p.projectName}"></td>
 										<td><span class="badge"
-											th:classappend="${p.statusLabel == '진행중' ? 'bg-success' : (p.statusLabel == '중단' ? 'bg-danger' : (p.statusLabel == '종료' ? 'bg-secondary' : 'bg-info'))}"
+											th:classappend="${p.statusValue == 330 ? 'bg-success' : (p.statusValue == 350 ? 'bg-warning' : (p.statusValue == 340 ? 'bg-danger' : 'bg-info'))}"
 											th:text="${p.statusLabel}"></span></td>
-										<td><span class="badge rounded-pill"
-											th:classappend="${p.publicYnLabel == '공개' ? 'text-bg-light border' : 'text-bg-dark'}"
-											th:text="${p.publicYnLabel}"></span></td>
-										<td th:text="${#temporals.format(p.createAt,'yyyy/MM/dd')}"></td>
+										<td th:text="${p.publicYnLabel}"></td>
+										<td
+											th:text="${p.createAt != null ? #temporals.format(p.createAt, 'yyyy/MM/dd') : '-'}"></td>
 										<td>
-											<button class="btn btn-sm btn-outline-primary"
-												th:onclick="|alert('프로젝트 번호: ${p.projectNo}')|">상세</button>
+											<button type="button" class="btn btn-sm btn-lock"
+												th:classappend="${p.statusValue == 350 ? 'btn-outline-success' : 'btn-outline-warning'}"
+												th:data-id="${p.projectNo}"
+												th:data-status="${p.statusValue}">
+												<i
+													th:class="${p.statusValue == 350 ? 'cil-lock-locked' : 'cil-lock-unlocked'}"></i>
+												<span th:text="${p.statusValue == 350 ? '잠금해제' : '잠금'}"></span>
+											</button>
+
 											<button class="btn btn-sm btn-outline-danger btn-delete"
 												th:data-id="${p.projectNo}">삭제</button>
 										</td>
-									</tr>
-									<tr th:if="${#lists.isEmpty(projects)}">
-										<td colspan="6" class="py-4">등록된 프로젝트가 없습니다.</td>
 									</tr>
 								</tbody>
 							</table>
@@ -155,7 +159,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<script>
 	// =============================
 	// 프로젝트 이벤트 영역
@@ -186,62 +190,63 @@
 	        });
 	    }
 
-	    // 🔹 프로젝트 테이블 렌더링 함수
 	    function renderProjectTable(projects) {
-	        const $tbody = $('#projectTableBody').empty();   // 기존 테이블 초기화
-
-	        // 데이터 없을 때
+	        const $tbody = $('#projectTableBody').empty();
 	        if (!projects || projects.length === 0) {
 	            $tbody.append('<tr><td colspan="6" class="py-4">검색 결과가 없습니다.</td></tr>');
 	            return;
 	        }
 
-	        // 프로젝트 목록 반복
 	        projects.forEach(p => {
+	            let formattedDate = p.createAt ? new Date(p.createAt).toLocaleDateString('zh-Hans-CN').replace(/-/g, '/') : "-";
+	            
+	            // 상태별 뱃지 색상
+	            let statusColor = p.statusValue == 330 ? 'bg-success' : (p.statusValue == 350 ? 'bg-warning' : 'bg-info');
 
-	            // 생성일 날짜 포맷
-	            let formattedDate = p.createAt 
-	                ? new Date(p.createAt).toLocaleDateString('zh-Hans-CN').replace(/-/g, '/') 
-	                : "-";
+	            // 🔹 잠금 UI 설정
+	            const isLocked = (p.statusValue == 350); 
+	            const lockBtnClass = isLocked ? 'btn-outline-success' : 'btn-outline-warning';
+	            const lockIcon = isLocked ? 'cil-lock-locked' : 'cil-lock-unlocked';
+	            const lockText = isLocked ? '잠금해제' : '잠금';
 
-	            // 상태 뱃지 색상 지정
-	            let statusColor =
-	                p.statusLabel === '진행중' ? 'bg-success' :
-	                (p.statusLabel === '종료' ? 'bg-secondary' :
-	                (p.statusLabel === '중단' ? 'bg-danger' : 'bg-info'));
-
-	            // 공개 여부 스타일
-	            let publicClass =
-	                p.publicYnLabel === '공개'
-	                ? 'text-bg-light border'
-	                : 'text-bg-dark';
-
-	            // 테이블 row 생성
 	            const row = `
 	                <tr>
 	                    <td>${p.projectNo}</td>
 	                    <td class="text-start">${p.projectName}</td>
 	                    <td><span class="badge ${statusColor}">${p.statusLabel}</span></td>
-	                    <td><span class="badge rounded-pill ${publicClass}">${p.publicYnLabel}</span></td>
+	                    <td><span class="badge rounded-pill ${p.publicYn === 1 ? 'text-bg-light border' : 'text-bg-dark'}">${p.publicYnLabel}</span></td>
 	                    <td>${formattedDate}</td>
 	                    <td>
-	                        <!-- 상세 버튼 -->
-	                        <button class="btn btn-sm btn-outline-primary"
-	                                onclick="alert('프로젝트 번호: ${p.projectNo}')">
-	                            상세
+	                        <button class="btn btn-sm btn-lock ${lockBtnClass}" 
+	                                data-id="${p.projectNo}" 
+	                                data-status="${p.statusValue}">
+	                            <i class="${lockIcon}"></i> ${lockText}
 	                        </button>
-
-	                        <!-- 삭제 버튼 -->
-	                        <button class="btn btn-sm btn-outline-danger btn-delete"
-	                                data-id="${p.projectNo}">
-	                            삭제
-	                        </button>
+	                        <button class="btn btn-sm btn-outline-danger btn-delete" data-id="${p.projectNo}">삭제</button>
 	                    </td>
 	                </tr>`;
-
 	            $tbody.append(row);
 	        });
 	    }
+
+	    // 🔹 잠금/해제 버튼 클릭 이벤트
+	    $(document).on('click', '.btn-lock', function() {
+	        const id = $(this).data('id');
+	        const currentStatus = $(this).data('status');
+	        const targetStatus = (currentStatus == 350) ? 330 : 350;
+	        const msg = (targetStatus == 350) ? "잠금보관" : "진행중으로 변경";
+
+	        if(confirm(`해당 프로젝트를 ${msg} 하시겠습니까?`)) {
+	            $.ajax({
+	                url: `/settings/api/projects/${id}/lock`,
+	                type: 'PATCH',
+	                data: { status: targetStatus },
+	                success: function() {
+	                    performSearch(); // 목록 새로고침
+	                }
+	            });
+	        }
+	    });
 
 	    // 🔹 프로젝트 삭제 이벤트 (동적 버튼 대응 위해 위임 방식)
 	    $(document).on('click', '.btn-delete', function() {
