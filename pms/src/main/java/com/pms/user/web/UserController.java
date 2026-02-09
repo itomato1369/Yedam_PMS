@@ -51,7 +51,6 @@ public class UserController {
 		if (authentication != null && authentication.isAuthenticated()) {
 			return "redirect:/";
 		}
-		userService.modifyDateUpdate(null);
 		model.addAttribute("loginDto", new LoginDto());
 		return "user/loginForm";
 	}
