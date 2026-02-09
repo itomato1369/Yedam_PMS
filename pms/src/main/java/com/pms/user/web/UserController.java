@@ -21,14 +21,15 @@ public class UserController {
 
 	private final UserService userService;
 
-	// 유저 등록
+	// 회원가입 페이지 이동
 	@GetMapping("/new")
 	public String newUserForm(Model model) {
 		model.addAttribute("userDto", new UserDto());
 		return "user/register-form";
 	}
 
-	@PostMapping("")
+	// 회원가입 실행
+	@PostMapping("/")
 	public String register(@Valid @ModelAttribute("userDto") UserDto userDto, BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {

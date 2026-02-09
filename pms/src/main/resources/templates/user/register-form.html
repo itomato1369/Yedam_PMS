@@ -16,21 +16,13 @@
 		</div>
 
 		<div>
-			<label>비밀번호(임시)</label> <input type="password" th:field="*{password}" />
+			<label>비밀번호</label> <input type="password" th:field="*{password}" />
 			<div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color: red;">err</div>
 		</div>
 
 		<div>
 			<label>이름</label> <input type="text" th:field="*{username}" />
 			<div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style="color: red;">err</div>
-		</div>
-
-		<div>
-			<label>관리자 여부</label>
-			<select th:field="*{admin}">
-				<option value="0">0 (false)</option>
-				<option value="1">1 (true)</option>
-			</select>
 		</div>
 
 		<div>

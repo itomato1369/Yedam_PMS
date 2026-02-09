@@ -20,10 +20,12 @@ public class PwrTokenServiceImpl implements PwrTokenService {
 	private final UserRepository userRepository;
 	private final PwrTokenRepository pwrTokenRepository;
 	private final PasswordEncoder passwordEncoder;
-
+	
+	// TODO 반환타입 void로 변경할 것
+	// String 테스트 용
 	@Override
 	@Transactional
-	public void sendResetMail(String userId) {
+	public String sendResetMail(String userId) {
 		// 존재하는 유저인지 확인
 		userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이디"));
 
@@ -36,6 +38,8 @@ public class PwrTokenServiceImpl implements PwrTokenService {
 		PwrTokenEntity newToken = PwrTokenEntity.builder().userId(userId).tokenValue(tokenValue).endTime(5).build();
 
 		pwrTokenRepository.save(newToken);
+		
+		return tokenValue;
 	}
 
 	// 토큰 유효성 확인
@@ -57,7 +61,7 @@ public class PwrTokenServiceImpl implements PwrTokenService {
 
 		String encodedPw = passwordEncoder.encode(newPw);
 		user.updatePwEntity(encodedPw);
-
+		
 		// PW 변경 후 DB에서 토큰 삭제
 		pwrTokenRepository.delete(pwrToken);
 	}
