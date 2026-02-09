@@ -1,5 +1,6 @@
 package com.pms.user.web;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -47,35 +48,12 @@ public class UserController {
 
 	// 로그인
 	@GetMapping("/login")
-	public String loginForm(Model model) {
+	public String login(Model model, Authentication authentication) {
+		// 로그인했다면 메인으로
+		if (authentication != null && authentication.isAuthenticated()) {
+			return "redirect:/";
+		}
 		model.addAttribute("loginDto", new LoginDto());
 		return "user/loginForm";
-	}
-
-	@PostMapping("/login")
-	public String login(@Valid @ModelAttribute("loginDto") LoginDto loginDto, BindingResult bindingResult,
-			HttpSession session) {
-
-		if (bindingResult.hasErrors()) {
-			return "user/loginForm";
-		}
-
-		try {
-			UserEntity user = userService.login(loginDto.getUserId(), loginDto.getPassword());
-
-			session.setAttribute("LOGIN_USER_ID", user.getUserId());
-			session.setAttribute("LOGIN_ADMIN", user.getAdmin());
-			return "redirect:/";
-		} catch (Exception e) {
-			bindingResult.reject("loginErr", e.getMessage());
-			return "user/loginForm";
-		}
-	}
-
-	// 로그아웃
-	@GetMapping("/logout")
-	public String logout(HttpSession session) {
-		session.invalidate();
-		return "redirect:/user/login";
 	}
 }

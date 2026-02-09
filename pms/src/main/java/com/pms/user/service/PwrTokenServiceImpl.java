@@ -1,8 +1,8 @@
 package com.pms.user.service;
 
-import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,7 +10,6 @@ import com.pms.user.entity.PwrTokenEntity;
 import com.pms.user.entity.UserEntity;
 import com.pms.user.repository.PwrTokenRepository;
 import com.pms.user.repository.UserRepository;
-import com.pms.user.service.password.PasswordPolicy;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,7 +19,7 @@ public class PwrTokenServiceImpl implements PwrTokenService {
 
 	private final UserRepository userRepository;
 	private final PwrTokenRepository pwrTokenRepository;
-	private final PasswordPolicy passwordPolicy;
+	private final PasswordEncoder passwordEncoder;
 
 	@Override
 	@Transactional
