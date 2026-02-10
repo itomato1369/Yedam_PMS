@@ -44,6 +44,10 @@
 			</ul>
 		</div>
 		<br>
+		<div>
+			<button th:onclick="|location.href='@{/home}'|">Home</button>
+		</div>
+		<br>
 		<form th:action="@{/user/logout}" method="post">
 			<button type="submit">로그아웃</button>
 		</form>

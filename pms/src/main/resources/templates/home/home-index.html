@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{common/layouts/default-layout}" layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h4>프로젝트</h4>
+	<div th:if="${#lists.isEmpty(list.projects)}">프로젝트가 없습니다.</div>
+	<ul>
+		<li th:each="p : ${list.projects}" th:text="${p.projectName}">프로젝트명</li>
+	</ul>
+
+	<h4>공지사항</h4>
+	<ul>
+		<li th:each="n : ${list.notices}" th:text="${n.title}">공지제목</li>
+	</ul>
+
+	<h4>메모</h4>
+	<div th:if="${#lists.isEmpty(list.memos)}">메모가 없습니다.</div>
+	<ul th:unless="${#lists.isEmpty(list.memos)}">
+		<li th:each="m : ${list.memos}" th:text="${m.content}">메모 내용</li>
+	</ul>
+	<br>
+	<div>
+		<button th:onclick="|location.href='@{/}'|">테스트 페이지</button>
+	</div>
+</body>
+</html>
