@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org/"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layouts/default_layout}"
+	layout:decorate="~{common/layouts/default-layout}"
 	layout:fragment="Content">
 <head>
 <meta charset="UTF-8" />
@@ -21,7 +21,7 @@
 </head>
 <body>
 	<div class="container">
-		<form id="issueUpdate" enctype="multipart/form-data" method="post">
+		<form id="issueUpdate" th:action="@{/issue/update}" enctype="multipart/form-data" method="post">
 			<!-- 제목 -->
 			<div class="mb-3">
 				<label class="form-label">제목</label> <input type="text"
@@ -136,19 +136,29 @@
 					<div class="d-flex gap-5">
 						<div class="form-check">
 							<input class="form-check-input" type="radio" name="publicRole"
-								id="public" value="public" /> <label
-								class="form-check-label" for="public">전체공개</label>
+								id="public" value="public" /> <label class="form-check-label"
+								for="public">전체공개</label>
 						</div>
 						<div class="form-check">
 							<input class="form-check-input" type="radio" name="publicRole"
-								id="private" value="private" /> <label
-								class="form-check-label" for="private">일부공개</label>
+								id="private" value="private" /> <label class="form-check-label"
+								for="private">일부공개</label>
 						</div>
 					</div>
 				</div>
 			</div>
 
-
+			<!-- 수정버튼 -->
+			<div class="row md-3">
+				<div class="d-flex gap-2">
+					<button type="button" class="btn btn-danger flex-fill text-white"
+						data-bs-toggle="modal" data-bs-target="#issueRejectModal">
+						반려</button>
+					<button type="button" class="btn btn-primary flex-fill"
+						data-bs-toggle="modal" data-bs-target="#issueUpdateModal">
+						수정</button>
+				</div>
+			</div>
 		</form>
 		<!-- form 태그 바깥 부가 기능 영역 Card영역 -->
 		<div class="card">
@@ -158,6 +168,8 @@
 						수정이력</button>
 					<button type="button" class="btn btn-secondary" id="commentButton">
 						댓글</button>
+					<a href="/workinsert" class="btn btn-secondary">소요시간 등록</a>
+					<button type="button" class="btn btn-primary">보고하기</button>
 				</div>
 				<!-- grid 영역 -->
 				<div id="subContentArea"></div>
@@ -165,6 +177,18 @@
 		</div>
 	</div>
 
-	<script th:src="@{/js/issue/issue_update.js}"></script>
+	<!-- 모달 fragment 호출 ~{템플릿 재사용 fragment 호출 조각 표현식} -->
+	<th:block
+		th:replace="~{common/fragments/issue/user-select-modal :: UserSelectModal}"></th:block>
+	<th:block
+		th:replace="~{common/fragments/issue/issue-select-modal :: IssueSelectModal}"></th:block>
+	<th:block
+		th:replace="~{common/fragments/issue/issue-update-modal :: IssueUpdateModal}"></th:block>
+	<th:block
+		th:replace="~{common/fragments/issue/issue-reject-modal :: IssueRejectModal}"></th:block>
+
+	<script th:src="@{/js/issue/issue-insert.js}"></script>
+	<script th:src="@{/js/issue/issue-update.js}"></script>
+	<script th:src="@{/js/issue/issue-comment.js}"></script>
 </body>
 </html>

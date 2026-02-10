@@ -8,20 +8,20 @@ public class WorkController {
 	// 소요시간 등록
 	@GetMapping("workinsert")
 	public String workinsert() {
-		return "work/work_insert";
+		return "work/work-insert";
 	}
 	
 	@GetMapping("workupdate")
 	public String workupdate() {
-		return "work/work_update";
+		return "work/work-update";
 	}
 	@GetMapping("workinfo")
 	public String workinfo() {
-		return "work/work_info";
+		return "work/work-info";
 	}
 	@GetMapping("worklist")
 	public String worklist() {
-		return "work/work_list";
+		return "work/work-list";
 	}
 	
 

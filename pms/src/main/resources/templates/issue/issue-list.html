@@ -1,8 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org/"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layouts/default_layout}"
-	layout:fragment="Content">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org/" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{common/layouts/default-layout}" layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
 <title>일감 전체 조회</title>
@@ -13,9 +10,11 @@
 			<label>.. 프로젝트의 일감 전체 조회</label>
 		</div>
 		<div>
+			<button th:onclick="|location.href='@{/issue/new}'|">일감 추가</button>
+		</div>
+		<div>
 			<div class="dropdown">
-				<button class="btn btn-secondary dropdown-toggle" type="button"
-					data-bs-toggle="dropdown" aria-expanded="false">검색조건 추가</button>
+				<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">검색조건 추가</button>
 				<ul class="dropdown-menu">
 					<li><a class="dropdown-item" href="#">제목</a></li>
 					<li><a class="dropdown-item" href="#">일감번호</a></li>
@@ -42,7 +41,19 @@
 				</tr>
 			</thead>
 			<tbody>
-				
+				<tr th:each="issue : ${issueList}">
+					<td th:text="${issue.jobNo}">1</td>
+					<td th:text="${issue.title}">제목</td>
+					<td th:text="${issue.jobStatusNo}">상태</td>
+					<td th:text="${issue.priority}">우선순위</td>
+					<td th:text="${issue.managerId}">담당자</td>
+
+					<td>
+						<div class="btn-group" role="group">
+							<a th:href="@{/issue/info(jobNo=${issue.jobNo})}" class="btn btn-sm btn-outline-info">상세</a>
+						</div>
+					</td>
+				</tr>
 			</tbody>
 		</table>
 	</div>

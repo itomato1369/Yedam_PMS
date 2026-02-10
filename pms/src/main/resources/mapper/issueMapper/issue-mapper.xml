@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pms.issue.mapper.IssueMapper">
+
+	<select id="selectIssue" parameterType="IssueDto">
+		SELECT job_no
+		, title
+		, job_status_no
+		, priority
+		, manager_id
+		FROM job
+		WHERE user_id = #{userId}
+		ORDER BY job_no
+	</select>
+
+	<insert id="insertIssue" parameterType="IssueDto" useGeneratedKeys="true" keyProperty="jobNo" keyColumn="job_no">
+		INSERT INTO job (
+		job_no,
+		title,
+		content,
+		priority,
+		manager_id,
+		user_id,
+		public_role,
+		start_date,
+		end_date,
+		add_date,
+		progress,
+		job_type_no,
+		job_status_no,
+		project_no,
+		parent_job_no
+		) VALUES (
+		job_seq.NEXTVAL,
+		#{title},
+		#{content},
+		#{priority},
+		#{managerId},
+		#{userId},
+		#{publicRole},
+		#{startDate},
+		#{endDate},
+		CURRENT_TIMESTAMP,
+		#{progress},
+		#{jobTypeNo},
+		#{jobStatusNo},
+		#{projectNo},
+		#{parentJobNo}
+		)
+	</insert>
+</mapper>
