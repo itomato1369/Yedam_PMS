@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pms.project.parentproject.mapper.ParentProjectMapper">
+	<select id="selectAll" resultType="ParentProjectDTO">
+		SELECT project_no
+		  , project_name
+		FROM vw_project
+		WHERE le = 1 AND status != 390
+		ORDER BY project_no;
+	</select>
+</mapper>

@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.pms.project.dto.ProjectSearchDTO;
 import com.pms.project.dto.ProjectSelectDTO;
 import com.pms.project.mapper.ProjectMapper;
+import com.pms.project.parentproject.dto.ParentProjectDTO;
+import com.pms.project.parentproject.mapper.ParentProjectMapper;
 import com.pms.project.service.ProjectService;
 
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
     private final ProjectMapper projectMapper;
+    private final ParentProjectMapper parentProjectMapper;
 
     @Override
     @Transactional(readOnly = true)
@@ -37,5 +40,11 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public List<ProjectSelectDTO> findProjectByOptions(ProjectSearchDTO searchDTO) {
 		return projectMapper.selectProjectsByOptions(searchDTO);
+	}
+
+
+	@Override
+	public List<ParentProjectDTO> findParentProjects() {
+		return parentProjectMapper.selectAll();
 	}
 }

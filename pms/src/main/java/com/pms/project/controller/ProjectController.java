@@ -4,6 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute; // 추가
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import com.pms.project.common.mapper.ProjectCommonStatusMapper;
 import com.pms.project.dto.ProjectSearchDTO; // 추가
@@ -43,5 +45,19 @@ public class ProjectController {
         model.addAttribute("searchDTO", searchDTO); // 검색 폼의 값 유지를 위해 모델에 추가
         
         return "project/list";
+    }
+    
+	// 새 프로젝트 등록화면 불러오기
+    @GetMapping("/project/new")
+    public String addProject(Model model) {
+    	model.addAttribute("parentProjects", projectService.findParentProjects());
+    	return "project/insert-form";
+    }
+    
+    // 프로젝트 입력 처리
+    @PostMapping("/project/new")
+    public String modifyProject() {
+    	
+    	return null;
     }
 }
