@@ -8,6 +8,7 @@
 		add_date,
 		user_id
 		FROM memo
+		WHERE user_id = #{userId}
 		ORDER BY add_date DESC, memo_no DESC
 	</select>
 

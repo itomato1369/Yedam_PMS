@@ -8,5 +8,5 @@ import com.pms.home.project.dto.HomeProjectDto;
 
 @Mapper
 public interface HomeProjectMapper {
-	List<HomeProjectDto> findProjects();
+	List<HomeProjectDto> findProjects(String userId);
 }

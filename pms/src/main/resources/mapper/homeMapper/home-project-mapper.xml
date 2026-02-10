@@ -2,13 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pms.home.project.mapper.HomeProjectMapper">
 	<select id="findProjects" resultType="HomeProjectDto">
-		SELECT
-		project_no,
-		project_name,
-		project_desc,
-		project_code
-		FROM project
-		ORDER BY create_at DESC NULLS LAST, project_no DESC
+		SELECT DISTINCT p.*
+		FROM project p
+		WHERE p.project_no IN (
+		SELECT gp.project_no
+		FROM g_project gp
+		WHERE gp.group_no IN (SELECT groupid FROM members WHERE user_id = #{userId})
+		)
+		START WITH p.project_no IN (
+		SELECT gp.project_no
+		FROM g_project gp
+		WHERE gp.group_no IN (SELECT groupid FROM members WHERE user_id = #{userId})
+		)
+		CONNECT BY NOCYCLE PRIOR p.project_no = p.parent_project_no
+		AND p.parent_member_yn = 1
+		ORDER BY p.project_no
 	</select>
 
 </mapper>

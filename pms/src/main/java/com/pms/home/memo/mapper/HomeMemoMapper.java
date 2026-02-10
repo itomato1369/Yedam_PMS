@@ -8,5 +8,5 @@ import com.pms.home.memo.dto.HomeMemoDto;
 
 @Mapper
 public interface HomeMemoMapper {
-	List<HomeMemoDto> findMemos();
+	List<HomeMemoDto> findMemos(String userId);
 }

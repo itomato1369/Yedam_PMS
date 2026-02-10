@@ -1,6 +1,7 @@
 package com.pms.home.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.pms.home.dto.HomeDto;
 import com.pms.home.memo.mapper.HomeMemoMapper;
@@ -15,11 +16,12 @@ public class HomeService {
 	private final HomeProjectMapper projectMapper;
 	private final HomeNoticeMapper noticeMapper;
 	private final HomeMemoMapper memoMapper;
-
-	public HomeDto loadMainPage() {
-		var projects = projectMapper.findProjects();
+	
+	@Transactional(readOnly = true)
+	public HomeDto loadMainPage(String userId) {
+		var projects = projectMapper.findProjects(userId);
 		var notices = noticeMapper.findNotices();
-		var memos = memoMapper.findMemos();
+		var memos = memoMapper.findMemos(userId);
 		return new HomeDto(projects, notices, memos);
 	}
 }
