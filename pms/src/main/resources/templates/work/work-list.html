@@ -6,9 +6,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="stylesheet" th:href="@{/css/dynamic-search.css}"/>
+<link rel="stylesheet" th:href="@{/css/dynamic-search.css}" />
 <!-- Bootstrap5 icon사용 -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css" />
 
@@ -30,29 +31,19 @@
 		</div>
 
 		<!-- 검색조건  -->
-		<form th:action="@{/worklist}" method="get" id="searchForm">
+		<form th:action="@{/work/list}" method="get" id="searchForm">
 			<div id="dynamicSearch" class="row g-3 mb-3">
-				<div
-					th:replace="~{common/fragments/work/dynamic-search :: JobIdField}"></div>
-							<div
-					th:replace="~{common/fragments/work/dynamic-search :: JobTitleField}"></div>
-				<div
-					th:replace="~{common/fragments/work/dynamic-search :: WorkersField}"></div>
-				<div
-					th:replace="~{common/fragments/work/dynamic-search :: WorkDateField}"></div>
-				<div
-					th:replace="~{common/fragments/work/dynamic-search :: WorkTypeField}"></div>
-				<div
-					th:replace="~{common/fragments/work/dynamic-search :: WorkContentField}"></div>
+				<div th:replace="~{common/fragments/work/dynamic-search}"></div>
 			</div>
 
-			<!-- 검색조건 추가 버튼 -->
-			<div class="mb-3 d-flex align-items-center justify-content-end">
+			<!-- 검색조건 추가 버튼 + 조회 버튼 -->
+			<div
+				class="mb-3 d-flex align-items-stretch justify-content-end gap-2">
 				<div class="dropdown me-2">
 					<button class="btn btn-secondary dropdown-toggle" type="button"
 						data-bs-toggle="dropdown">검색조건 추가</button>
 					<ul class="dropdown-menu">
-					<li><a class="dropdown-item add-condition" href="#"
+						<li><a class="dropdown-item add-condition" href="#"
 							data-target="field-jobId">일감번호</a></li>
 						<li><a class="dropdown-item add-condition" href="#"
 							data-target="field-jobTitle">일감제목</a></li>
@@ -66,7 +57,14 @@
 							data-target="field-workContent">작업내용</a></li>
 					</ul>
 				</div>
+				<!-- 조회 버튼 -->
 				<button type="submit" class="btn btn-primary">조회</button>
+				<!-- 소요시간 등록으로 이동-->
+				<a th:href="@{/work/insert}" class="btn btn-success text-white 
+				d-inline-flex align-items-center justify-content-center">소요시간등록</a>
+				<!-- 소요시간 관련 보고서로 이동 -->
+				<a th:href="@{/work/report}" class="btn btn-info text-white
+				d-inline-flex align-items-center justify-content-center">보고서</a>
 			</div>
 		</form>
 
@@ -92,7 +90,8 @@
 					<td th:text="${#dates.format(list.workDate, 'yyyy-MM-dd')}"></td>
 					<td th:text="${list.workTime}"></td>
 					<td th:text="${list.workers}"></td>
-					<td><a href="#" class="btn btn-sm btn-outline-primary">수정</a></td>
+					<td><a th:href="@{/work/update(workNo=${list.workEntriesNo})}"
+						class="btn btn-sm btn-outline-primary">수정</a></td>
 				</tr>
 			</tbody>
 		</table>

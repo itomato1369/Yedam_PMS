@@ -1,152 +1,71 @@
-/* 1. 기본 폰트 및 페이지 감성 설정 */
+/* 1. 기본 테마 설정 */
 :root {
     --primary-color: #0d6efd;
     --primary-hover: #0b5ed7;
+    --success-color: #198754;
+    --info-color: #0dcaf0;
     --bg-light: #f8f9fa;
-    --text-muted: #6c757d;
     --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
-/* 2. 페이지 제목 (Underline 포인트) */
-.page-title {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: #212529;
-    letter-spacing: -0.5px;
-    position: relative;
-    margin-bottom: 1.5rem;
-}
-
-.page-title::after {
-    content: '';
-    display: block;
-    width: 40px;
-    height: 4px;
-    background: var(--primary-color);
-    margin-top: 8px;
-    border-radius: 2px;
-}
-
-/* 3. 동적 검색 영역 컨테이너 */
-#dynamicSearch {
-    padding: 10px 0;
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-}
-
-/* 4. 검색 조건 카드 (현대적인 보더리스 스타일) */
-.condition-field .card {
-    border: 1px solid rgba(0,0,0,0.08);
-    border-radius: 12px;
-    background-color: #ffffff;
-    box-shadow: var(--card-shadow);
-    transition: all 0.3s ease;
-}
-
-.condition-field .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
-    border-color: var(--primary-color);
-}
-
-/* 카드 왼쪽 강조 라인 */
-.condition-field .card::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 15%;
-    height: 70%;
-    width: 4px;
-    background: var(--primary-color);
-    border-radius: 0 4px 4px 0;
-}
-
-.condition-field label {
-    color: #495057;
-    font-weight: 600;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-}
-
-/* 5. 입력 폼 요소 스타일링 */
-.condition-field .form-control, 
-.condition-field .form-select {
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    padding: 0.5rem 0.75rem;
-    font-size: 0.9rem;
-}
-
-.condition-field .form-control:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
-}
-
-/* 6. 우측 상단 닫기(X) 버튼 */
-.btn-remove {
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    background-color: #f1f3f5;
-    border-radius: 50%;
-    border: none;
-    display: flex;
+/* 2. 버튼 및 액션 영역 통일 */
+/* 모든 버튼(a, button)의 높이와 정렬을 강제 통일 */
+.action-area .btn {
+    height: 45px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
+    padding: 0 1.25rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border: none;
+    white-space: nowrap; /* 글자 줄바꿈 방지 */
 }
 
-.btn-remove:hover {
-    background-color: #ffecef;
-    color: #fa5252;
-    transform: rotate(90deg);
+/* 버튼별 그림자 및 포인트 */
+.btn-primary { box-shadow: 0 4px 6px rgba(13, 110, 253, 0.2); }
+.btn-success { box-shadow: 0 4px 6px rgba(25, 135, 84, 0.2); }
+.btn-info { box-shadow: 0 4px 6px rgba(13, 202, 240, 0.2); }
+
+/* 호버 시 효과 */
+.action-area .btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(0.9);
 }
 
-/* 7. 데이터 테이블 현대화 */
-.table-responsive {
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: var(--card-shadow);
+/* 3. 테이블 현대화 */
+.table-container {
     background: #fff;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    margin-top: 1.5rem;
 }
 
-.table {
-    margin-bottom: 0;
-}
-
+.table { margin-bottom: 0; }
 .table thead th {
     background-color: #f8f9fa;
-    color: #495057;
-    font-weight: 600;
-    border-bottom: 2px solid #edf2f7;
     padding: 1rem;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    color: #495057;
+    border-bottom: 2px solid #edf2f7;
 }
 
 .table tbody td {
     padding: 1rem;
     vertical-align: middle;
-    color: #2d3748;
-    border-bottom: 1px solid #f1f3f5;
 }
 
-.table tbody tr:hover {
-    background-color: #f1f7ff !important;
-}
-
-/* 8. 조회/추가 버튼 액션 영역 */
-.search-actions {
-    margin-top: 1.5rem;
-    padding: 1rem;
-    background: #fff;
+/* 4. 검색 조건 카드 스타일 (기존 유지 및 강화) */
+.condition-field .card {
+    border: 1px solid rgba(0,0,0,0.08);
     border-radius: 12px;
-    border: 1px dashed #dee2e6;
-    display: flex;
-    gap: 10px;
+    box-shadow: var(--card-shadow);
+    transition: 0.3s;
 }
 
-.btn-primary {
-    border-radius: 8px;
-    padding: 0.6rem 1.5rem;
-    font-weight: 600;
-    box-shadow: 0 4px 6px rgba(13, 110, 253, 0.2);
+.condition-field .card:hover {
+    border-color: var(--primary-color);
 }

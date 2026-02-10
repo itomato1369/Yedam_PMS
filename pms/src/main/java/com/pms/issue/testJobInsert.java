@@ -6,17 +6,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class testJobInsert {
 	// 일감 등록
-	@GetMapping("issueinsert")
+	@GetMapping("issue/insert")
 	public String issueadd() {
 		return "issue/issue-insert";
 	}
 	
-	@GetMapping("issueupdate")
+	@GetMapping("issue/update")
 	public String issueupdate() {
 		return "issue/issue-update";
 	}
 	
-	@GetMapping("issueinfo")
+	@GetMapping("issue/info")
 	public String issuedetails() {
 		return "issue/issue-info";
 	}
@@ -30,7 +30,7 @@ public class testJobInsert {
 	public String issueHistory() {
 		return "common/fragments/issue/issue-hisotry :: IssueHistoryArea";
 	}
-	@GetMapping("issuelist")
+	@GetMapping("issue/list")
 	public String issueList() {
 		return "issue/issue-list";
 	}
