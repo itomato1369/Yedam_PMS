@@ -1,10 +1,10 @@
 package com.pms.project.service;
 
+import com.pms.project.dto.ParentProjectDTO;
 import com.pms.project.dto.ProjectSearchDTO;
 import java.util.List;
 
 import com.pms.project.dto.ProjectSelectDTO;
-import com.pms.project.parentproject.dto.ParentProjectDTO;
 
 /**
  * 프로젝트 관리 비즈니스 로직 인터페이스

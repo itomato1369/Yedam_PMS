@@ -144,4 +144,13 @@
         </where>
         ORDER BY p.create_at ASC
     </select>
+    
+    <!--/* insert-from에서 사용할 최상위 프로젝트 목록 */-->
+    <select id="selectParentProjects" resultType="com.pms.project.dto.ParentProjectDTO">
+		SELECT project_no
+		  , project_name
+		FROM vw_project
+		WHERE le = 1 AND status != 390
+		ORDER BY project_no
+	</select>
 </mapper>

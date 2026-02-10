@@ -1,4 +1,4 @@
-package com.pms.project.parentproject.dto;
+package com.pms.project.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
