@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pms.setting.groups.mapper.GroupsMapper">
+
+    <!-- 전체 조회 -->
+    <select id="selectGroupAll"
+            resultType="com.pms.setting.groups.vo.GroupsVO">
+
+        SELECT
+            GROUP_NO   AS groupNo,
+            GROUPNAME  AS groupName
+        FROM GROUPS
+        ORDER BY GROUP_NO
+
+    </select>
+
+    <!-- 단건 조회 -->
+    <select id="selectGroup"
+            parameterType="long"
+            resultType="com.pms.setting.groups.vo.GroupsVO">
+
+        SELECT
+            GROUP_NO   AS groupNo,
+            GROUPNAME  AS groupName
+        FROM GROUPS
+        WHERE GROUP_NO = #{value}
+
+    </select>
+    
+    <select id="searchGroup"
+        parameterType="string"
+        resultType="com.pms.setting.groups.vo.GroupsVO">
+
+    SELECT
+        GROUP_NO  AS groupNo,
+        GROUPNAME AS groupName
+    FROM GROUPS
+    WHERE GROUPNAME LIKE '%' || #{keyword} || '%'
+    ORDER BY GROUP_NO
+
+</select>
+
+</mapper>
