@@ -8,6 +8,10 @@ public interface GroupsService {
     List<GroupsVO> getGroupAll();
 
     GroupsVO getGroup(Long groupNo);
-    
+
     List<GroupsVO> search(String keyword);
+
+    void updateGroupStatus(Long groupNo, Integer status);
+
+    void toggleGroupStatus(Long groupNo);
 }

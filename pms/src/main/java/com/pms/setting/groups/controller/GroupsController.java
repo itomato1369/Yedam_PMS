@@ -3,6 +3,7 @@ package com.pms.setting.groups.controller;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,5 +36,18 @@ public class GroupsController {
             @RequestParam(required = false) String keyword) {
 
         return groupsService.search(keyword);
+    }
+    
+    @PatchMapping("/{groupNo}/status")
+    public void updateStatus(
+            @PathVariable Long groupNo,
+            @RequestParam Integer status){
+
+        groupsService.updateGroupStatus(groupNo, status);
+    }
+
+    @PatchMapping("/{groupNo}/toggle-status")
+    public void toggleStatus(@PathVariable Long groupNo){
+        groupsService.toggleGroupStatus(groupNo);
     }
 }

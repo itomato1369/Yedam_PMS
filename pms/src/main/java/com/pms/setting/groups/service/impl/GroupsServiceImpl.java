@@ -34,4 +34,21 @@ public class GroupsServiceImpl implements GroupsService {
         }
         return groupsMapper.searchGroup(keyword);
     }
+    
+    @Override
+    public void updateGroupStatus(Long groupNo, Integer status) {
+
+        // 방어코드 (선택이지만 추천)
+        if(status != 510 && status != 520){
+            throw new IllegalArgumentException("잘못된 상태값입니다.");
+        }
+
+        groupsMapper.updateGroupStatus(groupNo, status);
+    }
+    
+    @Override
+    public void toggleGroupStatus(Long groupNo) {
+        groupsMapper.toggleGroupStatus(groupNo);
+    }
+
 }

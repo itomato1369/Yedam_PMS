@@ -5,42 +5,99 @@
 
 <mapper namespace="com.pms.setting.groups.mapper.GroupsMapper">
 
+    <!-- ========================= -->
     <!-- 전체 조회 -->
+    <!-- ========================= -->
     <select id="selectGroupAll"
             resultType="com.pms.setting.groups.vo.GroupsVO">
 
         SELECT
-            GROUP_NO   AS groupNo,
-            GROUPNAME  AS groupName
-        FROM GROUPS
-        ORDER BY GROUP_NO
+            g.GROUP_NO        AS groupNo,
+            g.GROUPNAME       AS groupName,
+            g.STATUS          AS status,
+            c.COMMON_NAME     AS statusName
+
+        FROM GROUPS g
+
+        LEFT JOIN COMMON c
+            ON g.STATUS = c.COMMON_NO
+            AND c.PARENT_COMMON_NO = 500
+            AND c.DISPLAY_YN = 'Y'
+
+        ORDER BY g.GROUP_NO
 
     </select>
 
+    <!-- ========================= -->
     <!-- 단건 조회 -->
+    <!-- ========================= -->
     <select id="selectGroup"
             parameterType="long"
             resultType="com.pms.setting.groups.vo.GroupsVO">
 
         SELECT
-            GROUP_NO   AS groupNo,
-            GROUPNAME  AS groupName
-        FROM GROUPS
-        WHERE GROUP_NO = #{value}
+            g.GROUP_NO        AS groupNo,
+            g.GROUPNAME       AS groupName,
+            g.STATUS          AS status,
+            c.COMMON_NAME     AS statusName
+
+        FROM GROUPS g
+
+        LEFT JOIN COMMON c
+            ON g.STATUS = c.COMMON_NO
+            AND c.PARENT_COMMON_NO = 500
+            AND c.DISPLAY_YN = 'Y'
+
+        WHERE g.GROUP_NO = #{groupNo}
 
     </select>
-    
+
+    <!-- ========================= -->
+    <!-- 검색 -->
+    <!-- ========================= -->
     <select id="searchGroup"
-        parameterType="string"
-        resultType="com.pms.setting.groups.vo.GroupsVO">
+            parameterType="string"
+            resultType="com.pms.setting.groups.vo.GroupsVO">
 
-    SELECT
-        GROUP_NO  AS groupNo,
-        GROUPNAME AS groupName
-    FROM GROUPS
-    WHERE GROUPNAME LIKE '%' || #{keyword} || '%'
-    ORDER BY GROUP_NO
+        SELECT
+            g.GROUP_NO        AS groupNo,
+            g.GROUPNAME       AS groupName,
+            g.STATUS          AS status,
+            c.COMMON_NAME     AS statusName
 
-</select>
+        FROM GROUPS g
+
+        LEFT JOIN COMMON c
+            ON g.STATUS = c.COMMON_NO
+            AND c.PARENT_COMMON_NO = 500
+            AND c.DISPLAY_YN = 'Y'
+
+        WHERE g.GROUPNAME LIKE '%' || #{keyword} || '%'
+
+        ORDER BY g.GROUP_NO
+
+    </select>
+
+    <!-- ========================= -->
+    <!-- 상태 직접 변경 (드롭다운) -->
+    <!-- ========================= -->
+    <update id="updateGroupStatus">
+        UPDATE GROUPS
+        SET STATUS = #{status}
+        WHERE GROUP_NO = #{groupNo}
+    </update>
+
+    <!-- ========================= -->
+    <!-- 상태 토글 변경 -->
+    <!-- ========================= -->
+    <update id="toggleGroupStatus">
+        UPDATE GROUPS
+        SET STATUS =
+            CASE
+                WHEN STATUS = 510 THEN 520
+                WHEN STATUS = 520 THEN 510
+            END
+        WHERE GROUP_NO = #{groupNo}
+    </update>
 
 </mapper>
