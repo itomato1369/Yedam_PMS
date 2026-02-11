@@ -2,27 +2,19 @@
  * DOMContentLoaded html파일을 다 만들고 나면 JavaScript 코드를 실행한다
  */
 document.addEventListener("DOMContentLoaded", function () {
-  /*	bootstrap-datepicker 플러그인은 jQuery만 알아듣는다 
-  
-    work_list.html에서 설정을 해놓았음
-				class="datepicker"를 가진 input요소를 찾아서
-				datepicker() method를 실행하겠다
-				한국어 캘린더 사용을 위해 가져옴
-			 */
-  $(".datepicker").datepicker({
-    format: "yyyy-mm-dd",
-    language: "ko",
-    autoclose: true,
-  });
   /* 검색조건 추가 메뉴에서 항목을 클릭하면 
    class명이 add-condition인 걸다 가져와서 각각에
   변수명 menuItem으로  클릭 이벤트를 준다
   변수명 targeId는 data-target 아이디
   targetDiv는 그 아이디의 html요소를 가져옴
   if 만약 그 요소가 있으면 d-none을 지운다
- 
   
   */
+  $(".datepicker").datepicker({
+    format: "yyyy-mm-dd",
+    language: "ko",
+    autoclose: true,
+  });
   document.querySelectorAll(".add-condition").forEach((menuItem) => {
     menuItem.addEventListener("click", function (event) {
       event.preventDefault();
@@ -54,6 +46,16 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
-  
-  
+  // id가 reportSearchForm인 태그 가져옴
+  const reportForm = document.getElementById("reportSearchForm");
+  if (reportForm) {
+    reportForm.addEventListener("submit", function (e) {
+      // 선택이 안된 다른 input 태그의 값은 전송하지 않는다
+      document.querySelectorAll(".condition-field.d-none").forEach((field) => {
+        field.querySelectorAll("input, select").forEach((el) => {
+          el.disabled = true;
+        });
+      });
+    });
+  }
 });

@@ -33,7 +33,7 @@
 		<!-- 검색조건  -->
 		<form th:action="@{/work/list}" method="get" id="searchForm">
 			<div id="dynamicSearch" class="row g-3 mb-3">
-				<div th:replace="~{common/fragments/work/dynamic-search}"></div>
+				<div th:replace="~{common/fragments/work/dynamic-work-list-search}"></div>
 			</div>
 
 			<!-- 검색조건 추가 버튼 + 조회 버튼 -->
@@ -44,7 +44,7 @@
 						data-bs-toggle="dropdown">검색조건 추가</button>
 					<ul class="dropdown-menu">
 						<li><a class="dropdown-item add-condition" href="#"
-							data-target="field-jobId">일감번호</a></li>
+							data-target="field-jobNo">일감번호</a></li>
 						<li><a class="dropdown-item add-condition" href="#"
 							data-target="field-jobTitle">일감제목</a></li>
 						<li><a class="dropdown-item add-condition" href="#"
@@ -84,7 +84,7 @@
 			</thead>
 			<tbody>
 				<tr th:each="list : ${workEntriesList}">
-					<td th:text="${list.jobId}"></td>
+					<td th:text="${list.jobNo}"></td>
 					<td th:text="${list.title}"></td>
 					<td th:text="${list.workType}"></td>
 					<td th:text="${#dates.format(list.workDate, 'yyyy-MM-dd')}"></td>

@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.pms.work.dto.WorkDetailsDto;
 import com.pms.work.dto.WorkInsertDto;
+import com.pms.work.dto.WorkReportDto;
 import com.pms.work.dto.WorkSelectDto;
 import com.pms.work.dto.WorkUpdateDto;
 import com.pms.work.mapper.WorkMapper;
@@ -20,8 +21,13 @@ import lombok.RequiredArgsConstructor;
 public class WorkServiceImpl implements WorkService {
 	// mapper와 연결
 	private final WorkMapper workMapper;
+	// 작업분류 조회
+	@Override
+	public List<WorkDetailsDto> findWorkDetails() {
+		return workMapper.selectWorkDetails();
+	};
 
-	// 소요시간 전체 조회
+	// 소요시간 전체 조회 + 검색기능
 	@Override
 	public List<WorkSelectDto> findAllWorkEntries(WorkSelectDto workSelectDto) {
 		return workMapper.selectWorkEntries(workSelectDto);
@@ -51,7 +57,7 @@ public class WorkServiceImpl implements WorkService {
 	@Transactional
 	public void addWorkEntries(WorkInsertDto workInsertDto) {
 		// 등록된 일감에 대한 소요시간만 작성할 수 있다
-		if (workInsertDto.getJobId() == null) {
+		if (workInsertDto.getJobNo() == null) {
 			/*
 			 * IllegalArgumentException 적절하지 않은 인자(Argument) 전달 예외 메서드가 호출될 때, 전달된
 			 * 매개변수(Parameter)의 값이 허용되는 범위나 조건에 맞지 않을 때 발생
@@ -81,11 +87,23 @@ public class WorkServiceImpl implements WorkService {
 
 		workMapper.updateWorkEntries(workUpdateDto);
 	}
-
-	// 작업분류 조회
+	// 통합 소요시간 보고서
 	@Override
-	public List<WorkDetailsDto> findWorkDetails() {
-		return workMapper.selectWorkDetails();
+	public List<WorkReportDto> findWorkReport(String type, WorkSelectDto workSelectDto) {
+		if (type == null) {
+			return null;
+		}
+		// 전달받은 type에 따라 각기 다른 mapper의 Method호출
+		switch (type.toLowerCase()) {
+		case "job": return workMapper.selectJobReport(workSelectDto);
+		case "project": return workMapper.selectProjectReport(workSelectDto);
+		case "users": return workMapper.selectUserReport(workSelectDto);
+		case "week": return workMapper.selectWeekReport(workSelectDto);
+		case "month": return workMapper.selectMonthReport(workSelectDto);
+		default: return null; // 잘못된 type이 들어왔을 때
+		}
 	};
+	
+	
 
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.pms.work.dto.WorkDetailsDto;
 import com.pms.work.dto.WorkInsertDto;
+import com.pms.work.dto.WorkReportDto;
 import com.pms.work.dto.WorkSelectDto;
 import com.pms.work.dto.WorkUpdateDto;
 
@@ -23,5 +24,8 @@ public interface WorkService {
 	// 작업분류 조회
 	List<WorkDetailsDto> findWorkDetails();
 	
+    // 통합 보고서 조회 Method 
+	// type 은 일감, 프로젝트, 사용자, 주,월별
+	List<WorkReportDto> findWorkReport(String type, WorkSelectDto workSelectDto);
 
 }

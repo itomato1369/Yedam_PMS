@@ -1,14 +1,14 @@
 <!-- 조건을 추가하여 검색 -->
 <!-- 일감번호 -->
-<div th:fragment="JobIdField" class="col-md-3 condition-field d-none"
-	id="field-jobId">
+<div th:fragment="JobNoField" class="col-md-3 condition-field d-none"
+	id="field-jobNo">
 	<div class="card card-body bg-light shadow-sm">
 		<div class="d-flex justify-content-between align-items-center mb-2">
 			<label class="fw-bold small">일감 번호</label>
 			<button type="button" class="btn-close btn-remove"
-				data-target="field-jobId"></button>
+				data-target="field-jobNo"></button>
 		</div>
-		<input type="number" name="jobId" class="form-control form-control-sm"
+		<input type="number" name="jobNo" class="form-control form-control-sm"
 			placeholder="일감 번호를 선택하세요">
 	</div>
 </div>
@@ -48,7 +48,7 @@
 				data-target="field-workDate"></button>
 		</div>
 		<input type="date" name="workDate"
-			class="form-control form-control-sm datepicker " placeholder="작업일시를 선택하세요">
+			class="form-control form-control-sm datepicker" placeholder="작업일시를 선택하세요">
 	</div>
 </div>
 <!-- 소요시간 작업분류 -->
@@ -81,5 +81,4 @@
 			class="form-control form-control-sm" placeholder="내용 키워드">
 	</div>
 </div>
-<script th:src="@{/js/work/workInsert.js}"></script>
 

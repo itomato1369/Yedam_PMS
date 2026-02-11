@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.pms.work.dto.WorkDetailsDto;
 import com.pms.work.dto.WorkInsertDto;
+import com.pms.work.dto.WorkReportDto;
 import com.pms.work.dto.WorkSelectDto;
 import com.pms.work.dto.WorkUpdateDto;
 
@@ -26,5 +27,15 @@ public interface WorkMapper {
 	
 	// 작업시간 분류 조회
 	List<WorkDetailsDto> selectWorkDetails();
-
+	
+	// 일감별 소요시간 보고서
+	List<WorkReportDto> selectJobReport(WorkSelectDto workSelectDto);
+	// 프로젝트별 소요시간 보고서
+	List<WorkReportDto> selectProjectReport(WorkSelectDto workSelectDto);
+	// 사용자별 소요시간 보고서
+	List<WorkReportDto> selectUserReport(WorkSelectDto workSelectDto);
+	// 프로젝트 주별 소요시간 보고서
+	List<WorkReportDto> selectWeekReport(WorkSelectDto workSelectDto);
+	// 프로젝트 월별 소요시간 보고서
+	List<WorkReportDto> selectMonthReport(WorkSelectDto workSelectDto);
 }
