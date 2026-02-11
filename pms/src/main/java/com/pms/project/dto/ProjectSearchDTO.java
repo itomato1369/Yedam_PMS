@@ -1,5 +1,7 @@
 package com.pms.project.dto;
 
+import org.apache.ibatis.type.Alias;
+
 import groovy.transform.ToString;
 import lombok.Data;
 import lombok.Getter;
@@ -10,6 +12,7 @@ import lombok.Setter;
 @Setter
 @ToString
 @RequiredArgsConstructor
+@Alias("ProjectSearchDTO")
 public class ProjectSearchDTO {
     private String projectName;
     private Integer projectStatus; // 또는 String 타입, 상태 코드에 따라

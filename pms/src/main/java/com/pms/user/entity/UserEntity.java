@@ -28,7 +28,7 @@ public class UserEntity {
 
 	// 공통코드 : 1 / 0
 	@Column(name = "admin", nullable = false)
-	private Integer admin;
+	private boolean admin;
 
 	// 공통코드 : 110 / 120 / 130
 	@Column(name = "status", nullable = false)
@@ -45,7 +45,7 @@ public class UserEntity {
 	private String email;
 
 	@Builder
-	private UserEntity(String userId, String passwd, String username, Integer admin, Integer status,
+	private UserEntity(String userId, String passwd, String username, boolean admin, Integer status,
 			LocalDateTime createtime, String email) {
 		this.userId = userId;
 		this.passwd = passwd;

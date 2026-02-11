@@ -1,0 +1,29 @@
+<!-- 담당자 선택 Modal -->
+<th:block th:fragment="IssueSelectModal">
+	<link rel="stylesheet" th:href="@{/css/modal.css}" />
+	<div class="modal fade" id="issueSelectModal" tabindex="-1"
+		aria-labelledby="issueSelectModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="issueSelectModalLabel">상위일감 선택</h5>
+				</div>
+
+				<div class="modal-body">
+					<!-- 추후 등록된 일감 목록을 DB에서 가져와야한다 -->
+					<ul class="list-group">
+						<li class="list-group-item job-item">A일감</li>
+						<li class="list-group-item job-item">B일감</li>
+						<li class="list-group-item job-item">C일감</li>
+					</ul>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script th:src="@{/js/issue/issue-select-modal.js}"></script>
+</th:block>

@@ -1,5 +1,7 @@
 package com.pms.project.service;
 
+import com.pms.project.dto.ParentProjectDTO;
+import com.pms.project.dto.ProjectInsertDTO;
 import com.pms.project.dto.ProjectSearchDTO;
 import java.util.List;
 
@@ -18,4 +20,8 @@ public interface ProjectService {
     List<ProjectSelectDTO> findUserProjects(String userId);
     
     List<ProjectSelectDTO> findProjectByOptions(ProjectSearchDTO searchDTO);
+    
+    List<ParentProjectDTO> findParentProjects();
+    
+    boolean addProject(ProjectInsertDTO projectInsertDTO);
 }

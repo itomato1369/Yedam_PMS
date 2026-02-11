@@ -1,12 +1,18 @@
 package com.pms.project.service.impl;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.pms.project.dto.ParentProjectDTO;
+import com.pms.project.dto.ProjectInsertDTO;
 import com.pms.project.dto.ProjectSearchDTO;
 import com.pms.project.dto.ProjectSelectDTO;
+import com.pms.project.dto.ProjectStatus;
 import com.pms.project.mapper.ProjectMapper;
 import com.pms.project.service.ProjectService;
 
@@ -16,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
     private final ProjectMapper projectMapper;
-
+    
     @Override
     @Transactional(readOnly = true)
     public List<ProjectSelectDTO> findUserProjects(String userId) {
@@ -37,5 +43,34 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public List<ProjectSelectDTO> findProjectByOptions(ProjectSearchDTO searchDTO) {
 		return projectMapper.selectProjectsByOptions(searchDTO);
+	}
+
+
+	@Override
+	public List<ParentProjectDTO> findParentProjects() {
+		return projectMapper.selectParentProjects();
+	}
+
+
+	@Override
+	public boolean addProject(ProjectInsertDTO projectInsertDTO) {
+		// INSERT 결과로 생성된 row count 확인하여 성공 여부 판단
+		LocalDate startDate = convertToLocalDate(projectInsertDTO.getStartDate());
+	    LocalDate today = LocalDate.now();
+	    
+		if (startDate.equals(today)) {
+			projectInsertDTO.setStatus( ProjectStatus.ACTIVE.getCode());
+		} else {
+			projectInsertDTO.setStatus( ProjectStatus.PAUSED.getCode());
+		}
+		
+		return projectMapper.insertProject(projectInsertDTO) > 0;
+	}
+	
+	// Date → LocalDate 변환 헬퍼 메서드
+	private LocalDate convertToLocalDate(Date date) {
+	    return date.toInstant()
+	               .atZone(ZoneId.systemDefault())
+	               .toLocalDate();
 	}
 }

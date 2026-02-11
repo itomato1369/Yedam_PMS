@@ -4,8 +4,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute; // 추가
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.pms.project.common.mapper.ProjectCommonStatusMapper;
+import com.pms.project.dto.ProjectInsertDTO;
 import com.pms.project.dto.ProjectSearchDTO; // 추가
 import com.pms.project.service.ProjectService;
 
@@ -43,5 +46,36 @@ public class ProjectController {
         model.addAttribute("searchDTO", searchDTO); // 검색 폼의 값 유지를 위해 모델에 추가
         
         return "project/list";
+    }
+    
+	// 새 프로젝트 등록화면 불러오기
+    @GetMapping("/project/new")
+    public String addProject(Model model) {
+    	model.addAttribute("project", new ProjectInsertDTO()); // 전달받을 값을 입력하기위한 빈 객체
+    	model.addAttribute("parentProjects", projectService.findParentProjects()); // 빈객체에 입력할 상속 가능한 프로젝트 목록
+        model.addAttribute("mode", "new"); // 모드 구분
+        
+    	return "project/insert-form";
+    }
+    
+    // 프로젝트 입력 처리
+    @PostMapping("/project/new")
+	// TODO: dev 머지 이후 수정 - 매개변수에 추가
+    // @AuthenticationPrincipal CustomUserDetails customUser 
+    public String modifyProject(
+    		@ModelAttribute ProjectInsertDTO dto
+    		, RedirectAttributes redirectAttributes
+    		) {
+    	dto.setUserId("admin");
+    	
+    	boolean success = projectService.addProject(dto);
+    	
+    	if (success) {
+    		redirectAttributes.addFlashAttribute("successMessage", "프로젝트가 등록되었습니다.");
+        } else {
+        	redirectAttributes.addFlashAttribute("errorMessage", "프로젝트 등록에 실패했습니다.");
+        }
+    	
+    	return "redirect:/projects";
     }
 }

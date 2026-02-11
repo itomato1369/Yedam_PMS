@@ -144,4 +144,48 @@
         </where>
         ORDER BY p.create_at ASC
     </select>
+    
+    <!--/* insert-from에서 조회 할 프로젝트 목록 */-->
+    <select id="selectParentProjects" resultType="ParentProjectDTO">
+		SELECT project_no
+		  , project_name
+		FROM vw_project
+		WHERE status != 390
+		ORDER BY project_no
+	</select>
+	
+	<!--/* insert update delete: MyBatis가 내부적으로 실행 후 결과(Row 수)를 반환하는 구조 */-->
+	<insert id="insertProject" parameterType="projectInsertDTO">
+		INSERT INTO project (
+		    project_no,         -- 식별자
+		    parent_project_no,  -- 상위프로젝트
+		    project_name,       -- 프로젝트명
+		    user_id,            -- 제작자
+		    project_desc,       -- 설명
+		    project_home,       -- 홈페이지
+		    project_code,       -- URI
+		    create_at,          -- 생성일
+		    update_at,          -- 수정일
+		    start_date,         -- 시작일
+		    end_date,           -- 종료일
+		    parent_member_yn,   -- 멤버상속
+		    public_yn,          -- 공개여부
+		    status              -- 상태
+		) VALUES (
+	        PROJECT_SEQ.NEXTVAL               -- 시퀀스 자동 생성
+	        , NVL(#{parentProjectNo}, 0)      -- null able, default: 0
+	        , #{projectName}                  -- 필수값: 중복 가능
+	        , #{userId}                       -- 필수값: Service 에서 세팅
+	        , NVL(#{projectDesc}, '')         -- null able, 추후에 null 예외처리 가능성
+	        , NVL(#{projectHome}, '')         -- null able, 추후에 null 예외처리 가능성
+	        , #{projectCode}                  -- 필수값(Unique, 수정불가능)
+	        , SYSTIMESTAMP                    -- 생성일 자동
+	        , NULL                            -- 수정일은 생성 시 null
+	        , #{startDate}                    -- 필수값(오늘 이전 날짜 불가)
+	        , #{endDate}                      -- 필수값(오늘 이전 날짜 불가)
+	        , NVL(#{parentMemberYn}, 0)       -- null able, default: 0
+	        , NVL(#{publicYn}, 0)             -- null able, default: 0
+	        , #{status}                       -- 필수값: Service 에서 세팅
+    )
+	</insert>
 </mapper>
