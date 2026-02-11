@@ -18,4 +18,15 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
 			WHERE u.userId = :userId
 			""")
 	public int updateLastLogin(@Param("userId") String userId, @Param("lastLogin") LocalDateTime lastLogin);
+
+	@Query(value = """
+			SELECT COUNT(*) > 0
+			FROM users u
+			JOIN members m ON u.user_id = m.user_id
+			JOIN g_project gp ON m.groupid = gp.group_no
+			JOIN project p ON gp.project_no = p.project_no
+			WHERE m.user_id = :userId
+			AND p.project_code = :projectCode
+			""", nativeQuery = true)
+	boolean existsByUserId(@Param("userId") String userId, @Param("projectCode") String projectCode);
 }
