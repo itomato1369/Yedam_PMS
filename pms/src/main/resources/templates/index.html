@@ -53,7 +53,11 @@
 		</div>
 		<br>
 		<div>
-			<button th:onclick="|location.href='@{/settings/}'|">Settings</button>
+			<button th:onclick="|location.href='@{/settings}'|">Settings</button>
+		</div>
+		<br>
+		<div sec:authorize="hasRole('ROLE_ADMIN')">
+			<button th:onclick="|location.href='@{/user/new}'|">회원 등록(Admin 전용)</button>
 		</div>
 		<br>
 		<form th:action="@{/user/logout}" method="post">
