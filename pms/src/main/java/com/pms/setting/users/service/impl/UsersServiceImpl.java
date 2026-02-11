@@ -1,13 +1,14 @@
 package com.pms.setting.users.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.pms.setting.groups.vo.GroupsVO;
 import com.pms.setting.users.dto.UserStatusUpdateDto;
 import com.pms.setting.users.dto.UsersResponseDto;
+import com.pms.setting.users.entity.UsersEntity;
 import com.pms.setting.users.repository.UsersRepository;
 import com.pms.setting.users.service.UsersService;
 
@@ -21,18 +22,19 @@ public class UsersServiceImpl implements UsersService {
     private final UsersRepository usersRepository;
 
     @Override
-    public List<UsersResponseDto> getUsers() {
-        return usersRepository.findAllUsers();
+    public List<UsersResponseDto> getUsersExcludeStatus(Integer status) {
+        return usersRepository.findByStatusNot(status)
+                .stream()
+                .map(UsersResponseDto::fromEntity) // 또는 생성자 매핑
+                .collect(Collectors.toList());
     }
-
+    
     @Override
     @Transactional
     public void updateUserStatus(UserStatusUpdateDto dto) {
-        int updated = usersRepository.updateUserStatus(dto.getUserId(), dto.getStatus());
-
-        if (updated == 0) {
-            throw new RuntimeException("해당 유저가 존재하지 않습니다.");
-        }
+    	//단건조회
+    	UsersEntity  user = usersRepository.findById(dto.getUserId()).orElseThrow();
+    	user.updateStatus(dto.getStatus());
     }
     
     @Override

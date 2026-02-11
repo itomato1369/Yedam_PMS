@@ -2,7 +2,14 @@ package com.pms.setting.users.controller;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.pms.setting.users.dto.UserStatusUpdateDto;
 import com.pms.setting.users.dto.UsersResponseDto;
@@ -16,12 +23,6 @@ import lombok.RequiredArgsConstructor;
 public class UsersController {
 
     private final UsersService usersService;
-
-    // 유저 목록 조회 (기본 목록)
-    @GetMapping
-    public List<UsersResponseDto> getUsers() {
-        return usersService.getUsers();
-    }
 
     // 유저 검색 (AJAX 호출용)
     // JS에서 보낸 status와 keyword를 여기서 받습니다.
@@ -45,4 +46,11 @@ public class UsersController {
         // usersService.deleteUser(id); // 삭제 로직 구현 필요
         return "SUCCESS";
     }
+    
+    @GetMapping("/exclude")
+    public List<UsersResponseDto> getUsersExcludeStatus(
+            @RequestParam(required = false) Integer status) {
+        return usersService.getUsersExcludeStatus(status);
+    }
+
 }

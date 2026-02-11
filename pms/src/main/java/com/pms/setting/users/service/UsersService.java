@@ -7,9 +7,9 @@ import com.pms.setting.users.dto.UsersResponseDto;
 
 public interface UsersService {
 
-	    List<UsersResponseDto> getUsers();
-
 	    void updateUserStatus(UserStatusUpdateDto dto);
 	    
 	    List<UsersResponseDto> searchUsers(Integer status, String keyword);
+	    
+	    List<UsersResponseDto> getUsersExcludeStatus(Integer status);
 }
