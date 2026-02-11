@@ -24,11 +24,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/work")
 public class WorkController {
 	private final WorkService workService;
-	// 소요시간 등록
-	@GetMapping("workinsert")
-	public String workinsert() {
-		return "work/work-insert";
-	}
 	
 	// 소요시간 전체 조회 + 검색기능
 	@GetMapping("/list")
