@@ -14,4 +14,6 @@ public interface GroupsService {
     void register(GroupsVO vo);
     
     void toggleGroupStatus(Long groupNo);
+    
+    boolean modifyGroupName(GroupsVO groupsVO);
 }

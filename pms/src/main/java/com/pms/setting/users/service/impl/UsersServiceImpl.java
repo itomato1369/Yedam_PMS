@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.pms.setting.groups.vo.GroupsVO;
 import com.pms.setting.users.dto.UserStatusUpdateDto;
 import com.pms.setting.users.dto.UsersResponseDto;
 import com.pms.setting.users.repository.UsersRepository;

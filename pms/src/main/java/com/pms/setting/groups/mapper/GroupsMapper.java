@@ -19,4 +19,6 @@ public interface GroupsMapper {
 
     // 상세 보기가 필요 없다면 이건 주석 처리해도 됩니다.
     GroupsVO selectGroup(Long groupNo);
+    
+    int updateGroupName(GroupsVO groupVO);
 }

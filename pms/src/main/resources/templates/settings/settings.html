@@ -449,8 +449,18 @@
 
 	    // 각 섹션 로드 함수 정의 (그룹, 역할, 상태, 유형)
 	    const gCtrl = setupSection({ listUrl:'/settings/api/groups', searchUrl:'/settings/api/groups/search', searchBtnId:'#btnGroupSearch', keywordId:'#groupKeyword', addBtnId:'#btnGroupAdd', tbodyId:'#groupTableBody', cols:5, emptyMsg:'등록된 그룹이 없습니다.', newInputId:'#groupNewInput', 
-	        rowFn: g => `<tr><td>${g.groupNo}</td><td class="text-start">${g.groupName}</td><td class="text-center"><span class="badge bg-light text-dark">${g.memberCount||0} 명</span></td><td><span class="badge ${g.status==510?'bg-success':'bg-warning'}">${g.statusName}</span></td><td><button class="btn btn-sm ${g.status==510?'btn-outline-warning':'btn-outline-success'} btn-group-toggle" data-id="${g.groupNo}" data-status="${g.status}"><i class="${g.status==510?'cil-lock-locked':'cil-lock-unlocked'}"></i> ${g.status==510?'비활성화':'활성화'}</button></td></tr>`,
-	        newRowHtml: `<tr class="table-info" id="rowGroupNew"><td>#</td><td><input type="text" id="groupNewInput" class="form-control form-control-sm" placeholder="그룹명 입력"></td><td class="text-center">0 명</td><td><span class="badge bg-warning">비활성(520)</span></td><td><button class="btn btn-sm btn-primary btn-group-save">저장</button> <button class="btn btn-sm btn-secondary btn-group-cancel">취소</button></td></tr>`
+	    	rowFn: g => `<tr>
+	    <td>${g.groupNo}</td>
+	    <td class="text-start group-name-cell" data-id="${g.groupNo}" style="cursor:pointer" title="더블클릭하여 수정">
+	        <span class="name-text">${g.groupName}</span>
+	    </td>
+	    <td class="text-center"><span class="badge bg-light text-dark">${g.memberCount||0} 명</span></td>
+	    <td><span class="badge ${g.status==510?'bg-success':'bg-warning'}">${g.statusName}</span></td>
+	    <td>
+	        <button class="btn btn-sm ${g.status==510?'btn-outline-warning':'btn-outline-success'} btn-group-toggle" data-id="${g.groupNo}" data-status="${g.status}">상태변경</button>
+	    </td>
+	</tr>`,
+	    	newRowHtml: `<tr class="table-info" id="rowGroupNew"><td>#</td><td><input type="text" id="groupNewInput" class="form-control form-control-sm" placeholder="그룹명 입력"></td><td class="text-center">0 명</td><td><span class="badge bg-warning">비활성(520)</span></td><td><button class="btn btn-sm btn-primary btn-group-save">저장</button> <button class="btn btn-sm btn-secondary btn-group-cancel">취소</button></td></tr>`
 	    });
 	    const loadGroups = gCtrl.load;
 
@@ -492,9 +502,37 @@
 	    $(document).on('click', '.btn-role-delete', function() { if(confirm("삭제하시겠습니까?")) $.ajax({ url: `/settings/api/roles/${$(this).data('id')}`, type: 'DELETE', success: loadRoles }); });
 	    $(document).on('click', '.btn-job-status-delete', function() { if(confirm("삭제하시겠습니까?")) $.ajax({ url: `/settings/api/job-status/${$(this).data('id')}`, type: 'DELETE', success: loadJobStatus }); });
 	    $(document).on('click', '.btn-job-type-delete', function() { if(confirm("삭제하시겠습니까?")) $.ajax({ url: `/settings/api/job-types/${$(this).data('id')}`, type: 'DELETE', success: loadJobTypes }); });
+	 	// 그룹 이름 더블클릭 시 입력창으로 전환
+	    $(document).on('dblclick', '.group-name-cell', function() {
+	        if ($(this).find('input').length) return; // 이미 입력창이면 무시
 
-	    
-	 // 공통 이벤트 (저장/취소/삭제/토글) + 📍 키보드 단축키 복구
+	        const $cell = $(this);
+	        const id = $cell.data('id');
+	        const oldName = $cell.find('.name-text').text();
+	        // 입력창으로 교체
+	        $cell.html(`<input type="text" class="form-control form-control-sm edit-group-input" value="${oldName}">`);
+	        const $input = $cell.find('input').focus();
+	        // 저장 함수
+	        const saveName = () => {
+	            const newName = $input.val().trim();
+	            if (!newName || newName === oldName) return $cell.html(`<span class="name-text">${oldName}</span>`);
+
+	            apiCall(`/settings/api/groups/${id}/name`, 'PATCH', { groupName: newName }, () => {
+	                $cell.html(`<span class="name-text">${newName}</span>`);
+	                // 성공 알림 없이 조용히 업데이트하거나 alert 추가 가능
+	            }, () => {
+	                alert("이름 변경 실패");
+	                $cell.html(`<span class="name-text">${oldName}</span>`);
+	            });
+	        };
+	        // 엔터 및 ESC 처리
+	        $input.on('keyup', e => {
+	            if (e.key === 'Enter') saveName();
+	            if (e.key === 'Escape') $cell.html(`<span class="name-text">${oldName}</span>`);
+	        });
+	        // 포커스 잃으면 자동 저장
+	        $input.on('blur', saveName);
+	    });
 
 	    init();
 	});

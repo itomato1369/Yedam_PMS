@@ -3,6 +3,7 @@ package com.pms.setting.groups.service.impl;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.pms.setting.groups.mapper.GroupsMapper;
 import com.pms.setting.groups.service.GroupsService;
@@ -45,4 +46,13 @@ public class GroupsServiceImpl implements GroupsService {
         groupsMapper.insertGroup(vo);
     }
 
+    @Override
+    @Transactional
+    public boolean modifyGroupName(GroupsVO groupsVO) {
+        // 이름이 비어있는지 마지막으로 한 번 더 체크하는 센스!
+        if (groupsVO.getGroupName() == null || groupsVO.getGroupName().trim().isEmpty()) {
+            return false;
+        }
+        return groupsMapper.updateGroupName(groupsVO) > 0;
+    }
 }
