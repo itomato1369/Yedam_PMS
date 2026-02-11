@@ -22,7 +22,8 @@ public class ProjectAuthorizationManager implements AuthorizationManager<Request
 
 	@Override
 	public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext context) {
-
+		System.out.println(">>> ProjectAuthorizationManager 진입함! URL: " + context.getRequest().getRequestURI());
+		
 		// url이 맞는지 확인
 		String uri = context.getRequest().getRequestURI();
 		if (!projectUri.matches(uri)) {
@@ -45,7 +46,20 @@ public class ProjectAuthorizationManager implements AuthorizationManager<Request
 		// -> 프로젝트 멤버인지 확인하는 용도
 		String projectCode = projectUri.match(uri).get("projectCode");
 		boolean isMember = userRepository.existsByUserId(customUser.getUsername(), projectCode);
-
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println("==============================================");
+		System.out.println("[Security-Log] 프로젝트 권한 검사 수행");
+		System.out.println("[ 접속 유저 ]		: " + customUser.getUsername());
+		System.out.println("[ 프로젝트 ]		: " + projectCode);
+		System.out.println("[ 권한 여부(DB) ]	: " + isMember);
+		System.out.println("[ 결과 ]			: " + (isMember ? "승인" : "거부"));
+		System.out.println("==============================================");
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		
 		return new AuthorizationDecision(isMember);
 	}
 
