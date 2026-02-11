@@ -10,11 +10,11 @@ import lombok.Getter;
 @Getter
 public class CustomUserDetails extends User {
 
-	private static final long serialVersionUID = 1L;
 	private final UserEntity userEntity;
 
 	public CustomUserDetails(UserEntity user) {
-		super(user.getUserId(),
+		super(
+			user.getUserId(),
 			user.getPasswd(),
 			AuthorityUtils.createAuthorityList(
 					user.isAdmin() ? "ROLE_ADMIN" : "ROLE_USER")
