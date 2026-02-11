@@ -18,18 +18,21 @@
     <div class="d-flex justify-content-between align-items-center mb-5">
       <div class="d-flex align-items-center">
         <div class="position-relative">
-          <h2 class="fw-bold m-0 text-dark">프로젝트</h2>
+          <h2 class="fw-bold m-0 text-dark" 
+                th:text="${mode == 'new' ? '새 프로젝트' : '프로젝트 설정'}"></h2>
         </div>
       </div>
       <!--/* pm/admin Only */-->
       <!--/* ProjectAdmin buttons : add-project, modify-project */-->
       <div class="d-flex align-items-center gap-4">
         <div class="d-flex align-items-center gap-2">
-          <i
-            class="cil-plus text-dark"
-            style="font-size: 1.5rem; font-weight: bold"
-          ></i>
-          <button class="btn btn-dark fw-bold">새 프로젝트</button>
+          <i class="cil-plus text-dark" style="font-size: 1.5rem; font-weight: bold"></i>
+			<button type="button" 
+			        id="btnAddNewProject" 
+			        class="btn btn-dark fw-bold" 
+			        th:data-url="@{/project/new}">
+			    새 프로젝트
+			</button>
         </div>
 
         <div class="d-flex align-items-center gap-2">
@@ -185,5 +188,15 @@
       </th:block>
     </div>
   </th:block>
-   <!--/* <script th:src="@{/project/js/projectList.js}"></script> */-->
+	<script>
+	document.addEventListener('DOMContentLoaded', function() {
+	    const btn = document.getElementById('btnAddNewProject');
+	    if (btn) {
+	        btn.addEventListener('click', function() {
+	            const url = this.getAttribute('data-url');
+	            location.href = url;
+	        });
+	    }
+	});	
+	</script>
 </html>
