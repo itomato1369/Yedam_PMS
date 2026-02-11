@@ -8,10 +8,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import lombok.RequiredArgsConstructor;
+
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final ProjectAuthorizationManager projectAuthorizationManager;
 	@Bean
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -28,6 +32,7 @@ public class SecurityConfig {
 			.authorizeHttpRequests(auth -> auth
 					.requestMatchers("/home/**", "/user/**", "/coreui/**", "/css/**", "/js/**").permitAll()
 					.requestMatchers("/settings/**").hasRole("ADMIN")
+					.requestMatchers("/project/**").access(projectAuthorizationManager)
 					.anyRequest().authenticated()
 					)
 			.formLogin(form -> form
