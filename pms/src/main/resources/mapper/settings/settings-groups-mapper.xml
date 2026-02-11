@@ -5,109 +5,60 @@
 
 <mapper namespace="com.pms.setting.groups.mapper.GroupsMapper">
 
-	<!-- ========================= -->
-	<!-- 전체 조회 -->
-	<!-- ========================= -->
-	<select id="selectGroupAll"
-		resultType="com.pms.setting.groups.vo.GroupsVO">
+    <select id="selectGroupAll" resultType="com.pms.setting.groups.vo.GroupsVO">
+        SELECT
+            g.GROUP_NO AS groupNo,
+            g.GROUPNAME AS groupName,
+            g.STATUS AS status,
+            c.COMMON_NAME AS statusName,
+            (SELECT COUNT(*) FROM MEMBERS m WHERE m.GROUPID = g.GROUP_NO) AS memberCount
+        FROM GROUPS g
+        LEFT JOIN COMMON c
+            ON g.STATUS = c.COMMON_NO
+            AND c.PARENT_COMMON_NO = 500
+            AND c.DISPLAY_YN = 'Y'
+        ORDER BY g.GROUP_NO
+    </select>
 
-		SELECT
-		g.GROUP_NO AS groupNo,
-		g.GROUPNAME AS groupName,
-		g.STATUS AS status,
-		c.COMMON_NAME AS statusName
+    <select id="searchGroup" parameterType="string" resultType="com.pms.setting.groups.vo.GroupsVO">
+        SELECT
+            g.GROUP_NO AS groupNo,
+            g.GROUPNAME AS groupName,
+            g.STATUS AS status,
+            c.COMMON_NAME AS statusName,
+            (SELECT COUNT(*) FROM MEMBERS m WHERE m.GROUPID = g.GROUP_NO) AS memberCount
+        FROM GROUPS g
+        LEFT JOIN COMMON c
+            ON g.STATUS = c.COMMON_NO
+            AND c.PARENT_COMMON_NO = 500
+            AND c.DISPLAY_YN = 'Y'
+        WHERE g.GROUPNAME LIKE '%' || #{keyword} || '%'
+        ORDER BY g.GROUP_NO
+    </select>
 
-		FROM GROUPS g
+    <insert id="insertGroup" parameterType="com.pms.setting.groups.vo.GroupsVO">
+        <selectKey keyProperty="groupNo" resultType="long" order="BEFORE">
+            SELECT GROUP_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO GROUPS (
+            GROUP_NO,
+            GROUPNAME,
+            STATUS
+        ) VALUES (
+            #{groupNo},
+            #{groupName},
+            520
+        )
+    </insert>
 
-		LEFT JOIN COMMON c
-		ON g.STATUS = c.COMMON_NO
-		AND c.PARENT_COMMON_NO = 500
-		AND c.DISPLAY_YN = 'Y'
-
-		ORDER BY g.GROUP_NO
-
-	</select>
-
-	<!-- ========================= -->
-	<!-- 단건 조회 -->
-	<!-- ========================= -->
-	<select id="selectGroup" parameterType="long"
-		resultType="com.pms.setting.groups.vo.GroupsVO">
-
-		SELECT
-		g.GROUP_NO AS groupNo,
-		g.GROUPNAME AS groupName,
-		g.STATUS AS status,
-		c.COMMON_NAME AS statusName
-
-		FROM GROUPS g
-
-		LEFT JOIN COMMON c
-		ON g.STATUS = c.COMMON_NO
-		AND c.PARENT_COMMON_NO = 500
-		AND c.DISPLAY_YN = 'Y'
-
-		WHERE g.GROUP_NO = #{groupNo}
-
-	</select>
-
-	<!-- ========================= -->
-	<!-- 검색 -->
-	<!-- ========================= -->
-	<select id="searchGroup" parameterType="string"
-		resultType="com.pms.setting.groups.vo.GroupsVO">
-
-		SELECT
-		g.GROUP_NO AS groupNo,
-		g.GROUPNAME AS groupName,
-		g.STATUS AS status,
-		c.COMMON_NAME AS statusName
-
-		FROM GROUPS g
-
-		LEFT JOIN COMMON c
-		ON g.STATUS = c.COMMON_NO
-		AND c.PARENT_COMMON_NO = 500
-		AND c.DISPLAY_YN = 'Y'
-
-		WHERE g.GROUPNAME LIKE '%' || #{keyword} || '%'
-
-		ORDER BY g.GROUP_NO
-
-	</select>
-
-	<!-- ========================= -->
-	<!-- 그룹 생성 -->
-	<!-- ========================= -->
-	<insert id="insertGroup"
-		parameterType="com.pms.setting.groups.vo.GroupsVO">
-		<selectKey keyProperty="groupNo" resultType="long"
-			order="BEFORE">
-			SELECT GROUP_SEQ.NEXTVAL FROM DUAL
-		</selectKey>
-		INSERT INTO GROUPS (
-		GROUP_NO,
-		GROUPNAME,
-		STATUS
-		) VALUES (
-		#{groupNo},
-		#{groupName},
-		520
-		)
-	</insert>
-
-
-	<!-- ========================= -->
-	<!-- 상태 토글 변경 -->
-	<!-- ========================= -->
-	<update id="toggleGroupStatus">
-		UPDATE GROUPS
-		SET STATUS =
-		CASE
-		WHEN STATUS = 510 THEN 520
-		WHEN STATUS = 520 THEN 510
-		END
-		WHERE GROUP_NO = #{groupNo}
-	</update>
+    <update id="toggleGroupStatus">
+        UPDATE GROUPS
+        SET STATUS = CASE
+            WHEN STATUS = 510 THEN 520
+            WHEN STATUS = 520 THEN 510
+            ELSE STATUS
+        END
+        WHERE GROUP_NO = #{groupNo}
+    </update>
 
 </mapper>
