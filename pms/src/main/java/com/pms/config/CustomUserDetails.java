@@ -17,7 +17,7 @@ public class CustomUserDetails extends User {
 		super(user.getUserId(),
 			user.getPasswd(),
 			AuthorityUtils.createAuthorityList(
-					user.getAdmin().equals(1) ? "ROLE_ADMIN" : "ROLE_USER")
+					user.isAdmin() ? "ROLE_ADMIN" : "ROLE_USER")
 			);
 		this.userEntity = user;
 	}

@@ -26,7 +26,7 @@ public class UserDto {
 	private String username;
 
 	@NotNull
-	private Integer admin = 0;
+	private boolean admin = false;
 
 	private Integer status = 120;
 
