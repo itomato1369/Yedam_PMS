@@ -18,18 +18,17 @@ import lombok.RequiredArgsConstructor;
 public class ProjectAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
 
 	private final UserRepository userRepository;
-	private final UriTemplate projectUri = new UriTemplate("/project/{projectCode}/**");
+	private final UriTemplate projectUri = new UriTemplate("/project/{projectCode}{path:.*}");
 
 	@Override
 	public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext context) {
-		System.out.println(">>> ProjectAuthorizationManager 진입함! URL: " + context.getRequest().getRequestURI());
 		
 		// url이 맞는지 확인
 		String uri = context.getRequest().getRequestURI();
 		if (!projectUri.matches(uri)) {
 			return new AuthorizationDecision(true);
 		}
-
+		
 		// 인증 객체 확인
 		Authentication auth = authentication.get();
 		if (auth == null || !auth.isAuthenticated()) {
@@ -45,21 +44,8 @@ public class ProjectAuthorizationManager implements AuthorizationManager<Request
 		// projectCode 추출
 		// -> 프로젝트 멤버인지 확인하는 용도
 		String projectCode = projectUri.match(uri).get("projectCode");
-		boolean isMember = userRepository.existsByUserId(customUser.getUsername(), projectCode);
-		System.out.println();
-		System.out.println();
-		System.out.println();
-		System.out.println("==============================================");
-		System.out.println("[Security-Log] 프로젝트 권한 검사 수행");
-		System.out.println("[ 접속 유저 ]		: " + customUser.getUsername());
-		System.out.println("[ 프로젝트 ]		: " + projectCode);
-		System.out.println("[ 권한 여부(DB) ]	: " + isMember);
-		System.out.println("[ 결과 ]			: " + (isMember ? "승인" : "거부"));
-		System.out.println("==============================================");
-		System.out.println();
-		System.out.println();
-		System.out.println();
-		
+		int cnt = userRepository.existsByUserId(customUser.getUsername(), projectCode);
+		boolean isMember = cnt > 0;
 		return new AuthorizationDecision(isMember);
 	}
 

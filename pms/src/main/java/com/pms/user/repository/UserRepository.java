@@ -20,7 +20,7 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
 	public int updateLastLogin(@Param("userId") String userId, @Param("lastLogin") LocalDateTime lastLogin);
 
 	@Query(value = """
-			SELECT COUNT(*) > 0
+			SELECT COUNT(*)
 			FROM users u
 			JOIN members m ON u.user_id = m.user_id
 			JOIN g_project gp ON m.groupid = gp.group_no
@@ -28,5 +28,5 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
 			WHERE m.user_id = :userId
 			AND p.project_code = :projectCode
 			""", nativeQuery = true)
-	boolean existsByUserId(@Param("userId") String userId, @Param("projectCode") String projectCode);
+	int existsByUserId(@Param("userId") String userId, @Param("projectCode") String projectCode);
 }
