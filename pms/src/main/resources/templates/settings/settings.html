@@ -25,15 +25,21 @@
 										</th:block>
 									</select>
 								</div>
-								<div class="col-md-7">
+								<div class="col-md-6">
 									<input type="text" id="keyword" name="keyword"
 										class="form-control" placeholder="프로젝트명 검색">
 								</div>
-								<div class="col-md-2">
-									<button type="button" id="btnSearch"
-										class="btn btn-primary w-100">
-										<i class="cil-search"></i> 검색
-									</button>
+								<div class="col-md-3">
+									<div class="d-flex gap-2">
+										<button type="button" id="btnSearch"
+											class="btn btn-primary w-100">
+											<i class="cil-search"></i> 검색
+										</button>
+										<button type="button" id="btnProjectAdd"
+											class="btn btn-success w-100 text-white">
+											<i class="cil-plus"></i> 생성
+										</button>
+									</div>
 								</div>
 							</form>
 						</div>
@@ -112,15 +118,21 @@
 										<option value="">전체 상태</option>
 									</select>
 								</div>
-								<div class="col-md-7">
+								<div class="col-md-6">
 									<input type="text" id="userKeyword" name="keyword"
 										class="form-control" placeholder="이름 검색">
 								</div>
-								<div class="col-md-2">
-									<button type="button" id="btnUserSearch"
-										class="btn btn-primary w-100">
-										<i class="cil-search"></i> 검색
-									</button>
+								<div class="col-md-3">
+									<div class="d-flex gap-2">
+										<button type="button" id="btnUserSearch"
+											class="btn btn-primary w-100">
+											<i class="cil-search"></i> 검색
+										</button>
+										<button type="button" id="btnUserAdd"
+											class="btn btn-success w-100 text-white">
+											<i class="cil-plus"></i> 등록
+										</button>
+									</div>
 								</div>
 							</form>
 						</div>
@@ -181,13 +193,19 @@
 					<div class="card mb-3">
 						<div class="card-body">
 							<form id="groupSearchForm" class="row g-2">
-								<div class="col-md-10">
+								<div class="col-md-9">
 									<input type="text" id="groupKeyword" class="form-control"
 										placeholder="그룹명 검색">
 								</div>
-								<div class="col-md-2">
-									<button type="button" id="btnGroupSearch"
-										class="btn btn-primary w-100">검색</button>
+								<div class="col-md-3">
+									<div class="d-flex gap-2">
+										<button type="button" id="btnGroupSearch"
+											class="btn btn-primary w-100">검색</button>
+										<button type="button" id="btnGroupAdd"
+											class="btn btn-success w-100 text-white">
+											<i class="cil-plus"></i> 생성
+										</button>
+									</div>
 								</div>
 							</form>
 						</div>
@@ -216,12 +234,12 @@
 			</div>
 		</div>
 
-		<!-- 권한 아코디언 -->
+		<!-- 역할 아코디언 -->
 		<div class="accordion-item">
 			<h2 class="accordion-header">
 				<button class="accordion-button collapsed" type="button"
 					data-coreui-toggle="collapse" data-coreui-target="#collapseRoles">
-					프로젝트 권한 관리</button>
+					프로젝트 역할 관리</button>
 			</h2>
 			<div id="collapseRoles" class="accordion-collapse collapse"
 				data-coreui-parent="#settingsAccordion">
@@ -229,13 +247,19 @@
 					<div class="card mb-3">
 						<div class="card-body">
 							<div class="row g-2">
-								<div class="col-md-10">
+								<div class="col-md-9">
 									<input type="text" id="roleKeyword" class="form-control"
-										placeholder="권한명 검색">
+										placeholder="역할명 검색">
 								</div>
-								<div class="col-md-2">
-									<button type="button" id="btnRoleSearch"
-										class="btn btn-primary w-100">검색</button>
+								<div class="col-md-3">
+									<div class="d-flex gap-2">
+										<button type="button" id="btnRoleSearch"
+											class="btn btn-primary w-100">검색</button>
+										<button type="button" id="btnRoleAdd"
+											class="btn btn-success w-100 text-white">
+											<i class="cil-plus"></i> 추가
+										</button>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -246,12 +270,106 @@
 								class="table table-striped table-hover mb-0 text-center align-middle">
 								<thead class="table-light">
 									<tr>
-										<th>권한명</th>
+										<th>역할명</th>
 										<th>관리</th>
 									</tr>
 								</thead>
 								<tbody id="roleTableBody">
 								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 일감 상태 아코디언 -->
+		<div class="accordion-item">
+			<h2 class="accordion-header">
+				<button class="accordion-button collapsed" type="button"
+					data-coreui-toggle="collapse"
+					data-coreui-target="#collapseJobStatus">일감 상태 관리</button>
+			</h2>
+			<div id="collapseJobStatus" class="accordion-collapse collapse"
+				data-coreui-parent="#settingsAccordion">
+				<div class="accordion-body">
+					<div class="card mb-3">
+						<div class="card-body">
+							<div class="row g-2">
+								<div class="col-md-9">
+									<input type="text" id="jobStatusKeyword" class="form-control"
+										placeholder="상태명 검색">
+								</div>
+								<div class="col-md-3">
+									<div class="d-flex gap-2">
+										<button type="button" id="btnJobStatusSearch"
+											class="btn btn-primary w-100">검색</button>
+										<button type="button" id="btnJobStatusAdd"
+											class="btn btn-success w-100 text-white">
+											<i class="cil-plus"></i> 추가
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-body p-0">
+							<table
+								class="table table-striped table-hover mb-0 text-center align-middle">
+								<thead class="table-light">
+									<tr>
+										<th>일감 상태명</th>
+										<th>관리</th>
+									</tr>
+								</thead>
+								<tbody id="jobStatusTableBody"></tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 일감 유형 아코디언 -->
+		<div class="accordion-item">
+			<h2 class="accordion-header">
+				<button class="accordion-button collapsed" type="button"
+					data-coreui-toggle="collapse" data-coreui-target="#collapseJobType">
+					일감 유형 관리</button>
+			</h2>
+			<div id="collapseJobType" class="accordion-collapse collapse"
+				data-coreui-parent="#settingsAccordion">
+				<div class="accordion-body">
+					<div class="card mb-3">
+						<div class="card-body">
+							<div class="row g-2">
+								<div class="col-md-9">
+									<input type="text" id="jobTypeKeyword" class="form-control"
+										placeholder="유형명 검색">
+								</div>
+								<div class="col-md-3">
+									<div class="d-flex gap-2">
+										<button type="button" id="btnJobTypeSearch"
+											class="btn btn-primary w-100">검색</button>
+										<button type="button" id="btnJobTypeAdd"
+											class="btn btn-success w-100 text-white">
+											<i class="cil-plus"></i> 추가
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-body p-0">
+							<table
+								class="table table-striped table-hover mb-0 text-center align-middle">
+								<thead class="table-light">
+									<tr>
+										<th>일감 유형명</th>
+										<th>관리</th>
+									</tr>
+								</thead>
+								<tbody id="jobTypeTableBody"></tbody>
 							</table>
 						</div>
 					</div>
@@ -497,6 +615,67 @@ $(document).ready(function () {
                 </tr>`);
         });
     }
+ //  그룹 행 추가 버튼
+    $('#btnGroupAdd').on('click', function() {
+        if ($('#groupNewInput').length > 0) {
+            $('#groupNewInput').focus();
+            return;
+        }
+
+        const newRow = `
+            <tr class="table-info" id="rowGroupNew">
+                <td>#</td>
+                <td>
+                    <input type="text" id="groupNewInput" class="form-control form-control-sm" placeholder="그룹명 입력">
+                </td>
+                <td><span class="badge bg-warning">비활성</span></td> <td>
+                    <button class="btn btn-sm btn-primary btn-group-save">저장</button>
+                    <button class="btn btn-sm btn-secondary btn-group-cancel">취소</button>
+                </td>
+            </tr>`;
+        
+        $('#groupTableBody').prepend(newRow);
+        $('#groupNewInput').focus();
+    });
+
+    //  엔터 키 저장 & ESC 취소
+    $(document).on('keydown', '#groupNewInput', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); $('.btn-group-save').click(); }
+        if (e.key === 'Escape') { $('.btn-group-cancel').click(); }
+    });
+
+    //  취소
+    $(document).on('click', '.btn-group-cancel', function() {
+        $('#rowGroupNew').remove();
+    });
+
+    // 저장 (POST)
+    $(document).on('click', '.btn-group-save', function() {
+        const groupName = $('#groupNewInput').val().trim();
+
+        if (!groupName) {
+            alert("그룹명을 입력해주세요.");
+            $('#groupNewInput').focus();
+            return;
+        }
+
+        $.ajax({
+            url: '/settings/api/groups',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ 
+                groupName: groupName,
+                status: 520 // 📍 초기 상태값 (DB 공통코드에 맞춰 수정하세요)
+            }),
+            success: function() {
+                alert("새로운 그룹이 생성되었습니다.");
+                loadGroups(); // 목록 새로고침
+            },
+            error: function() {
+                alert("그룹 생성에 실패했습니다.");
+            }
+        });
+    });
 
     // 그룹 토글 이벤트
     $(document).on('click', '.btn-group-toggle', function(){
@@ -590,6 +769,288 @@ $(document).on('click', '.btn-role-delete', function() {
             }
         });
     }
+});
+// 역할 행 추가 버튼
+$('#btnRoleAdd').on('click', function() {
+    if ($('#roleNewInput').length > 0) {
+        $('#roleNewInput').focus();
+        return;
+    }
+
+    const newRow = `
+        <tr class="table-info" id="rowRoleNew">
+            <td>
+                <input type="text" id="roleNewInput" class="form-control form-control-sm" placeholder="역할명 입력 (예: 개발자)">
+            </td>
+            <td>
+                <button class="btn btn-sm btn-primary btn-role-save">저장</button>
+                <button class="btn btn-sm btn-secondary btn-role-cancel">취소</button>
+            </td>
+        </tr>`;
+    
+    $('#roleTableBody').prepend(newRow);
+    $('#roleNewInput').focus();
+});
+
+//행 추가 시 엔터 이벤트 바인딩 추가
+$(document).on('keydown', '#roleNewInput', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault(); // 페이지 새로고침 방지
+        $('.btn-role-save').click(); // 저장 버튼 클릭 트리거
+    }
+    if (e.key === 'Escape') {
+        $('.btn-role-cancel').click(); // ESC 누르면 취소
+    }
+});
+
+//  취소
+$(document).on('click', '.btn-role-cancel', function() {
+    $('#rowRoleNew').remove();
+});
+
+//  저장 (POST)
+$(document).on('click', '.btn-role-save', function() {
+    const roleName = $('#roleNewInput').val().trim();
+
+    if (!roleName) {
+        alert("역할명을 입력해주세요.");
+        $('#roleNewInput').focus();
+        return;
+    }
+
+    $.ajax({
+        url: '/settings/api/roles',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ roleName: roleName }),
+        success: function() {
+            alert("새로운 역할이 등록되었습니다.");
+            loadRoles(); // 목록 새로고침
+        },
+        error: function() {
+            alert("등록에 실패했습니다.");
+        }
+    });
+});
+//=============================
+// 5 일감 상태 관리 영역
+//=============================
+// 🔹 초기 로드 호출
+loadJobStatus();
+
+// 검색 이벤트
+$('#btnJobStatusSearch').on('click', performJobStatusSearch);
+$('#jobStatusKeyword').on('keypress', (e) => { if(e.which == 13) performJobStatusSearch(); });
+
+function loadJobStatus() {
+    $.get('/settings/api/job-status', renderJobStatusTable);
+}
+
+function performJobStatusSearch() {
+    const keyword = $('#jobStatusKeyword').val();
+    $.get('/settings/api/job-status/search', { keyword }, renderJobStatusTable);
+}
+
+function renderJobStatusTable(list) {
+    const $tbody = $('#jobStatusTableBody').empty();
+    if (!list.length) {
+        $tbody.append('<tr><td colspan="2" class="py-4">데이터가 없습니다.</td></tr>');
+        return;
+    }
+    list.forEach(item => {
+        $tbody.append(`
+            <tr>
+                <td class="text-start ps-4">${item.jobStatus}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-danger btn-job-status-delete" data-id="${item.jobStatusNo}" data-name="${item.jobStatus}">삭제</button>
+                </td>
+            </tr>`);
+    });
+}
+//📍 생성 버튼 클릭 시 빈 행 추가
+$('#btnJobStatusAdd').on('click', function() {
+    // 이미 입력 중인 행이 있다면 중복 추가 방지
+    if ($('#jobStatusNewInput').length > 0) {
+        $('#jobStatusNewInput').focus();
+        return;
+    }
+
+    const newRow = `
+        <tr class="table-info" id="rowJobStatusNew">
+            <td>
+                <input type="text" id="jobStatusNewInput" class="form-control form-control-sm" placeholder="상태명 입력 (예: 진행중)">
+            </td>
+            <td>
+                <button class="btn btn-sm btn-primary btn-job-status-save">저장</button>
+                <button class="btn btn-sm btn-secondary btn-job-status-cancel">취소</button>
+            </td>
+        </tr>`;
+    
+    $('#jobStatusTableBody').prepend(newRow);
+    $('#jobStatusNewInput').focus();
+});
+//행 추가 시 엔터 이벤트 바인딩 추가
+$(document).on('keydown', '#jobStatusNewInput', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault(); // 페이지 새로고침 방지
+        $('.btn-job-status-save').click(); // 저장 버튼 클릭 트리거
+    }
+    if (e.key === 'Escape') {
+        $('.btn-job-status-cancel').click(); // ESC 누르면 취소
+    }
+});
+// 📍 취소 버튼 클릭 시 행 제거
+$(document).on('click', '.btn-job-status-cancel', function() {
+    $('#rowJobStatusNew').remove();
+});
+
+// 📍 저장 버튼 클릭 시 Ajax 인서트 (POST)
+$(document).on('click', '.btn-job-status-save', function() {
+    const jobStatusName = $('#jobStatusNewInput').val().trim();
+
+    if (!jobStatusName) {
+        alert("상태명을 입력해주세요.");
+        $('#jobStatusNewInput').focus();
+        return;
+    }
+
+    $.ajax({
+        url: '/settings/api/job-status',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ jobStatus: jobStatusName }), // VO의 필드명 'jobStatus'와 일치해야 함
+        success: function(res) {
+            alert("새로운 상태가 등록되었습니다.");
+            loadJobStatus(); // 목록 새로고침
+        },
+        error: function(xhr) {
+            alert("등록에 실패했습니다. (사유: " + xhr.responseText + ")");
+        }
+    });
+});
+
+// 삭제 이벤트
+$(document).on('click', '.btn-job-status-delete', function() {
+    const no = $(this).data('id');
+    const name = $(this).data('name');
+    if(confirm(`[${name}] 상태를 삭제하시겠습니까?`)) {
+        $.ajax({
+            url: `/settings/api/job-status/${no}`,
+            type: 'DELETE',
+            success: loadJobStatus
+        });
+    }
+});
+//=============================
+// 6 일감 유형 관리 영역
+//=============================
+//🔹 초기 로드
+loadJobTypes();
+
+// 검색 이벤트
+$('#btnJobTypeSearch').on('click', performJobTypeSearch);
+$('#jobTypeKeyword').on('keypress', (e) => { if(e.which == 13) performJobTypeSearch(); });
+
+function loadJobTypes() {
+    $.get('/settings/api/job-types', renderJobTypeTable);
+}
+
+function performJobTypeSearch() {
+    const keyword = $('#jobTypeKeyword').val();
+    $.get('/settings/api/job-types/search', { keyword }, renderJobTypeTable);
+}
+
+function renderJobTypeTable(list) {
+    const $tbody = $('#jobTypeTableBody').empty();
+    if (!list.length) {
+        $tbody.append('<tr><td colspan="2" class="py-4">데이터가 없습니다.</td></tr>');
+        return;
+    }
+    list.forEach(item => {
+        $tbody.append(`
+            <tr>
+                <td class="text-start ps-4">${item.jobType}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-danger btn-job-type-delete" data-id="${item.jobTypeNo}" data-name="${item.jobType}">삭제</button>
+                </td>
+            </tr>`);
+    });
+}
+// 삭제 이벤트
+$(document).on('click', '.btn-job-type-delete', function() {
+    const no = $(this).data('id');
+    const name = $(this).data('name');
+    if(confirm(`[${name}] 유형을 삭제하시겠습니까?`)) {
+        $.ajax({
+            url: `/settings/api/job-types/${no}`,
+            type: 'DELETE',
+            success: loadJobTypes
+        });
+    }
+});
+// 생성 버튼 클릭 시 빈 행 추가
+$('#btnJobTypeAdd').on('click', function() {
+    // 이미 입력 중인 행이 있다면 중복 추가 방지
+    if ($('#jobTypeNewInput').length > 0) {
+        $('#jobTypeNewInput').focus();
+        return;
+    }
+
+    const newRow = `
+        <tr class="table-info" id="rowJobTypeNew">
+            <td>
+                <input type="text" id="jobTypeNewInput" class="form-control form-control-sm" placeholder="유형명 입력">
+            </td>
+            <td>
+                <button class="btn btn-sm btn-primary btn-job-type-save">저장</button>
+                <button class="btn btn-sm btn-secondary btn-job-type-cancel">취소</button>
+            </td>
+        </tr>`;
+    
+    // 테이블 최상단에 추가
+    $('#jobTypeTableBody').prepend(newRow);
+    $('#jobTypeNewInput').focus();
+});
+
+// 행 추가 시 엔터 이벤트 바인딩 추가
+$(document).on('keydown', '#jobTypeNewInput', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault(); // 페이지 새로고침 방지
+        $('.btn-job-type-save').click(); // 저장 버튼 클릭 트리거
+    }
+    if (e.key === 'Escape') {
+        $('.btn-job-type-cancel').click(); // ESC 누르면 취소
+    }
+});
+
+// 취소 버튼 클릭 시 행 제거
+$(document).on('click', '.btn-job-type-cancel', function() {
+    $('#rowJobTypeNew').remove();
+});
+
+// 저장 버튼 클릭 시 Ajax 인서트
+$(document).on('click', '.btn-job-type-save', function() {
+    const jobType = $('#jobTypeNewInput').val().trim();
+
+    if (!jobType) {
+        alert("유형명을 입력해주세요.");
+        $('#jobTypeNewInput').focus();
+        return;
+    }
+
+    $.ajax({
+        url: '/settings/api/job-types',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ jobType: jobType }),
+        success: function() {
+            alert("새로운 유형이 등록되었습니다.");
+            loadJobTypes(); // 목록 새로고침
+        },
+        error: function() {
+            alert("등록에 실패했습니다.");
+        }
+    });
 });
 </script>
 </div>

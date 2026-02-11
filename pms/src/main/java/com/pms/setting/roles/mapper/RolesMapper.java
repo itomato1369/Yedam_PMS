@@ -9,7 +9,11 @@ import com.pms.setting.roles.vo.RolesVO;
 
 @Mapper
 public interface RolesMapper {
-    List<RolesVO> selectAllRoles();
-    List<RolesVO> searchRoles(@Param("keyword") String keyword);
-    void deleteRole(@Param("roleNo") Long roleNo);
+	List<RolesVO> selectAllRoles();
+
+	List<RolesVO> searchRoles(@Param("keyword") String keyword);
+
+	void insertRole(RolesVO vo);
+
+	void deleteRole(@Param("roleNo") Long roleNo);
 }

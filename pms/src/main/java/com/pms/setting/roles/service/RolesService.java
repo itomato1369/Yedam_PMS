@@ -10,5 +10,7 @@ public interface RolesService {
     // 키워드로 권한 검색
     List<RolesVO> searchRoles(String keyword);
     
+    void register(RolesVO vo);
+    
     void removeRole(Long roleNo);
 }

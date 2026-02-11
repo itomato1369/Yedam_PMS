@@ -11,7 +11,7 @@ public interface GroupsService {
 
     List<GroupsVO> search(String keyword);
 
-    void updateGroupStatus(Long groupNo, Integer status);
-
+    void register(GroupsVO vo);
+    
     void toggleGroupStatus(Long groupNo);
 }

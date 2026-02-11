@@ -31,6 +31,11 @@ import lombok.RequiredArgsConstructor;
 	    }
 	    
 	    @Override
+	    public void register(RolesVO vo) {
+	        rolesMapper.insertRole(vo);
+	    }
+	    
+	    @Override
 	    public void removeRole(Long roleNo) {
 	        rolesMapper.deleteRole(roleNo);
 	    }

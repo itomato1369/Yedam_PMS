@@ -15,6 +15,19 @@
     ORDER BY ROLE_NO ASC
 </select>
 
+<insert id="insertRole" parameterType="com.pms.setting.roles.vo.RolesVO">
+    <selectKey keyProperty="roleNo" resultType="long" order="BEFORE">
+        SELECT ROLE_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO ROLES (
+        ROLE_NO,
+        ROLE_NAME
+    ) VALUES (
+        #{roleNo},
+        #{roleName}
+    )
+</insert>
+
 <delete id="deleteRole">
     DELETE FROM ROLES WHERE ROLE_NO = #{roleNo}
 </delete>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pms.setting.job.type.mapper.JobTypeMapper">
+
+	<select id="selectAllJobTypes"
+		resultType="com.pms.setting.job.type.vo.JobTypeVO">
+		SELECT JOB_TYPE_NO AS jobTypeNo, JOB_TYPE AS jobType
+		FROM
+		JOB_TYPE ORDER BY JOB_TYPE_NO
+	</select>
+
+	<select id="searchJobTypes"
+		resultType="com.pms.setting.job.type.vo.JobTypeVO">
+		SELECT JOB_TYPE_NO AS jobTypeNo, JOB_TYPE AS jobType
+		FROM
+		JOB_TYPE
+		WHERE JOB_TYPE LIKE '%' || #{keyword} || '%'
+		ORDER BY
+		JOB_TYPE_NO
+	</select>
+
+	<insert id="insertJobType"
+		parameterType="com.pms.setting.job.type.vo.JobTypeVO">
+		<selectKey keyProperty="jobTypeNo" resultType="long"
+			order="BEFORE">
+			SELECT NVL(MAX(JOB_TYPE_NO), 0) + 1 FROM JOB_TYPE
+		</selectKey>
+		INSERT INTO JOB_TYPE (
+		JOB_TYPE_NO,
+		JOB_TYPE
+		) VALUES (
+		#{jobTypeNo},
+		#{jobType}
+		)
+	</insert>
+	
+	
+
+	<delete id="deleteJobType">
+		DELETE FROM JOB_TYPE WHERE JOB_TYPE_NO = #{no}
+	</delete>
+
+</mapper>
