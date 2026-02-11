@@ -1,9 +1,8 @@
 <th:block th:fragment="IssueSubmitModal">
-<!-- 확인 Modal -->
+	<!-- 확인 Modal -->
 
 	<link rel="stylesheet" th:href="@{/css/modal.css}" />
-	<div class="modal fade" id="issueSubmitModal" tabindex="-1"
-		aria-labelledby="issueSubmitModalLabel" aria-hidden="true">
+	<div class="modal fade" id="issueSubmitModal" tabindex="-1" aria-labelledby="issueSubmitModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -13,15 +12,13 @@
 				<div class="modal-body">전송하시겠습니까?</div>
 
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary"
-						data-bs-dismiss="modal">취소</button>
-						<button type="button" class="btn btn-primary"
-						id="confirmSubmit">확인</button>
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+					<button type="button" class="btn btn-primary" id="confirmSubmit">확인</button>
 				</div>
 			</div>
 		</div>
 	</div>
-	<script th:src="@{/js/issue/issue_submit_modal.js}"></script>
+	<script th:src="@{/js/issue/issue-submit-modal.js}"></script>
 
 
 
