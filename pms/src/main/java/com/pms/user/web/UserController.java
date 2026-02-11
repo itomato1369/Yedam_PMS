@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.pms.user.service.UserService;
 
@@ -30,8 +31,8 @@ public class UserController {
 
 	// 회원가입 실행
 	@PostMapping("/")
-	public String register(@Valid @ModelAttribute("userDto") UserDto userDto, BindingResult bindingResult) {
-
+	public String register(@Valid @ModelAttribute("userDto") UserDto userDto, BindingResult bindingResult,
+			RedirectAttributes rttr) {
 		if (bindingResult.hasErrors()) {
 			return "user/register-form";
 		}
@@ -42,7 +43,9 @@ public class UserController {
 			bindingResult.rejectValue("userId", "newUserErr", e.getMessage());
 			return "user/register-form";
 		}
-		return "redirect:/";
+		
+		rttr.addFlashAttribute("success", "회원가입이 완료되었습니다.");
+		return "redirect:/user/login";
 	}
 
 	// 로그인
