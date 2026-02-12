@@ -51,6 +51,12 @@ public class WorkServiceImpl implements WorkService {
 		// 조회된 상세 화면 반환
 		return details;
 	}
+	
+	// 내가 속한 프로젝트의 일감
+	@Override
+	public List<WorkInsertDto> findMyIssue(String userId) {
+		return workMapper.selectIssueInProject(userId);
+	}
 
 	// 소요시간 등록
 	@Override

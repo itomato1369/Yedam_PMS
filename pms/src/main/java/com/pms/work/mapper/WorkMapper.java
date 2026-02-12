@@ -19,6 +19,9 @@ public interface WorkMapper {
 	// 소요시간 수정을 위한 상세조회 단건조회 List안쓴다
 	WorkUpdateDto selectWorkEntriesByNo(WorkUpdateDto workUpdateDto);
 	
+	// 소요시간 등록 페이지의 내가 속한 프로젝트의 일감 조회
+	List<WorkInsertDto> selectIssueInProject(String userId);
+	
 	// 소요시간 등록 매개변수 타입이 WorkInsertDto  insert된 row 행의 개수
 	int insertWorkEntries(WorkInsertDto workInsertDto);
 	

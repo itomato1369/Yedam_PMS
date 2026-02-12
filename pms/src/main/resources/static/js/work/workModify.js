@@ -10,4 +10,8 @@ document.addEventListener("DOMContentLoaded", function () {
     language: "ko",
     autoclose: true,
   });
+  
+  document.getElementById("confirmSubmit").addEventListener("click", function () {
+    document.getElementById("workUpdate").submit();
+  });
 });
