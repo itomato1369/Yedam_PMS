@@ -1,44 +1,109 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="https://www.thymeleaf.org/" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{common/layouts/default-layout}" layout:fragment="Content">
+
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<link
+	href="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.0.0/dist/css/coreui.min.css"
+	rel="stylesheet">
+uts/default-layout}">
+
 <head>
 <meta charset="utf-8" />
 <title>회원 등록</title>
 </head>
+
 <body>
-	<h2>회원 등록</h2>
 
-	<div th:if="${error}" style="color: red;" th:text="${error}"></div>
+	<div layout:fragment="Content">
 
-	<form th:action="@{/user/}" th:object="${userDto}" method="post">
-		<div>
-			<label>유저 ID</label>
-			<input type="text" th:field="*{userId}" />
-			<div th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}" style="color: red;">err</div>
+		<div class="container-fluid">
+			<div class="row justify-content-center">
+				<div class="col-lg-6 col-xl-5">
+
+					<div class="card shadow-sm border-0 mt-4">
+						<div class="card-header bg-primary text-white">
+							<h5 class="mb-0">회원 등록</h5>
+						</div>
+
+						<div class="card-body">
+
+							<!-- 글로벌 에러 -->
+							<div th:if="${error}" class="alert alert-danger"
+								th:text="${error}"></div>
+
+							<form th:action="@{/user/}" th:object="${userDto}" method="post">
+
+								<!-- 유저 ID -->
+								<div class="mb-3">
+									<label class="form-label">유저 ID</label> <input type="text"
+										th:field="*{userId}" class="form-control" placeholder="아이디 입력">
+
+									<div class="invalid-feedback d-block"
+										th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}">
+									</div>
+								</div>
+
+								<!-- 비밀번호 -->
+								<div class="mb-3">
+									<label class="form-label">비밀번호</label> <input type="password"
+										th:field="*{password}" class="form-control"
+										placeholder="비밀번호 입력">
+
+									<div class="invalid-feedback d-block"
+										th:if="${#fields.hasErrors('password')}"
+										th:errors="*{password}"></div>
+								</div>
+
+								<!-- 이름 -->
+								<div class="mb-3">
+									<label class="form-label">이름</label> <input type="text"
+										th:field="*{username}" class="form-control"
+										placeholder="이름 입력">
+
+									<div class="invalid-feedback d-block"
+										th:if="${#fields.hasErrors('username')}"
+										th:errors="*{username}"></div>
+								</div>
+
+								<!-- 이메일 -->
+								<div class="mb-3">
+									<label class="form-label">이메일</label> <input type="email"
+										th:field="*{email}" class="form-control"
+										placeholder="example@email.com">
+								</div>
+
+								<!-- 관리자 체크 -->
+								<div class="form-check mb-3"
+									sec:authorize="hasRole('ROLE_ADMIN')">
+
+									<input type="checkbox" id="adminCheck" th:field="*{admin}"
+										class="form-check-input"> <label for="adminCheck"
+										class="form-check-label"> 관리자 권한 부여 </label>
+								</div>
+
+								<!-- 버튼 영역 -->
+								<div class="d-flex justify-content-between">
+									<a th:href="@{/user/list}" class="btn btn-secondary"> 취소 </a>
+
+									<button type="submit" class="btn btn-primary">등록</button>
+								</div>
+
+							</form>
+
+						</div>
+					</div>
+
+				</div>
+			</div>
 		</div>
 
-		<div>
-			<label>비밀번호</label>
-			<input type="password" th:field="*{password}" />
-			<div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color: red;">err</div>
-		</div>
+	</div>
 
-		<div>
-			<label>이름</label>
-			<input type="text" th:field="*{username}" />
-			<div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style="color: red;">err</div>
-		</div>
+	<!-- CoreUI JS -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.0.0/dist/js/coreui.bundle.min.js"></script>
 
-		<div>
-			<label>이메일</label>
-			<input type="email" th:field="*{email}" />
-		</div>
-
-		<div class="mb-3 form-check" sec:authorize="hasRole('ROLE_ADMIN')">
-			<input type="checkbox" id="adminCheck" th:field="*{admin}" class="form-check-input">
-			<label for="adminCheck" class="form-check-label">관리자 권한 부여</label>
-		</div>
-
-		<button type="submit">등록</button>
-	</form>
 </body>
 </html>

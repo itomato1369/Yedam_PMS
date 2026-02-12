@@ -1,44 +1,102 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="https://www.thymeleaf.org/" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{common/layouts/default-layout}" layout:fragment="Content">
+<html lang="ko"
+      xmlns:th="https://www.thymeleaf.org/">
+
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>로그인</title>
+
+<!-- CoreUI CSS -->
+<link href="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.0.0/dist/css/coreui.min.css" rel="stylesheet">
+
 </head>
-<body>
 
-	<h2>로그인</h2>
-	<div th:if="${msg}" style="color: blue;">
-		<p th:text="${msg}"></p>
-		<button th:if="${testToken}" th:onclick="|location.href='@{/user/pwResetLink(token=${testToken})}'|">비밀번호 재설정 테스트 버튼</button>
-	</div>
+<body class="bg-body-tertiary">
 
-	<div th:if="${success}" style="color: blue; margin-bottom: 10px;">
-		<p th:text="${success}"></p>
-	</div>
-	<div th:if="${param.error}" style="color: red; margin-bottom: 10px;">아이디 또는 비밀번호가 올바르지 않습니다.</div>
+<div class="container min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="row justify-content-center w-100">
+        <div class="col-md-6 col-lg-4">
 
-	<form th:action="@{/user/login}" th:object="${loginDto}" method="post">
-		<div>
-			<label for="userId">유저 ID</label><br>
-			<input type="text" th:field="*{userId}" id="userId" placeholder="아이디를 입력하세요">
-		</div>
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-4">
 
-		<br>
+                    <!-- 타이틀 -->
+                    <div class="text-center mb-4">
+                        <h3 class="fw-bold">로그인</h3>
+                        <p class="text-medium-emphasis small">
+                            계정 정보를 입력해주세요
+                        </p>
+                    </div>
 
-		<div>
-			<label for="password">비밀번호</label><br>
-			<input type="password" th:field="*{password}" id="password" placeholder="비밀번호를 입력하세요">
-		</div>
+                    <!-- 메시지 영역 -->
+                    <div th:if="${msg}" class="alert alert-info">
+                        <p class="mb-2" th:text="${msg}"></p>
+                        <button th:if="${testToken}"
+                                class="btn btn-sm btn-outline-primary"
+                                th:onclick="|location.href='@{/user/pwResetLink(token=${testToken})}'|">
+                            비밀번호 재설정 테스트
+                        </button>
+                    </div>
 
-		<br>
+                    <div th:if="${success}" class="alert alert-success">
+                        <p class="mb-0" th:text="${success}"></p>
+                    </div>
 
-		<div>
-			<button type="submit">로그인</button>
-			<button type="button" th:onclick="|location.href='@{/user/new}'|">회원가입</button>
-			<button type="button" th:onclick="|location.href='@{/user/pwResetPage}'|">비밀변호 변경</button>
-		</div>
+                    <div th:if="${param.error}" class="alert alert-danger">
+                        아이디 또는 비밀번호가 올바르지 않습니다.
+                    </div>
 
-	</form>
+                    <!-- 로그인 폼 -->
+                    <form th:action="@{/user/login}" 
+                          th:object="${loginDto}" 
+                          method="post">
+
+                        <div class="mb-3">
+                            <label class="form-label">유저 ID</label>
+                            <input type="text"
+                                   class="form-control"
+                                   th:field="*{userId}"
+                                   placeholder="아이디 입력">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">비밀번호</label>
+                            <input type="password"
+                                   class="form-control"
+                                   th:field="*{password}"
+                                   placeholder="비밀번호 입력">
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit"
+                                    class="btn btn-primary rounded-3">
+                                로그인
+                            </button>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-3 small">
+                            <a th:href="@{/user/new}"
+                               class="text-decoration-none">
+                                회원가입
+                            </a>
+                            <a th:href="@{/user/pwResetPage}"
+                               class="text-decoration-none">
+                                비밀번호 변경
+                            </a>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- CoreUI JS -->
+<script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.0.0/dist/js/coreui.bundle.min.js"></script>
 
 </body>
 </html>
