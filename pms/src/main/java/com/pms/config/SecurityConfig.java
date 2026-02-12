@@ -1,5 +1,6 @@
 package com.pms.config;
 
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
     private final ProjectAuthorizationManager projectAuthorizationManager;
+    
 	@Bean
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -30,9 +32,11 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf(csrf -> csrf.disable())
 			.authorizeHttpRequests(auth -> auth
-					.requestMatchers("/home/**", "/user/**", "/coreui/**", "/css/**", "/js/**").permitAll()
+					.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+					.requestMatchers("/coreui/**").permitAll()
+					.requestMatchers("/home/**", "/user/**").permitAll()
 					.requestMatchers("/settings/**").hasRole("ADMIN")
-					.requestMatchers("/project/**").access(projectAuthorizationManager)
+					.requestMatchers("/project/{projectCode}/**").access(projectAuthorizationManager)
 					.anyRequest().authenticated()
 					)
 			.formLogin(form -> form
