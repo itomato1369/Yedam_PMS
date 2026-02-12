@@ -1,0 +1,181 @@
+<!doctype html>
+<!--
+* CoreUI - Free Bootstrap Admin Template
+* @version v5.3.0
+* @link https://coreui.io/product/free-bootstrap-admin-template/
+* Copyright (c) 2025 creativeLabs Łukasz Holeczek
+* Licensed under MIT (https://github.com/coreui/coreui-free-bootstrap-admin-template/blob/main/LICENSE)
+-->
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default-layout}"
+	layout:fragment="Content">
+<div class="mb-2">
+	<!--/* row-header */-->
+	<div class="d-flex justify-content-between align-items-center mb-5">
+		<div class="d-flex align-items-center">
+			<div class="position-relative">
+				<h2 class="fw-bold m-0 text-dark" th:text="개요"></h2>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="d-flex flex-column gap-4">
+
+<!--/* ━━━━━━━━━━━━━━━━━━━━ 카드 1: 일감 추적 ━━━━━━━━━━━━━━━━━━━━ */-->
+<div class="card">
+  <div class="card-header d-flex align-items-center gap-2 fs-4">
+    <i class="cil-task"></i>
+    <strong>일감 추적</strong>
+  </div>
+  <div class="card-body">
+    <!--/* 안쪽 카드 */-->
+    <div class="card bg-light border mb-0">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover table-bordered mb-0">
+            <thead class="table-light">
+              <tr>
+                <th></th>
+                <th class="text-center">진행중</th>
+                <th class="text-center">완료됨</th>
+                <th class="text-center">합계</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-left col-2 col-md-1"><a class="text-decoration-none">결함</a></td>
+                <td class="text-center text-primary fw-bold">4</td>
+                <td class="text-center text-success fw-bold">1</td>
+                <td class="text-center text-indigo fw-bold">5</td>
+              </tr>
+              <tr>
+                <td class="text-left col-2 col-md-1"><a class="text-decoration-none">새기능</a></td>
+                <td class="text-center text-primary fw-bold">5</td>
+                <td class="text-center text-success fw-bold">0</td>
+                <td class="text-center text-indigo fw-bold">5</td>
+              </tr>
+              <tr>
+                <td class="text-left col-2 col-md-1"><a class="text-decoration-none">지원</a></td>
+                <td class="text-center text-primary fw-bold">2</td>
+                <td class="text-center text-success fw-bold">1</td>
+                <td class="text-center text-indigo fw-bold">3</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-footer d-flex gap-2">
+    <a class="text-decoration-none">모든 일감 보기</a>
+    <span class="text-muted">|</span>
+    <a class="text-decoration-none">변경 사항 보기</a>
+    <span class="text-muted">|</span>
+    <a class="text-decoration-none">Gantt 차트</a>
+  </div>
+</div>
+
+<!--/* ━━━━━━━━━━━━━━━━━━━━ 카드 2: 최근 뉴스 ━━━━━━━━━━━━━━━━━━━━ */-->
+<div class="card">
+  <div class="card-header d-flex align-items-center gap-2 fs-4">
+    <i class="cil-newspaper"></i>
+    <strong>최근 뉴스</strong>
+  </div>
+
+  <div class="card-body d-flex flex-column gap-2">
+    <!-- 안쪽 카드 (뉴스 항목 1) -->
+    <div class="card border mb-0">
+      <div class="card-body py-2 px-3">
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <a href="#" class="fw-semibold text-decoration-none">이것이뉴스다</a>
+          <span class="badge bg-warning text-dark">NEW</span>
+        </div>
+        <div class="text-muted small">
+          <i class="cil-user"></i>
+          admin Admin이(가) 하루 전에 추가함
+        </div>
+      </div>
+    </div>
+
+    <!-- 안쪽 카드 (뉴스 항목 2) -->
+    <div class="card border mb-0">
+      <div class="card-body py-2 px-3">
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <a href="#" class="fw-semibold text-decoration-none">스프린트 2 일정 업데이트</a>
+        </div>
+        <div class="text-muted small">
+          <i class="cil-user"></i>
+          admin Admin이(가) 3일 전에 추가함
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-footer d-flex gap-2">
+    <a class="text-decoration-none">모든 뉴스</a>
+  </div>
+</div>
+
+<!--/* ━━━━━━━━━━━━━━━━━━━━ 카드 3: 구성 인원 ━━━━━━━━━━━━━━━━━━━━ */-->
+<div class="card">
+  <div class="card-header d-flex align-items-center gap-2">
+    <i class="cil-people"></i>
+    <strong>구성원</strong>
+  </div>
+
+  <div class="card-body d-flex flex-column gap-2">
+    <!-- 개발자 라벨 -->
+    <div class="text-muted small">
+      <i class="cil-code"></i> 개발자
+    </div>
+
+    <!-- 안쪽 카드 -->
+    <div class="card border mb-0">
+      <div class="card-body py-2 px-3 d-flex flex-wrap gap-2">
+        <a href="#" class="badge bg-primary-subtle text-primary text-decoration-none">ht kim</a>
+        <a href="#" class="badge bg-primary-subtle text-primary text-decoration-none">user1 user1</a>
+        <a href="#" class="badge bg-primary-subtle text-primary text-decoration-none">배 진욱</a>
+        <a href="#" class="badge bg-primary-subtle text-primary text-decoration-none">승일 송</a>
+        <a href="#" class="badge bg-primary-subtle text-primary text-decoration-none">유저 난</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--/* ━━━━━━━━━━━━━━━━━━━━ 카드 4: 하위 프로젝트 ━━━━━━━━━━━━━━━━━━━━ */-->
+<div class="card">
+  <div class="card-header d-flex align-items-center gap-2">
+    <i class="cil-layers"></i>
+    <strong>하위 프로젝트</strong>
+  </div>
+
+  <div class="card-body">
+    <!-- 안쪽 카드 -->
+    <div class="card border mb-0">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item d-flex align-items-center gap-2">
+          <i class="cil-folder text-primary"></i>
+          <a href="#" class="text-decoration-none fw-semibold">ASFD</a>
+          <span class="ms-auto badge bg-success-subtle text-success">활성</span>
+        </li>
+        <li class="list-group-item d-flex align-items-center gap-2">
+          <i class="cil-folder text-success"></i>
+          <a href="#" class="text-decoration-none fw-semibold">백엔드 API</a>
+          <span class="ms-auto badge bg-success-subtle text-success">활성</span>
+        </li>
+        <li class="list-group-item d-flex align-items-center gap-2">
+          <i class="cil-folder text-warning"></i>
+          <a href="#" class="text-decoration-none fw-semibold">QA 테스트</a>
+          <span class="ms-auto badge bg-secondary-subtle text-secondary">완료</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+</div>
+</html>

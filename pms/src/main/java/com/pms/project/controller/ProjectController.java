@@ -88,7 +88,7 @@ public class ProjectController {
     // @PathVariable: 단일값 처리 + 매개변수에 어노테이션선언으로 필수값 선언, 반드시 받을거라 default 사용하지않기로
     @GetMapping("/{projectCode}/info")
     public String getProjectInfo() {
-    	return "index";
+    	return "project/info";
     }
     
     
