@@ -12,7 +12,7 @@
 		g.GROUPNAME AS groupName,
 		g.STATUS AS status,
 		c.COMMON_NAME AS statusName,
-		(SELECT COUNT(*) FROM MEMBERS m WHERE m.GROUPID = g.GROUP_NO) AS memberCount
+		(SELECT COUNT(*) FROM MEMBERS m WHERE m.GROUP_NO = g.GROUP_NO) AS memberCount
 		FROM GROUPS g
 		LEFT JOIN COMMON c
 		ON g.STATUS = c.COMMON_NO
@@ -28,7 +28,7 @@
 		g.GROUPNAME AS groupName,
 		g.STATUS AS status,
 		c.COMMON_NAME AS statusName,
-		(SELECT COUNT(*) FROM MEMBERS m WHERE m.GROUPID = g.GROUP_NO) AS memberCount
+		(SELECT COUNT(*) FROM MEMBERS m WHERE m.GROUP_NO = g.GROUP_NO) AS memberCount
 		FROM GROUPS g
 		LEFT JOIN COMMON c
 		ON g.STATUS = c.COMMON_NO
@@ -69,6 +69,6 @@
 		parameterType="com.pms.setting.groups.vo.GroupsVO">
 		UPDATE groups
 		SET GROUPNAME = #{groupName} -- VO의 groupName 필드 사용
-		WHERE GROUP_NO = #{groupNo} -- VO의 groupNo 필드 사용
+		WHERE GROUP_NO = #{groupNO} -- VO의 groupNo 필드 사용
 	</update>
 </mapper>

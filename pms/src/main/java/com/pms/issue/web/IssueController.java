@@ -27,8 +27,6 @@ public class IssueController {
 		String userId = customUser.getUsername();
 		List<IssueDto> issueList = issueService.findIssueList(userId);
 		model.addAttribute("issueList", issueList);
-		System.out.println(userId);
-		System.out.println(issueList.toString());
 		return "issue/issue-list";
 	}
 
