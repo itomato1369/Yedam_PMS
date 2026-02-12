@@ -8,7 +8,8 @@
 <meta charset="UTF-8" />
 <title>Dashboard</title>
 
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
 <style>
 /* 1. 대시보드 그리드 레이아웃 */
@@ -88,11 +89,18 @@
 }
 
 /* 6. 메모 카드 스타일 (포스트잇 느낌) */
-.memo-bg-1 { background-color: #fff9db !important; } /* 노랑 */
-.memo-bg-2 { background-color: #e3faf2 !important; } /* 민트 */
-.memo-bg-3 { background-color: #f3f0ff !important; } /* 보라 */
-.memo-bg-4 { background-color: #fff0f6 !important; } /* 핑크 */
-
+.memo-bg-1 {
+	background-color: #fff9db !important;
+} /* 노랑 */
+.memo-bg-2 {
+	background-color: #e3faf2 !important;
+} /* 민트 */
+.memo-bg-3 {
+	background-color: #f3f0ff !important;
+} /* 보라 */
+.memo-bg-4 {
+	background-color: #fff0f6 !important;
+} /* 핑크 */
 .memo-card {
 	position: relative;
 	cursor: pointer;
@@ -208,6 +216,8 @@
 				<div class="section-box border-top border-success border-4">
 					<div class="section-title text-success">
 						<span><i class="cil-note-add"></i> 메모</span>
+						<button class="btn btn-sm btn-success" onclick="showMemoForm()">+
+							추가</button>
 					</div>
 
 					<div class="section-content" id="content-memos">
@@ -229,11 +239,14 @@
 							onclick="showMemoForm()">데이터가 없습니다. (클릭하여 추가)</div>
 
 						<div class="row g-3" id="memoList">
-							<div class="col-6 page-item-memos" th:each="m, stat : ${list.memos}">
-								<div th:class="'card memo-card shadow-sm h-100 memo-bg-' + ${ (stat.index % 4) + 1 }"
-									 th:onclick="viewMemoDetail([[${m.content}]])">
+							<div class="col-6 page-item-memos"
+								th:each="m, stat : ${list.memos}">
+								<div
+									th:class="'card memo-card shadow-sm h-100 memo-bg-' + ${ (stat.index % 4) + 1 }"
+									th:onclick="viewMemoDetail([[${m.content}]])">
 									<div class="card-body py-3">
-										<p class="mb-0 memo-content-preview" th:text="${m.content}">메모 내용</p>
+										<p class="mb-0 memo-content-preview" th:text="${m.content}">메모
+											내용</p>
 									</div>
 								</div>
 							</div>
@@ -259,7 +272,8 @@
 		</div>
 	</div>
 
-	<div class="modal fade" id="memoDetailModal" tabindex="-1" aria-hidden="true">
+	<div class="modal fade" id="memoDetailModal" tabindex="-1"
+		aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content border-0 shadow-lg">
 				<div class="modal-header bg-success text-white">
