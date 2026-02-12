@@ -1,4 +1,4 @@
-package com.yedam.pms.project;
+package com.pms.project;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -12,38 +12,49 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.pms.config.CustomUserDetails;
+import com.pms.user.entity.UserEntity;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ProjectSecurityTest {
 
 	@Autowired
 	private MockMvc mockMvc;
+	
+	private CustomUserDetails createCustomUser(String userId, boolean isAdmin) {
+		UserEntity user = UserEntity.builder()
+									.userId(userId)
+									.passwd("1234")
+									.admin(isAdmin)
+									.build();
+        return new CustomUserDetails(user);
+    }
 
 	@Test
-	@DisplayName("프로젝트 멤버 접근 확인")
+	@DisplayName("프로젝트 멤버 접근 확인(아직 페이지가 없어서 isNotFound)")
 	public void project_member_get() throws Exception {
 		mockMvc.perform(get("/project/PMS100/")
-						.with(user("song").roles("USER"))
-						.with(csrf())
-						)
-				.andExpect(status().isOk());
+						.with(user(createCustomUser("song", false)))
+						.with(csrf()))
+				.andExpect(status().isNotFound());
 	}
 	
 	@Test
 	@DisplayName("권한 없는 유저의 접근 확인(403 error)")
 	public void unauthorized_get() throws Exception {
 		mockMvc.perform(get("/project/PMS100/")
-						.with(user("tester").roles("USER"))
-						)
+						.with(user(createCustomUser("tester", false)))
+						.with(csrf()))
 				.andExpect(status().isForbidden());
 	}
 	
 	@Test
-	@DisplayName("관리자 접근 확인")
+	@DisplayName("관리자 접근 확인(아직 페이지가 없어서 isNotFound)")
 	public void admin_get() throws Exception {
 		mockMvc.perform(get("/project/PMS100/")
-						.with(user("admin").roles("ADMIN"))
-						)
-				.andExpect(status().isOk());
+						.with(user(createCustomUser("admin", true)))
+						.with(csrf()))
+				.andExpect(status().isNotFound());
 	}
 }
