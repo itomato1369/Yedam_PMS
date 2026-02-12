@@ -1,6 +1,7 @@
 package com.pms.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -28,11 +29,29 @@ public class UserMockTest {
 	private BCryptPasswordEncoder passwordEncoder;
 
 	@InjectMocks
-	private UserServiceImpl userService; 
+	private UserServiceImpl userService;
+
+	@Test
+	@DisplayName("중복된 ID가 있을 시 예외가 발생해야 한다.")
+	public void idCheckMockTest() {
+		System.out.println("[Mock] ID CHECK TEST START");
+		// given
+		UserDto userDto = new UserDto();
+		userDto.setUserId("mockUser01");
+		userDto.setPassword("1234");
+		when(userRepository.existsById("mockUser01")).thenReturn(true);
+
+		// when -> then
+		assertThatThrownBy(() -> userService.addUser(userDto))
+								.isInstanceOf(RuntimeException.class)
+								.hasMessageContaining("이미 존재하는 ID입니다.");
+		System.out.println("[Mock] ID CHECK TEST SUCCESS");
+	}
 
 	@Test
 	@DisplayName("회원가입 시 PW는 암호화 되어야 한다.")
 	public void pwEncodeMockTest() {
+		System.out.println("[Mock] PW HASHING TEST START");
 		// given
 		UserDto userDto = new UserDto();
 		userDto.setUserId("mockUser01");
@@ -53,7 +72,7 @@ public class UserMockTest {
 		// PW 확인
 		assertThat(user.getPasswd()).as("PW는 Not Null입니다.").isNotEqualTo(null);
 		assertThat(user.getPasswd()).as("PW가 암호화되지 않았습니다.").isEqualTo("encode_1234");
-		System.out.println("[Mock] PW TEST END");
+		System.out.println("[Mock] PW HASHING TEST SUCCESS");
 
 	}
 }
