@@ -19,6 +19,9 @@ public class ProjectSelectDTO {
     private String  projectCode;
     private String  projectName;
     private String  projectDesc;
+    private String  statusName;
+    private Integer status;
+    
     
     // 계층 구조용
     private List<ProjectSelectDTO> childProjects; 

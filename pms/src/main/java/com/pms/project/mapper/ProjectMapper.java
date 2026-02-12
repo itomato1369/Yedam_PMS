@@ -20,4 +20,7 @@ public interface ProjectMapper {
     
     // 사용자의 입력값을 바탕으로 프로젝트 추가
     int insertProject(ProjectInsertDTO projectInsertDTO);
+    
+    // 프로젝트 개요 페이지 - 자식 하위 프로젝트 목록 조회(이름, 식별자, 상태)
+    List<ProjectSelectDTO> selectFirstChildsByCode(@Param("projectCode") String projectCode, Integer active, Integer locked );
 }

@@ -189,4 +189,18 @@
 	        , #{status}                       -- 필수값: Service 에서 세팅
     )
 	</insert>
+	
+	
+	<select id="selectFirstChildsByCode" resultType="ProjectSelectDTO">
+		SELECT 
+		  child.project_name
+		  , child.project_code
+		  , child.status
+		  , FN_GET_CODE_NAME(child.status) AS status_name
+		FROM project parent
+		JOIN project child
+		ON parent.project_no = child.parent_project_no
+		WHERE parent.project_code = #{projectCode}
+		AND child.status Between #{active} AND #{locked}
+	</select>
 </mapper>

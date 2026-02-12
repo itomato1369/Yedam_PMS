@@ -24,4 +24,7 @@ public interface ProjectService {
     List<ParentProjectDTO> findParentProjects();
     
     boolean addProject(ProjectInsertDTO projectInsertDTO);
+    
+    // 개요페이지
+    List<ProjectSelectDTO> findFirstChildsByCode(String projectCode);
 }

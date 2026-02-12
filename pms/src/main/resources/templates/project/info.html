@@ -121,7 +121,7 @@
 
 <!--/* ━━━━━━━━━━━━━━━━━━━━ 카드 3: 구성 인원 ━━━━━━━━━━━━━━━━━━━━ */-->
 <div class="card">
-  <div class="card-header d-flex align-items-center gap-2">
+  <div class="card-header d-flex align-items-center gap-2 fs-4">
     <i class="cil-people"></i>
     <strong>구성원</strong>
   </div>
@@ -147,33 +147,29 @@
 
 <!--/* ━━━━━━━━━━━━━━━━━━━━ 카드 4: 하위 프로젝트 ━━━━━━━━━━━━━━━━━━━━ */-->
 <div class="card">
-  <div class="card-header d-flex align-items-center gap-2">
-    <i class="cil-layers"></i>
-    <strong>하위 프로젝트</strong>
-  </div>
-
-  <div class="card-body">
-    <!-- 안쪽 카드 -->
-    <div class="card border mb-0">
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item d-flex align-items-center gap-2">
-          <i class="cil-folder text-primary"></i>
-          <a href="#" class="text-decoration-none fw-semibold">ASFD</a>
-          <span class="ms-auto badge bg-success-subtle text-success">활성</span>
-        </li>
-        <li class="list-group-item d-flex align-items-center gap-2">
-          <i class="cil-folder text-success"></i>
-          <a href="#" class="text-decoration-none fw-semibold">백엔드 API</a>
-          <span class="ms-auto badge bg-success-subtle text-success">활성</span>
-        </li>
-        <li class="list-group-item d-flex align-items-center gap-2">
-          <i class="cil-folder text-warning"></i>
-          <a href="#" class="text-decoration-none fw-semibold">QA 테스트</a>
-          <span class="ms-auto badge bg-secondary-subtle text-secondary">완료</span>
-        </li>
-      </ul>
-    </div>
-  </div>
+	<div class="card-header d-flex align-items-center gap-2 fs-4">
+		<i class="cil-layers"></i>
+		<strong>하위 프로젝트</strong>
+	</div>
+	<div class="card-body">
+	    <!--/* 안쪽 카드 */-->
+		<div class="card border mb-0">
+			<!--/* 하위 프로젝트 목록이 있을 경우 */-->
+			<ul th:if="${not #lists.isEmpty(childProjects)}" class="list-group list-group-flush">
+	        	<li th:each=" cp : ${childProjects}" class="list-group-item d-flex align-items-center gap-2">
+	        		<i class="cil-folder text-success"></i>
+	        		<a href="#" class="text-decoration-none fw-semibold" th:text="${cp.projectName}"></a>
+          			<span class="ms-auto badge bg-success-subtle text-success" th:text="${cp.statusName}"></span>
+	        	</li>
+			</ul>
+			<!--/* 하위 프로젝트 목록이 없을 경우 */-->
+			<div th:unless="${not #lists.isEmpty(childProjects)}"
+		         class="d-flex align-items-center justify-content-center py-4">
+		        <span class="text-secondary">프로젝트가 없습니다.</span>
+		    </div>
+		</div>
+		
+	</div>
 </div>
 
 
