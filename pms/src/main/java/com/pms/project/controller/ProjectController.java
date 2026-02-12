@@ -1,0 +1,81 @@
+package com.pms.project.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute; // 추가
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.pms.project.common.mapper.ProjectCommonStatusMapper;
+import com.pms.project.dto.ProjectInsertDTO;
+import com.pms.project.dto.ProjectSearchDTO; // 추가
+import com.pms.project.service.ProjectService;
+
+import lombok.RequiredArgsConstructor;
+
+@Controller
+@RequiredArgsConstructor
+public class ProjectController {
+    
+    // 인터페이스 타입으로 주입받아 결합도를 낮춤
+    private final ProjectService projectService;
+    private final ProjectCommonStatusMapper projectCommonStatusMapper;
+    
+    @GetMapping("/projects")
+    public String listProjects(Model model, @ModelAttribute ProjectSearchDTO searchDTO) {
+        // 실제 운영 시에는 세션 또는 SecurityContext에서 userId를 가져옴
+        String currentUserId = "song";
+        
+        // 검색 조건이 있는지 확인 (projectName, projectStatus, projectAssignee 중 하나라도 값이 있으면 검색 조건으로 간주)
+        boolean hasSearchCriteria = searchDTO.getProjectName() != null && !searchDTO.getProjectName().isEmpty() ||
+                                    searchDTO.getProjectStatus() != null ||
+                                    searchDTO.getProjectAssignee() != null && !searchDTO.getProjectAssignee().isEmpty();
+
+        if (hasSearchCriteria) {
+            // 검색 조건이 있으면 검색 결과 반환
+            // 현재 로그인 사용자 ID를 searchDTO에 추가하여 쿼리에서 활용 (예: has_login_user_joined 필드)
+            searchDTO.setCurrentUserId(currentUserId); // ProjectSearchDTO에 currentUserId 필드 추가 필요
+            model.addAttribute("projects", projectService.findProjectByOptions(searchDTO));
+        } else {
+            // 검색 조건이 없으면 사용자 프로젝트 전체 목록 반환
+            model.addAttribute("projects", projectService.findUserProjects(currentUserId));
+        }
+        
+        model.addAttribute("commons" , projectCommonStatusMapper.selectProjectCommonStatusAll());
+        model.addAttribute("searchDTO", searchDTO); // 검색 폼의 값 유지를 위해 모델에 추가
+        
+        return "project/list";
+    }
+    
+	// 새 프로젝트 등록화면 불러오기
+    @GetMapping("/project/new")
+    public String addProject(Model model) {
+    	model.addAttribute("project", new ProjectInsertDTO()); // 전달받을 값을 입력하기위한 빈 객체
+    	model.addAttribute("parentProjects", projectService.findParentProjects()); // 빈객체에 입력할 상속 가능한 프로젝트 목록
+        model.addAttribute("mode", "new"); // 모드 구분
+        
+    	return "project/insert-form";
+    }
+    
+    // 프로젝트 입력 처리
+    @PostMapping("/project/new")
+	// TODO: dev 머지 이후 수정 - 매개변수에 추가
+    // @AuthenticationPrincipal CustomUserDetails customUser 
+    public String modifyProject(
+    		@ModelAttribute ProjectInsertDTO dto
+    		, RedirectAttributes redirectAttributes
+    		) {
+    	dto.setUserId("admin");
+    	
+    	boolean success = projectService.addProject(dto);
+    	
+    	if (success) {
+    		redirectAttributes.addFlashAttribute("successMessage", "프로젝트가 등록되었습니다.");
+        } else {
+        	redirectAttributes.addFlashAttribute("errorMessage", "프로젝트 등록에 실패했습니다.");
+        }
+    	
+    	return "redirect:/projects";
+    }
+}

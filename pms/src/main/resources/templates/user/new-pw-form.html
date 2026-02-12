@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{common/layouts/default-layout}" layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>로그인</title>
+</head>
+<body>
+	<h2>새 비밀번호 설정</h2>
+	<p>새로운 비밀번호를 입력해 주세요.</p>
+
+	<div th:if="${error}" style="color: red;">
+		<p th:text="${error}"></p>
+	</div>
+
+	<form th:action="@{/user/pw}" method="post">
+		<input type="hidden" name="token" th:value="${token}">
+
+		<div>
+			<label for="newPw">새 비밀번호 : </label>
+			<input type="password" id="newPw" name="newPw" required>
+		</div>
+		<br>
+		<button type="submit">비밀번호 변경 완료</button>
+	</form>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pms.project.common.mapper.ProjectCommonStatusMapper">
+	<select id="selectProjectCommonStatusAll" resultType="com.pms.project.common.dto.ProjectCommonStatusDTO">
+		SELECT common_no
+		  , common_name
+		  , common_desc
+		  , display_yn
+		FROM common
+		WHERE DISPLAY_YN = 'Y'
+			AND parent_common_no = 300
+		ORDER BY common_no
+	</select>
+</mapper>
