@@ -1,5 +1,5 @@
 <!-- 조건을 추가하여 검색 -->
-<!-- 일감 -->
+<!-- 일감 th:if -->
 <div th:fragment="JobReportField"
 	class="col-md-3 condition-field d-none" id="field-job">
 	<div class="card card-body bg-light shadow-sm">
@@ -8,9 +8,9 @@
 			<button type="button" class="btn-close btn-remove"
 				data-target="field-job"></button>
 		</div>
-		<input type="hidden" name="type" value="job">
-		<input type="number" name="jobNo" class="form-control form-control-sm"
-			placeholder="일감 번호를 선택하세요">
+		<input type="hidden" name="type" value="job" /> <input type="number"
+			name="jobNo" class="form-control form-control-sm"
+			placeholder="일감 번호를 선택하세요" />
 	</div>
 </div>
 <!-- 프로젝트 -->
@@ -22,9 +22,9 @@
 			<button type="button" class="btn-close btn-remove"
 				data-target="field-project"></button>
 		</div>
-		<input type="hidden" name="type" value="project">
-		<input type="number" name="projectNo"
-			class="form-control form-control-sm" placeholder="프로젝트 번호를 선택하세요">
+		<input type="hidden" name="type" value="project" /> <input
+			type="number" name="projectNo" class="form-control form-control-sm"
+			placeholder="프로젝트 번호를 선택하세요" />
 	</div>
 </div>
 <!-- 사용자 -->
@@ -36,9 +36,9 @@
 			<button type="button" class="btn-close btn-remove"
 				data-target="field-users"></button>
 		</div>
-		<input type="hidden" name="type" value="users">
-		<input type="text" name="userId"
-			class="form-control form-control-sm" placeholder="사용자를 입력하세요">
+		<input type="hidden" name="type" value="users" /> <input type="text"
+			name="userId" class="form-control form-control-sm"
+			placeholder="사용자를 입력하세요" />
 	</div>
 </div>
 <!-- 프로젝트 주별 -->
@@ -50,9 +50,8 @@
 			<button type="button" class="btn-close btn-remove"
 				data-target="field-projectWeek"></button>
 		</div>
-		<input type="hidden" name="type" value="week">
-		<input type="text" name="workDate"
-			class="form-control form-control-sm datepicker">
+		<input type="hidden" name="type" value="week" /> <input type="text"
+			name="workDate" class="form-control form-control-sm datepicker" />
 	</div>
 </div>
 <!-- 프로젝트 월별 -->
@@ -64,9 +63,7 @@
 			<button type="button" class="btn-close btn-remove"
 				data-target="field-projectMonth"></button>
 		</div>
-		<input type="hidden" name="type" value="month">
-		<input type="text" name="workDate"
-			class="form-control form-control-sm datepicker">
+		<input type="hidden" name="type" value="month" /> <input type="text"
+			name="workDate" class="form-control form-control-sm datepicker" />
 	</div>
 </div>
-

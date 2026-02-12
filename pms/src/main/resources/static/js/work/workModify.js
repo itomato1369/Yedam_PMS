@@ -12,6 +12,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   
   document.getElementById("confirmSubmit").addEventListener("click", function () {
-    document.getElementById("workInsert").submit();
+    document.getElementById("workUpdate").submit();
   });
 });
