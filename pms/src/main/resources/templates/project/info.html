@@ -158,7 +158,8 @@
 			<ul th:if="${not #lists.isEmpty(childProjects)}" class="list-group list-group-flush">
 	        	<li th:each=" cp : ${childProjects}" class="list-group-item d-flex align-items-center gap-2">
 	        		<i class="cil-folder text-success"></i>
-	        		<a href="#" class="text-decoration-none fw-semibold" th:text="${cp.projectName}"></a>
+	        		<a th:href="@{/project/{projectCode}/info(projectCode=${cp.projectCode})}"
+	        			 class="text-decoration-none fw-semibold" th:text="${cp.projectName}"></a>
           			<span class="ms-auto badge bg-success-subtle text-success" th:text="${cp.statusName}"></span>
 	        	</li>
 			</ul>
