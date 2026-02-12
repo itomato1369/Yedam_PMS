@@ -61,7 +61,7 @@ public class ProjectAuthorizationManager implements AuthorizationManager<Request
 	}
 
 	private boolean isUserAuth(Authentication auth) {
-		return auth == null || !auth.isAuthenticated() || !(auth.getPrincipal() instanceof CustomUserDetails);
+		return auth != null && auth.isAuthenticated() && (auth.getPrincipal() instanceof CustomUserDetails);
 	}
 
 }
