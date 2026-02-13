@@ -17,8 +17,8 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/issue")
-public class IssueController {
+@RequestMapping("/project/{projectCode}/issue")
+public class projectIssueController {
 
 	private final IssueService issueService;
 
@@ -26,8 +26,9 @@ public class IssueController {
 	@GetMapping("/list")
 	public String findIssueList(@AuthenticationPrincipal CustomUserDetails customUser, @PathVariable String projectCode, Model model) {
 		String userId = customUser.getUsername();
-		List<IssueDto> issueList = issueService.findIssueList(userId);
+		List<projectIssueDto> issueList = issueService.findProjectIssueList(userId);		
 		model.addAttribute("issueList", issueList);
+		model.addAttribute("projectCode", projectCode);
 		return "issue/issue-list";
 	}
 
