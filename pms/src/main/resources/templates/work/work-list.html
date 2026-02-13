@@ -62,7 +62,7 @@
 				<!-- 조회 버튼 -->
 				<button type="submit" class="btn btn-primary">소요시간 조회</button>
 				<!-- 일감조회로 이동 -->
-				<a th:href="@{/issue/list}"
+				<a th:href="@{/project/{code}/issue/list(code=${projectCode})}"
 					class="btn btn-primary text-white d-inline-flex align-items-center justify-content-center">일감 조회</a>
 				<!-- 소요시간 등록으로 이동-->
 				<a th:href="@{/work/insert}"
