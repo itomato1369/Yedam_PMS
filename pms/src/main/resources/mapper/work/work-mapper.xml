@@ -276,6 +276,16 @@
             workMonth DESC
             , p.project_no ASC
 	</select>
+	<!-- 소요시간에서 사용할 일감 조회 -->
+	<select id="selectIssueInProject" resultType="WorkInsertDto">
+			SELECT job_no
+		    , manager_id
+		    , title
+		    , project_no
+		   FROM job
+		   WHERE user_id = #{userId}
+           AND project_no = #{projectNo}
+	</select>
 
 	<!-- 작업분류 조회 -->
 	<select id="selectWorkDetails" resultType="WorkDetailsDto">

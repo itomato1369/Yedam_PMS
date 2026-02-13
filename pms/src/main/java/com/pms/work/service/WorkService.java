@@ -15,6 +15,9 @@ public interface WorkService {
 	// 수정페이지 화면 단건조회
 	WorkUpdateDto findWorkEntriesByNo(WorkUpdateDto workUpdateDto);
 	
+	// 내가 속한 프로젝트의 일감 조회
+	List<WorkInsertDto> findMyIssue(String userId);
+	
 	// 소요시간 등록 매개변수 타입은 WorkInsertDto
 	void addWorkEntries(WorkInsertDto workInsertDto);
 	

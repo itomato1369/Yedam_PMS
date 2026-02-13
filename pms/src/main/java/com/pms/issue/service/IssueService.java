@@ -18,7 +18,6 @@ public class IssueService {
 	// 일감 리스트
 	public List<IssueDto> findIssueList(String userId) {
 		List<IssueDto> issueList = issueMapper.selectIssue(userId);
-		System.out.println(issueList.toString());
 		return issueList;
 	}
 
