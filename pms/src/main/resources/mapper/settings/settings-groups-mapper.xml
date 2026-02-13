@@ -69,6 +69,6 @@
 		parameterType="com.pms.setting.groups.vo.GroupsVO">
 		UPDATE groups
 		SET GROUPNAME = #{groupName} -- VO의 groupName 필드 사용
-		WHERE GROUP_NO = #{groupNo} -- VO의 groupNo 필드 사용
+		WHERE GROUP_NO = #{groupNO} -- VO의 groupNo 필드 사용
 	</update>
 </mapper>

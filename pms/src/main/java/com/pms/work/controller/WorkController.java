@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/project/{projectCode}/{issueNo}/work")
+@RequestMapping("/work")
 public class WorkController {
 	private final WorkService workService;
 
