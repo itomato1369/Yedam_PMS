@@ -24,9 +24,5 @@ public class IssueDto {
 	private Integer jobStatusNo;
 	private Integer projectNo;
 	private Integer parentJobNo;
-	private String projectName;
-	private String jobStatusName;
-	private String jobTypeName;
-	private String priorityName;
 	
 }

@@ -6,9 +6,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<link rel="stylesheet" th:href="@{/css/dynamic-search.css}" />
-
+<link rel="stylesheet" th:href="@{/css/dynamic-search.css}"/>
 <!-- Bootstrap5 icon사용 -->
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
@@ -60,16 +58,13 @@
 					</ul>
 				</div>
 				<!-- 조회 버튼 -->
-				<button type="submit" class="btn btn-primary">소요시간 조회</button>
-				<!-- 일감조회로 이동 -->
-				<a th:href="@{/project/{code}/issue/list(code=${projectCode})}"
-					class="btn btn-primary text-white d-inline-flex align-items-center justify-content-center">일감 조회</a>
+				<button type="submit" class="btn btn-primary">조회</button>
 				<!-- 소요시간 등록으로 이동-->
 				<a th:href="@{/work/insert}"
-					class="btn btn-success text-white d-inline-flex align-items-center justify-content-center">소요시간 등록</a>
+					class="btn btn-success text-white d-inline-flex align-items-center justify-content-center">소요시간등록</a>
 				<!-- 소요시간 관련 보고서로 이동 -->
 				<a th:href="@{/work/report}"
-					class="btn btn-success text-white d-inline-flex align-items-center justify-content-center">보고서</a>
+					class="btn btn-info text-white d-inline-flex align-items-center justify-content-center">보고서</a>
 			</div>
 		</form>
 
@@ -102,7 +97,6 @@
 	</div>
 
 	<script th:src="@{/js/work/dynamicSearch.js}"></script>
-
-
+	
 </body>
 </html>

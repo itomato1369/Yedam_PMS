@@ -6,7 +6,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -24,7 +23,7 @@ public class IssueController {
 
 	// 일감 리스트
 	@GetMapping("/list")
-	public String findIssueList(@AuthenticationPrincipal CustomUserDetails customUser, @PathVariable String projectCode, Model model) {
+	public String findIssueList(@AuthenticationPrincipal CustomUserDetails customUser, Model model) {
 		String userId = customUser.getUsername();
 		List<IssueDto> issueList = issueService.findIssueList(userId);
 		model.addAttribute("issueList", issueList);
@@ -33,14 +32,13 @@ public class IssueController {
 
 	// 일감 등록 form
 	@GetMapping("/new")
-	public String newIssueForm(@PathVariable String projectCode, Model model) {	
-		model.addAttribute("projectCode", projectCode);
+	public String newIssueForm(Model model) {
 		return "issue/issue-insert";
 	}
 
 	// 일감 등록
 	@PostMapping("/insert")
-	public String addIssue(@AuthenticationPrincipal CustomUserDetails customUser, @PathVariable String projectCode, IssueDto issueDto) {
+	public String addIssue(@AuthenticationPrincipal CustomUserDetails customUser, IssueDto issueDto) {
 		issueDto.setUserId(customUser.getUsername());
 		Integer jobNo = issueService.addIssue(issueDto);
 
