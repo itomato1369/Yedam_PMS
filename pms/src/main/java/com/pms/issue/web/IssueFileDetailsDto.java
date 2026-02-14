@@ -10,7 +10,7 @@ public class IssueFileDetailsDto {
 	private Integer detailsNo;
 	private Integer filesNo;
 	private String filesName;
-	private String filesSize;
+	private Long filesSize;
 	private String filesType;
 	private String filesPath;
 }

@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.pms.config.CustomUserDetails;
 import com.pms.issue.service.IssueService;
@@ -38,9 +40,10 @@ public class IssueController {
 
 	// 일감 등록
 	@PostMapping("/insert")
-	public String addIssue(@AuthenticationPrincipal CustomUserDetails customUser, IssueDto issueDto) {
+	public String addIssue(@AuthenticationPrincipal CustomUserDetails customUser, IssueDto issueDto,
+			@RequestParam("files") List<MultipartFile> files) {
 		issueDto.setUserId(customUser.getUsername());
-		Integer jobNo = issueService.addIssue(issueDto);
+		Integer jobNo = issueService.addIssue(issueDto, files);
 
 		return "redirect:/issue/info?jobNo=" + jobNo;
 	}

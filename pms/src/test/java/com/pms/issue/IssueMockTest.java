@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.pms.issue.mapper.IssueMapper;
 import com.pms.issue.service.IssueService;
@@ -70,7 +72,8 @@ public class IssueMockTest {
 		}).when(issueMapper).insertIssue(issueDto);
 
 		// when
-		Integer jobNo = issueService.addIssue(issueDto);
+		List<MultipartFile> files = Collections.emptyList();
+		Integer jobNo = issueService.addIssue(issueDto, files);
 
 		// then
 		assertThat(jobNo).isEqualTo(101);
@@ -88,7 +91,8 @@ public class IssueMockTest {
 		IssueDto issueDto = new IssueDto();
 		
 		// when -> then
-		assertThatThrownBy(() -> issueService.addIssue(issueDto))
+		List<MultipartFile> files = Collections.emptyList();
+		assertThatThrownBy(() -> issueService.addIssue(issueDto, files))
 								.isInstanceOf(RuntimeException.class)
 								.hasMessageContaining("제목은 필수 입력 사항입니다.");
 
