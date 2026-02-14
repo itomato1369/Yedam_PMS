@@ -81,6 +81,7 @@ public class IssueService {
 			IssueFileDetailsDto fileDetailDto = new IssueFileDetailsDto();
 			fileDetailDto.setFilesNo(fileNo);
 			fileDetailDto.setFilesName(fileName);
+			fileDetailDto.setFilesUuid(fileUuid);
 			fileDetailDto.setFilesSize(file.getSize());
 			fileDetailDto.setFilesType(file.getContentType());
 			fileDetailDto.setFilesPath(filePath + "/" + fileUuid);

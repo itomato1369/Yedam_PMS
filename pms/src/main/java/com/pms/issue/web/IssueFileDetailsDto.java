@@ -13,4 +13,5 @@ public class IssueFileDetailsDto {
 	private Long filesSize;
 	private String filesType;
 	private String filesPath;
+	private String filesUuid;
 }

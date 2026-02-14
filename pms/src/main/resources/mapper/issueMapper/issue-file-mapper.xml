@@ -14,7 +14,7 @@
 		, upload_date
 		) VALUES (
 		#{filesNo}
-		, #{jobId}
+		, #{jobNo}
 		, #{userId}
 		, SYSDATE
 		)
