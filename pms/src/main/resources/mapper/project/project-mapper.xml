@@ -154,6 +154,12 @@
 		WHERE status != 390
 		ORDER BY project_no
 	</select>
+	<!--/* insert 실행 전 projectCode 중복 체크*/-->
+	<select id="selectByProjectCode" resultType="Integer">
+		SELECT COUNT(*)
+		FROM project
+		WHERE project_code=#{projectCode}
+	</select>
 	
 	<!--/* insert update delete: MyBatis가 내부적으로 실행 후 결과(Row 수)를 반환하는 구조 */-->
 	<insert id="insertProject" parameterType="projectInsertDTO">

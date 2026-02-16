@@ -23,6 +23,7 @@ public interface ProjectService {
     
     List<ParentProjectDTO> findParentProjects();
     
+    boolean findByProjectCode(String projectCode);
     boolean addProject(ProjectInsertDTO projectInsertDTO);
     
     // 개요페이지

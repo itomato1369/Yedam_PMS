@@ -51,7 +51,11 @@ public class ProjectServiceImpl implements ProjectService {
 		return projectMapper.selectParentProjects();
 	}
 
-
+	
+	@Override
+	public boolean findByProjectCode(String projectCode) {
+		return projectMapper.selectByProjectCode(projectCode) > 0;
+	}
 	@Override
 	public boolean addProject(ProjectInsertDTO projectInsertDTO) {
 		// INSERT 결과로 생성된 row count 확인하여 성공 여부 판단
