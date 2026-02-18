@@ -1,11 +1,15 @@
 package com.pms.project.mapper;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import com.pms.project.dto.JobDTO;
+import com.pms.project.dto.MemberDTO;
 import com.pms.project.dto.ParentProjectDTO;
 import com.pms.project.dto.ProjectInsertDTO;
 import com.pms.project.dto.ProjectSearchDTO;
-import java.util.List;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 import com.pms.project.dto.ProjectSelectDTO;
 
 @Mapper
@@ -17,6 +21,10 @@ public interface ProjectMapper {
     // 사용자의 검색결과를 바탕으로하는 프로젝트 목록 조회 (통계 포함) 
     List<ProjectSelectDTO> selectProjectsByOptions(ProjectSearchDTO searchDTO);
     List<ParentProjectDTO> selectParentProjects();
+    
+    // 조회 가속을 위한 메서드 추가 (List<Integer>를 파라미터로 받음)
+    List<JobDTO> selectJobsByProjectNos(@Param("projectNos") List<Integer> projectNos);
+    List<MemberDTO> selectMembersByProjectNos(@Param("projectNos") List<Integer> projectNos);
     
     // 프로젝트 code 중복 검사
     int selectByProjectCode(String projectCode);

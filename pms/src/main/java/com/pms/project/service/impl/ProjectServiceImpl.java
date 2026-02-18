@@ -2,17 +2,24 @@ package com.pms.project.service.impl;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.pms.project.dto.JobDTO;
+import com.pms.project.dto.MemberDTO;
 import com.pms.project.dto.ParentProjectDTO;
 import com.pms.project.dto.ProjectInsertDTO;
 import com.pms.project.dto.ProjectSearchDTO;
 import com.pms.project.dto.ProjectSelectDTO;
 import com.pms.project.dto.ProjectStatus;
+import com.pms.project.dto.ProjectTotalDTO;
 import com.pms.project.mapper.ProjectMapper;
 import com.pms.project.service.ProjectService;
 
@@ -26,10 +33,115 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional(readOnly = true)
     public List<ProjectSelectDTO> findUserProjects(String userId) {
-        // 1. 매퍼를 통해 데이터베이스에서 집계 및 계층 데이터 조회
-        List<ProjectSelectDTO> projects = projectMapper.selectUserProjects(userId);
-        // 2. 추가적인 비즈니스 가공이 필요한 경우 여기서 처리 (예: 특정 조건에 따른 리스트 필터링 등)
-        return projects;
+        // [1] DB 왕복 1회: 기본 프로젝트 정보 로드
+        List<ProjectSelectDTO> allProjects = projectMapper.selectUserProjects(userId);
+        if (allProjects.isEmpty()) return allProjects;
+
+        // [2] 벌크 조회를 위한 ID 추출
+        List<Integer> projectNos = allProjects.stream()
+                .map(ProjectSelectDTO::getProjectNo).toList();
+
+        // [3] DB 왕복 2, 3회: 일감 및 멤버 벌크 로딩
+        List<JobDTO> allJobs = projectMapper.selectJobsByProjectNos(projectNos);
+        List<MemberDTO> allMembers = projectMapper.selectMembersByProjectNos(projectNos);
+
+        // [4] 고속 조회를 위한 Map 그룹화 (O(1))
+        Map<Integer, List<JobDTO>> jobMap = allJobs.stream()
+                .collect(Collectors.groupingBy(JobDTO::getProjectNo));
+        Map<Integer, List<MemberDTO>> memberMap = allMembers.stream()
+                .collect(Collectors.groupingBy(MemberDTO::getProjectNo));
+
+        // [5] 자바 메모리 연산 (DB 재접속 없음)
+        for (ProjectSelectDTO p : allProjects) {
+            p.setProjectTotalDTO(calculateSubtreeStats(p, allProjects, jobMap, memberMap));
+        }
+
+        return allProjects;
+    }
+
+    /**
+     * 계층형 통계 합산 로직 (재귀 활용)
+     */
+    private ProjectTotalDTO calculateSubtreeStats(ProjectSelectDTO current, List<ProjectSelectDTO> all, 
+                                                  Map<Integer, List<JobDTO>> jobMap, 
+                                                  Map<Integer, List<MemberDTO>> memberMap) {
+        // 1. 하위 트리 ID 목록 수집 (나 포함)
+        List<Integer> subtreeIds = new ArrayList<>();
+        findSubtreeIds(current.getProjectNo(), all, subtreeIds);
+        
+        // 2. 일감 데이터 합산
+        List<JobDTO> subJobs = subtreeIds.stream()
+                .flatMap(id -> jobMap.getOrDefault(id, List.of()).stream()).toList();
+        
+        // 3. 인원 데이터 합산 (중복 제거)
+        Set<String> subMemberIds = subtreeIds.stream()
+                .flatMap(id -> memberMap.getOrDefault(id, List.of()).stream())
+                .map(MemberDTO::getUserId).collect(Collectors.toSet());
+
+        ProjectTotalDTO stats = new ProjectTotalDTO();
+        stats.setTotalJobCount(subJobs.size());
+        stats.setTotalMemberCount(subMemberIds.size());
+        
+        // 4. 실제 진척도 계산
+        double avgProgress = subJobs.stream()
+                .mapToDouble(JobDTO::getProgress).average().orElse(0.0);
+        stats.setCurrentProgress(Math.round(avgProgress * 100.0) / 100.0);
+
+        // 5. 예상 진척도 계산
+        stats.setTargetProgress(calculateTimeTargetProgress(current, all, subtreeIds));
+
+        return stats;
+    }
+
+    /**
+     * 재귀적으로 하위 프로젝트 ID를 찾는 헬퍼 메서드
+     */
+    private void findSubtreeIds(Integer parentId, List<ProjectSelectDTO> all, List<Integer> result) {
+        result.add(parentId);
+        for (ProjectSelectDTO p : all) {
+            if (parentId.equals(p.getParentProjectNo())) {
+                findSubtreeIds(p.getProjectNo(), all, result);
+            }
+        }
+    }
+
+    /**
+     * 시간 기준 예상 진척도 계산 (Java 날짜 연산)
+     */
+    private double calculateTimeTargetProgress(ProjectSelectDTO current, List<ProjectSelectDTO> all, List<Integer> subtreeIds) {
+        LocalDate today = LocalDate.now();
+
+        // 1. 하위 트리(나 포함)에 해당하는 프로젝트들만 필터링
+        List<ProjectSelectDTO> subtreeProjects = all.stream()
+                .filter(p -> subtreeIds.contains(p.getProjectNo()))
+                .toList();
+
+        // 2. 각 프로젝트별 예상 진척도 계산 후 평균 산출
+        double avgTarget = subtreeProjects.stream().mapToDouble(p -> {
+            // 시작일이나 종료일이 없으면 계획이 없는 것으로 간주 (0%)
+            if (p.getStartDate() == null || p.getEndDate() == null) return 0.0;
+
+            LocalDate start = convertToLocalDate(p.getStartDate());
+            LocalDate end = convertToLocalDate(p.getEndDate());
+
+            // 전체 계획 기간 (분모)
+            long totalDays = java.time.temporal.ChronoUnit.DAYS.between(start, end);
+            
+            // 당일 시작-당일 종료인 경우의 예외 처리
+            if (totalDays <= 0) return today.isBefore(start) ? 0.0 : 100.0;
+
+            // 시작일로부터 오늘까지 경과된 기간 (분자)
+            long passedDays = java.time.temporal.ChronoUnit.DAYS.between(start, today);
+
+            // 진행률 계산 및 범위 보정 [0% ~ 100%]
+            // 수식: (오늘 - 시작일) / (종료일 - 시작일) * 100
+            double progress = (double) passedDays / totalDays * 100.0;
+            return Math.min(100.0, Math.max(0.0, progress));
+            
+        }).average().orElse(0.0);
+
+        // 소수점 둘째 자리까지 반올림
+        return Math.round(avgTarget * 100.0) / 100.0;
     }
     
 
@@ -84,4 +196,5 @@ public class ProjectServiceImpl implements ProjectService {
 	public List<ProjectSelectDTO> findFirstChildsByCode(String projectCode) {
 		return projectMapper.selectFirstChildsByCode(projectCode, ProjectStatus.ACTIVE.getCode(), ProjectStatus.LOCKED.getCode());
 	}
+	
 }

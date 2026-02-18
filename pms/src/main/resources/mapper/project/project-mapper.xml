@@ -3,101 +3,45 @@
 <mapper namespace="com.pms.project.mapper.ProjectMapper">
 
 	<resultMap id="projectMap" type="ProjectSelectDTO" autoMapping="true">
-		<id property="projectNo" column="project_no"/>
-		<association property="projectTotalDTO" 
-                     column="project_no" 
-                     javaType="ProjectTotalDTO" 
-                     select="selectTotalClac"/>
+    	<id property="projectNo" column="project_no"/>
+    	<association property="projectTotalDTO" javaType="ProjectTotalDTO" />
 	</resultMap>
 
 	<select id="selectUserProjects" resultMap="projectMap">
-	SELECT 
-	  p.le
-	  , p.project_no
-	  , p.parent_project_no
-	  , p.project_name
-	  , p.project_desc
-	  , p.project_code
-	  , p.project_home 
-	  , FN_GET_CODE_NAME(p.status) AS project_status
-	  , p.status
-	  , p.public_yn
-	  , m.join_no -- 조인 정상적으로 되었는지 조회하는 용도
-	  , j.title AS latest_job_title
-	  FROM vw_project p
-	  LEFT JOIN (
-	    SELECT DISTINCT project_no AS join_no
-	    FROM vw_member m
-	    WHERE user_id = #{userId}
-	  ) m ON p.project_no = m.join_no
-	  LEFT JOIN (
-	    SELECT project_no, title
-		    FROM (
-		        SELECT project_no, title, 
-		               ROW_NUMBER() OVER (PARTITION BY project_no ORDER BY add_date DESC) as rn
-		        FROM job
-		    )
-		    WHERE rn = 1 
-		) j ON j.project_no = p.project_no
-	  WHERE 
-	    p.status BETWEEN 330 AND 370 
-	  AND
-	  (
-	    m.join_no IS NOT NULL  -- 조건1: 조인이 됐다? (즉, 나는 멤버다)
-	    OR 
-	    p.public_yn = 1           -- 조건2: 혹은 공개 프로젝트다
-	  )
+	    SELECT 
+        	p.le, p.project_no, p.parent_project_no, p.project_name, 
+	        p.project_desc, p.project_code, p.project_home, p.status, p.public_yn,
+    	    p.start_date, p.end_date,
+	        FN_GET_CODE_NAME(p.status) AS project_status,
+	        j.title AS latest_job_title
+	    FROM vw_project p
+	    LEFT JOIN (
+	        SELECT project_no, title 
+	        FROM (SELECT project_no, title, ROW_NUMBER() OVER (PARTITION BY project_no ORDER BY add_date DESC) as rn FROM job)
+	        WHERE rn = 1
+	    ) j ON j.project_no = p.project_no
+	    WHERE p.status BETWEEN 330 AND 370 
+	      AND (EXISTS (SELECT 1 FROM vw_member WHERE project_no = p.project_no AND user_id = #{userId}) OR p.public_yn = 1)
+	</select>
+
+	<select id="selectJobsByProjectNos" resultType="JobDTO">
+	    SELECT 
+	        project_no, job_no, title, progress, start_date, end_date, job_status_no
+	    FROM job
+	    WHERE project_no IN
+	    <foreach item="id" collection="projectNos" open="(" separator="," close=")">
+	        #{id}
+	    </foreach>
 	</select>
 	
-	<!--/* 넘겨받은 프로젝트 번호별로 하위프로젝트 하향식 탐사 */-->
-	<select id="selectTotalClac" resultType="ProjectTotalDTO">
-	  WITH subtree AS (
-	    SELECT sub.project_no
-	    FROM project sub
-	    START WITH sub.project_no = #{projectNo}
-	    CONNECT BY PRIOR sub.project_no = sub.parent_project_no
-	  )
-	  SELECT
-	    -- 총 소속 인원
-	    (SELECT COUNT(DISTINCT m.user_id)
-	     FROM vw_member m
-	     WHERE m.project_no IN (SELECT project_no FROM subtree)
-	    ) AS totalMemberCount,
-	
-	    -- 총 일감 수
-	    (SELECT COUNT(*)
-	     FROM job j
-	     WHERE j.project_no IN (SELECT project_no FROM subtree)
-	    ) AS totalJobCount,
-	
-	    -- 예상진척도 (CAST 추가)
-	    NVL((SELECT ROUND(AVG(
-	        CASE
-			  WHEN p.start_date IS NULL OR p.end_date IS NULL THEN 0 
-			  WHEN p.end_date = p.start_date THEN 100
-	          ELSE
-	            LEAST(
-	              GREATEST(
-	                (CAST(SYSDATE AS DATE) - CAST(p.start_date AS DATE)) 
-	                / 
-	                (CAST(p.end_date AS DATE) - CAST(p.start_date AS DATE)) 
-	                * 100,
-	                0
-	              ),
-	              100
-	            )
-	        END
-	      ), 2)
-	     FROM project p
-	     WHERE p.project_no IN (SELECT project_no FROM subtree)
-	    ), 0) AS targetProgress,
-	
-	    -- 실제진척도
-	    NVL((SELECT ROUND(AVG(j.progress), 2)
-	     FROM job j
-	     WHERE j.project_no IN (SELECT project_no FROM subtree)
-	    ), 0) AS currentProgress
-	  FROM dual
+	<select id="selectMembersByProjectNos" resultType="MemberDTO">
+	    SELECT 
+	        project_no, user_id
+	    FROM vw_member
+	    WHERE project_no IN
+	    <foreach item="id" collection="projectNos" open="(" separator="," close=")">
+	        #{id}
+	    </foreach>
 	</select>
 	
 	<select id="selectProjectsByOptions" parameterType="com.pms.project.dto.ProjectSearchDTO" resultType="ProjectSelectDTO">

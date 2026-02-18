@@ -1,6 +1,9 @@
 package com.pms.project.dto;
 
+import java.util.Date;
+
 import org.apache.ibatis.type.Alias;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +25,11 @@ public class ProjectSelectDTO {
     
     private Integer status;
     private String  statusName; // FN_GET_CODE_NAME 결과
+    
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date startDate; // 시작일 추가
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date endDate;   // 종료일 추가
     
     private Integer publicYn;
     
