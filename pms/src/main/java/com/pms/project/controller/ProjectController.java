@@ -28,9 +28,12 @@ public class ProjectController {
     private final ProjectCommonStatusMapper projectCommonStatusMapper;
     
     @GetMapping("/list")
-    public String listProjects(Model model, @ModelAttribute ProjectSearchDTO searchDTO) {
+    public String listProjects(Model model 
+    		, @ModelAttribute ProjectSearchDTO searchDTO
+    		, @AuthenticationPrincipal CustomUserDetails customUser 
+    		) {
         // 실제 운영 시에는 세션 또는 SecurityContext에서 userId를 가져옴
-        String currentUserId = "song";
+        String currentUserId = customUser.getUserEntity().getUserId();
         
         // 검색 조건이 있는지 확인 (projectName, projectStatus, projectAssignee 중 하나라도 값이 있으면 검색 조건으로 간주)
         boolean hasSearchCriteria = searchDTO.getProjectName() != null && !searchDTO.getProjectName().isEmpty() ||
