@@ -465,7 +465,25 @@
 		    };
 
 		    // [각 섹션 컨트롤러 설정은 기존과 동일]
-		    const gCtrl = setupSection({ listUrl:'/settings/api/groups', searchUrl:'/settings/api/groups/search', searchBtnId:'#btnGroupSearch', keywordId:'#groupKeyword', addBtnId:'#btnGroupAdd', tbodyId:'#groupTableBody', cols:5, emptyMsg:'등록된 그룹이 없습니다.', newInputId:'#groupNewInput', rowFn: g => `<tr><td>${g.groupNo}</td><td class="text-start group-name-cell" data-id="${g.groupNo}" style="cursor:pointer"><span class="name-text">${g.groupName}</span></td><td class="text-center"><span class="badge bg-light text-dark">${g.memberCount||0} 명</span></td><td><span class="badge ${g.status==510?'bg-success':'bg-warning'}">${g.statusName}</span></td><td><button class="btn btn-sm ${g.status==510?'btn-outline-warning':'btn-outline-success'} btn-group-toggle" data-id="${g.groupNo}" data-status="${g.status}">상태변경</button></td></tr>`, newRowHtml: `<tr class="table-info" id="rowGroupNew"><td>#</td><td><input type="text" id="groupNewInput" class="form-control form-control-sm" placeholder="그룹명 입력"></td><td class="text-center">0 명</td><td><span class="badge bg-warning">비활성</span></td><td><button class="btn btn-sm btn-primary btn-group-save">저장</button> <button class="btn btn-sm btn-secondary btn-group-cancel">취소</button></td></tr>` });
+		    const gCtrl = setupSection({ listUrl:'/settings/api/groups', searchUrl:'/settings/api/groups/search', searchBtnId:'#btnGroupSearch', keywordId:'#groupKeyword', addBtnId:'#btnGroupAdd', tbodyId:'#groupTableBody', cols:5, emptyMsg:'등록된 그룹이 없습니다.', newInputId:'#groupNewInput', 
+		    	rowFn: g => `
+		    <tr>
+		        <td>${g.groupNo}</td>
+		        <td class="text-start group-name-cell" data-id="${g.groupNo}" style="cursor:pointer">
+		            <span class="name-text text-primary fw-bold">${g.groupName}</span>
+		        </td>
+		        <td class="text-center">
+		            <span class="badge bg-light text-dark">${g.memberCount||0} 명</span>
+		        </td>
+		        <td>
+		            <span class="badge ${g.status==510?'bg-success':'bg-warning'}">${g.statusName}</span>
+		        </td>
+		        <td>
+		            <button class="btn btn-sm ${g.status==510?'btn-outline-warning':'btn-outline-success'} btn-group-toggle" 
+		                    data-id="${g.groupNo}" data-status="${g.status}">상태변경</button>
+		        </td>
+		    </tr>`
+		});
 		    const rCtrl = setupSection({ 
 		        listUrl:'/settings/api/roles', 
 		        searchUrl:'/settings/api/roles/search', 
@@ -476,10 +494,10 @@
 		        cols:2, 
 		        emptyMsg:'등록된 권한이 없습니다.', 
 		        newInputId:'#roleNewInput', 
-		        // 📍 이름 클릭 시 상세로 이동하도록 클래스와 스타일 추가
+		        // 📍 텍스트를 버튼 느낌이 나지 않도록 'text-dark'로 변경하고 'fw-bold' 정도만 유지합니다.
 		        rowFn: r => `<tr>
 		            <td class="text-start ps-4 role-name-cell" data-id="${r.roleNo}" style="cursor:pointer">
-		                <span class="name-text text-primary fw-bold">${r.roleName}</span>
+		                <span class="name-text text-dark">${r.roleName}</span>
 		            </td>
 		            <td><button class="btn btn-sm btn-outline-danger btn-role-delete" data-id="${r.roleNo}">삭제</button></td>
 		        </tr>`,
@@ -536,27 +554,12 @@
 		    $(document).on('click', '.btn-group-toggle', function(){ 
 		        apiCall(`/settings/api/groups/${$(this).data('id')}/toggle-status`, 'PATCH', null, loadGroups);
 		    });
-
-		    $(document).on('dblclick', '.group-name-cell', function() {
-		        const $cell = $(this), id = $cell.data('id'), oldName = $cell.find('.name-text').text();
-		        if ($cell.find('input').length) return;
-		        $cell.html(`<input type="text" class="form-control form-control-sm edit-group-input" value="${oldName}">`);
-		        const $input = $cell.find('input').focus();
-		        const saveName = () => {
-		            const newName = $input.val().trim();
-		            if (!newName || newName === oldName) return $cell.html(`<span class="name-text">${oldName}</span>`);
-		            apiCall(`/settings/api/groups/${id}/name`, 'PATCH', { groupName: newName }, () => $cell.html(`<span class="name-text">${newName}</span>`));
-		        };
-		        $input.on('keyup', e => { if (e.key === 'Enter') saveName(); if (e.key === 'Escape') $cell.html(`<span class="name-text">${oldName}</span>`); });
-		        $input.on('blur', saveName);
-		    });
-			//roles-info로 이동
-		    $(document).on('click', '.role-name-cell', function() {
-		        const roleId = $(this).data('id');
-		        if(!roleId) return;
-		        
-		        // roles-info.html로 menu_id 파라미터를 들고 이동
-		        location.href = `/settings/roles-info?menu_id=${roleId}`;
+		 // 📍 클릭 이벤트: 상세 페이지 이동
+		    $(document).on('click', '.group-name-cell', function() {
+		        const groupId = $(this).data('id');
+		        if(groupId) {
+		            location.href = `/settings/groups-info?group_no=${groupId}`;
+		        }
 		    });
 		    init();
 		});
