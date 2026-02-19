@@ -508,7 +508,7 @@
 		        // 📍 텍스트를 버튼 느낌이 나지 않도록 'text-dark'로 변경하고 'fw-bold' 정도만 유지합니다.
 		        rowFn: r => `<tr>
 		            <td class="text-start ps-4 role-name-cell" data-id="${r.roleNo}" style="cursor:pointer">
-		                <span class="name-text text-dark">${r.roleName}</span>
+		                <span class="name-text text-primary fw-bold">${r.roleName}</span>
 		            </td>
 		            <td><button class="btn btn-sm btn-outline-danger btn-role-delete" data-id="${r.roleNo}">삭제</button></td>
 		        </tr>`,
@@ -605,6 +605,14 @@
 		    });
 		    $(document).on('click', '.btn-group-toggle', function(){ 
 		        apiCall(`/settings/api/groups/${$(this).data('id')}/toggle-status`, 'PATCH', null, loadGroups);
+		    });
+		 // 6-1. 역할(Role) 이름 클릭 시 상세 페이지 이동
+		    $(document).on('click', '.role-name-cell', function() {
+		        const roleId = $(this).data('id');
+		        if(roleId) {
+		            // 파라미터명 menu_id를 사용하여 이동합니다.
+		            location.href = `/settings/roles-info?menu_id=${roleId}`;
+		        }
 		    });
 		 // 📍 클릭 이벤트: 상세 페이지 이동
 		    $(document).on('click', '.group-name-cell', function() {
