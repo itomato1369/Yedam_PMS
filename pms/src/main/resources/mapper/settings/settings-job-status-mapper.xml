@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.pms.setting.job.status.mapper.JobStatusMapper">
+
+	<select id="selectAllJobStatus"
+		resultType="com.pms.setting.job.status.vo.JobStatusVO">
+		SELECT JOB_STATUS_NO AS jobStatusNo, JOB_STATUS AS
+		jobStatus
+		FROM JOB_STATUS ORDER BY JOB_STATUS_NO
+	</select>
+
+	<select id="searchJobStatus"
+		resultType="com.pms.setting.job.status.vo.JobStatusVO">
+		SELECT JOB_STATUS_NO AS jobStatusNo, JOB_STATUS AS
+		jobStatus
+		FROM JOB_STATUS
+		WHERE JOB_STATUS LIKE '%' || #{keyword} || '%'
+		ORDER BY JOB_STATUS_NO
+	</select>
+	
+	<insert id="insertJobStatus"
+		parameterType="com.pms.setting.job.status.vo.JobStatusVO">
+		<selectKey keyProperty="jobStatusNo" resultType="long"
+			order="BEFORE">
+			SELECT NVL(MAX(JOB_STATUS_NO), 0) + 1 FROM JOB_STATUS
+		</selectKey>
+		INSERT INTO JOB_STATUS (
+		JOB_STATUS_NO,
+		JOB_STATUS
+		) VALUES (
+		#{jobStatusNo},
+		#{jobStatus}
+		)
+	</insert>
+	
+	<delete id="delete">
+		DELETE FROM JOB_STATUS WHERE JOB_STATUS_NO = #{no}
+	</delete>
+
+</mapper>

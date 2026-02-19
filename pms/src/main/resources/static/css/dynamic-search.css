@@ -1,0 +1,70 @@
+/* 1. 기본 카드 스타일 업그레이드 */
+.condition-field .card {
+    border: none;
+    border-radius: 12px; /* 더 둥글게 */
+    background-color: #ffffff !important; /* 순백색 */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* 부드러운 그림자 */
+    transition: all 0.3s ease; /* 호버 효과를 위한 설정 */
+    border: 1px solid #f0f0f0;
+}
+
+/* 2. 마우스를 올렸을 때 강조 효과 */
+.condition-field .card:hover {
+    transform: translateY(-3px); /* 살짝 떠오르는 느낌 */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* 3. 상단 라벨 스타일링 */
+.condition-field label {
+    color: #495057;
+    font-size: 0.85rem;
+    letter-spacing: -0.02em;
+}
+
+/* 4. 입력창(Input, Select) 현대화 */
+.condition-field .form-control, 
+.condition-field .form-select {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.9rem;
+    background-color: #f8f9fa;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.condition-field .form-control:focus, 
+.condition-field .form-select:focus {
+    background-color: #fff;
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+    outline: none;
+}
+
+/* 5. 닫기 버튼 스타일링 */
+.btn-remove {
+    background-color: #f8f9fa;
+    padding: 0.4rem;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.btn-remove:hover {
+    background-color: #fee2e2; /* 아주 연한 빨간색 */
+}
+
+/* 6. [중요] 나타날 때 부드러운 애니메이션 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* d-none이 제거될 때 애니메이션 적용 */
+.condition-field:not(.d-none) {
+    animation: fadeInUp 0.4s ease forwards;
+}

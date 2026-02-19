@@ -13,7 +13,11 @@
 		ORDER BY job_no
 	</select>
 
-	<insert id="insertIssue" parameterType="IssueDto" useGeneratedKeys="true" keyProperty="jobNo" keyColumn="job_no">
+	<insert id="insertIssue" parameterType="IssueDto">
+		<selectKey keyProperty="jobNo" resultType="Integer" order="BEFORE">
+			SELECT JOB_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+
 		INSERT INTO job (
 		job_no,
 		title,
@@ -31,7 +35,7 @@
 		project_no,
 		parent_job_no
 		) VALUES (
-		job_seq.NEXTVAL,
+		#{jobNo},
 		#{title},
 		#{content},
 		#{priority},

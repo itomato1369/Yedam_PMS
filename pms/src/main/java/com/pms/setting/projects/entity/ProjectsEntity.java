@@ -2,6 +2,8 @@ package com.pms.setting.projects.entity;
 
 import java.time.LocalDateTime;
 
+import com.pms.setting.common.entity.CommonEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -23,7 +25,7 @@ public class ProjectsEntity {
     private Long projectNo;
 
     @Column(name = "PROJECT_NAME")
-    private String projectName;
+    private String projectName;	
 
     // 기존 Integer status 대신 CommonEntity와 연관관계를 맺습니다.
     @ManyToOne(fetch = FetchType.LAZY)

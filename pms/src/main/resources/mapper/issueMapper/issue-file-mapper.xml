@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pms.issue.mapper.IssueMapper">
+
+	<insert id="insertIssueFile" parameterType="IssueFileUploadDto">
+		<selectKey keyProperty="filesNo" resultType="Integer" order="BEFORE">
+			SELECT FILES_SEQ.NEXTVAL
+			FROM DUAL
+		</selectKey>
+		INSERT INTO files (
+		files_no
+		, job_no
+		, user_id
+		, upload_date
+		) VALUES (
+		#{filesNo}
+		, #{jobNo}
+		, #{userId}
+		, SYSDATE
+		)
+	</insert>
+
+	<insert id="insertIssueFileDetails" parameterType="IssueFileDetailsDto">
+		INSERT INTO files_details (
+		details_no
+		, files_no
+		, files_name
+		, files_size
+		, files_type
+		, files_path
+		, files_uuid
+		)
+		<foreach collection="list" item="file" separator=" UNION ALL ">
+			SELECT
+			FILES_DETAILS_SEQ.NEXTVAL
+			, #{file.filesNo}
+			, #{file.filesName}
+			, #{file.filesSize}
+			, #{file.filesType}
+			, #{file.filesPath}
+			, #{file.filesUuid}
+			FROM DUAL
+		</foreach>
+	</insert>
+</mapper>

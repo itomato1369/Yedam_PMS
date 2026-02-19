@@ -5,34 +5,36 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.pms.setting.common.entity.CommonEntity;
+import com.pms.setting.common.repository.CommonRepository;
 import com.pms.setting.projects.dto.SettingProjectDto;
-import com.pms.setting.projects.entity.CommonEntity;
 import com.pms.setting.projects.entity.ProjectsEntity;
-import com.pms.setting.projects.repository.CommonRepository;
 import com.pms.setting.projects.repository.ProjectsRepository;
 import com.pms.setting.projects.service.ProjectsService;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class ProjectsServiceImpl implements ProjectsService {
-
+	
+	@PersistenceContext
+	private EntityManager em; // 엔티티 매니저 주입
     private final ProjectsRepository projectsRepository;
     private final CommonRepository commonRepository;
 
     @Override
     public List<SettingProjectDto> getAllProjects() {
-        // [수정] 전체 조회 시에도 삭제된(390) 프로젝트는 제외
-        return projectsRepository.findAll().stream()
-                .filter(p -> p.getStatus() == null || p.getStatus().getCommonNo() != 390L)
+        return projectsRepository.search(null, null, null)
+                .stream()
                 .map(this::convertToDto)
                 .toList();
     }
-
     @Override
     public List<CommonEntity> getStatusList() {
-        return commonRepository.findByParentCommonNoAndDisplayYn(300L, "Y");
+        return commonRepository.findByParent_CommonNoAndDisplayYn(300L, "Y");
     }
 
     @Override
@@ -54,9 +56,21 @@ public class ProjectsServiceImpl implements ProjectsService {
 
     @Override
     @Transactional
+    public void toggleLock(Long projectNo, Integer targetStatus) {
+        projectsRepository.updateProjectStatus(projectNo, targetStatus);
+        // 영속성 컨텍스트 초기화 (최신 데이터 반영 보장)
+        em.flush();
+        em.clear();
+    }
+    
+    @Override
+    @Transactional
     public void logicalDelete(Long projectNo) {
-        // 리포지토리에 정의한 업데이트 쿼리 호출
         projectsRepository.updateStatusToDelete(projectNo);
+        
+        // [중요] 영속성 컨텍스트를 비워서 다음 조회 때 무조건 DB를 찌르게 함!
+        em.flush();
+        em.clear();
     }
     
     private SettingProjectDto convertToDto(ProjectsEntity p) {

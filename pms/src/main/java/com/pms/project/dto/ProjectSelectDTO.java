@@ -2,6 +2,8 @@ package com.pms.project.dto;
 
 import java.util.List;
 
+import org.apache.ibatis.type.Alias;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -11,10 +13,15 @@ import lombok.ToString;
 @Getter 
 @Setter
 @RequiredArgsConstructor
+@Alias("ProjectSelectDTO")
 public class ProjectSelectDTO {
-    private Long projectNo;
-    private String projectName;
-    private String projectDesc;
+    private Integer projectNo;
+    private String  projectCode;
+    private String  projectName;
+    private String  projectDesc;
+    private String  statusName;
+    private Integer status;
+    
     
     // 계층 구조용
     private List<ProjectSelectDTO> childProjects; 

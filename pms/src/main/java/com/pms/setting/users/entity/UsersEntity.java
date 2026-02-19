@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "USERS")
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -16,15 +15,13 @@ public class UsersEntity {
 
     /** 로그인 ID (PK) */
     @Id
-    @Column(name = "USER_ID", nullable = false, length = 255)
+    @Column(name = "USER_ID", nullable = false)
     private String userId;
 
     /** 비밀번호 */
-    @Column(name = "PASSWD", length = 255)
     private String passwd;
 
     /** 사용자 이름 (100 CHAR) */
-    @Column(name = "USERNAME", length = 100)
     private String username;
 
     /** 관리자 여부 (0 또는 1) */
@@ -53,5 +50,9 @@ public class UsersEntity {
         if (this.createTime == null) {
             this.createTime = LocalDateTime.now();
         }
+    }
+    
+    public void updateStatus(Integer status) {
+    	this.status = status;
     }
 }

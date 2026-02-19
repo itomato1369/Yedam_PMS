@@ -13,7 +13,7 @@ public class UsersDto {
 	// 유저가입/수정용 DTO
     private String userId;
     private String passwd;
-    private String username;
+    private String userName;
     private Integer admin;
     private Integer status;
     private LocalDateTime lastLogin;

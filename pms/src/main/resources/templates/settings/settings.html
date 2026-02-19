@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{common/layouts/default-layout}">
+
+<body>
+<div layout:fragment="Content">
+	<!-- 프로젝트 아코디언 -->
+	<div class="accordion" id="settingsAccordion">
+		<div class="accordion-item">
+			<h2 class="accordion-header">
+				<button class="accordion-button" type="button"
+					data-coreui-toggle="collapse" data-coreui-target="#collapseProject">
+					프로젝트 관리</button>
+			</h2>
+
+			<div id="collapseProject" class="accordion-collapse collapse show"
+				data-coreui-parent="#settingsAccordion">
+				<div class="accordion-body">
+					<div class="card mb-3">
+						<div class="card-body">
+							<form id="searchForm" class="row g-2">
+								<div class="col-md-3">
+									<select id="projectStatusSelect" name="status"
+										class="form-select">
+										<option value="">전체 상태</option>
+										<th:block th:each="status : ${statusList}">
+											<option th:value="${status.commonNo}"
+												th:text="${status.commonName}"></option>
+										</th:block>
+									</select>
+								</div>
+								<div class="col-md-6">
+									<input type="text" id="keyword" name="keyword"
+										class="form-control" placeholder="프로젝트명 검색">
+								</div>
+								<div class="col-md-3">
+									<div class="d-flex gap-2">
+										<button type="button" id="btnSearch"
+											class="btn btn-primary w-100">
+											<i class="cil-search"></i> 검색
+										</button>
+										<button type="button" id="btnProjectAdd"
+											class="btn btn-success w-100 text-white">
+											<i class="cil-plus"></i> 생성
+										</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+
+					<div class="card">
+						<div class="card-body p-0">
+							<table
+								class="table table-striped table-hover mb-0 text-center align-middle">
+								<thead class="table-light">
+									<tr>
+										<th>번호</th>
+										<th>프로젝트명</th>
+										<th>상태</th>
+										<th>공개 여부</th>
+										<th>등록일</th>
+										<th>관리</th>
+									</tr>
+								</thead>
+								<tbody id="projectTableBody">
+									<tr th:each="p : ${projects}">
+										<td th:text="${p.projectNo}"></td>
+										<td class="text-start" th:text="${p.projectName}"></td>
+
+										<td><span class="badge"
+											th:classappend="${p.statusValue == 330 ? 'bg-success' : (p.statusValue == 350 ? 'bg-warning' : 'bg-info')}"
+											th:text="${p.statusLabel}"></span></td>
+
+										<td><span class="badge rounded-pill"
+											th:classappend="${p.publicYn == 1 ? 'text-bg-light border' : 'text-bg-dark'}"
+											th:text="${p.publicYnLabel}"></span></td>
+
+										<td
+											th:text="${p.createAt != null ? #temporals.format(p.createAt, 'yyyy/MM/dd') : '-'}"></td>
+
+										<td>
+											<button type="button" class="btn btn-sm btn-lock"
+												th:classappend="${p.statusValue == 350 ? 'btn-outline-success' : 'btn-outline-warning'}"
+												th:data-id="${p.projectNo}"
+												th:data-status="${p.statusValue}">
+												<i
+													th:class="${p.statusValue == 350 ? 'cil-lock-locked' : 'cil-lock-unlocked'}"></i>
+												<span th:text="${p.statusValue == 350 ? '잠금해제' : '잠금'}"></span>
+											</button>
+
+											<button class="btn btn-sm btn-outline-danger btn-delete"
+												th:data-id="${p.projectNo}">삭제</button>
+										</td>
+									</tr>
+									<tr th:if="${#lists.isEmpty(projects)}">
+										<td colspan="6" class="py-4">등록된 프로젝트가 없습니다.</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 사용자 아코디언 -->
+		<div class="accordion-item">
+			<h2 class="accordion-header">
+				<button class="accordion-button collapsed" type="button"
+					data-coreui-toggle="collapse" data-coreui-target="#collapseUser">
+					사용자 관리</button>
+			</h2>
+
+			<div id="collapseUser" class="accordion-collapse collapse"
+				data-coreui-parent="#settingsAccordion">
+				<div class="accordion-body">
+					<div class="card mb-3">
+						<div class="card-body">
+							<form id="userSearchForm" class="row g-2">
+								<div class="col-md-3">
+									<select id="userStatusSelect" name="status" class="form-select">
+										<option value="">전체 상태</option>
+									</select>
+								</div>
+								<div class="col-md-6">
+									<input type="text" id="userKeyword" name="keyword"
+										class="form-control" placeholder="이름 검색">
+								</div>
+								<div class="col-md-3">
+									<div class="d-flex gap-2">
+										<button type="button" id="btnUserSearch"
+											class="btn btn-primary w-100">
+											<i class="cil-search"></i> 검색
+										</button>
+										<button type="button" id="btnUserAdd"
+											class="btn btn-success w-100 text-white">
+											<i class="cil-plus"></i> 등록
+										</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+
+					<div class="card">
+						<div class="card-body p-0">
+							<table
+								class="table table-striped table-hover mb-0 text-center align-middle">
+								<thead class="table-light">
+									<tr>
+										<th>아이디</th>
+										<th>이름</th>
+										<th>상태</th>
+										<th>권한</th>
+										<th>이메일</th>
+										<th>가입일</th>
+										<th>관리</th>
+									</tr>
+								</thead>
+								<tbody id="userTableBody">
+									<tr th:each="u : ${users}">
+										<td th:text="${u.userId}"></td>
+										<td class="text-start" th:text="${u.userName}"></td>
+
+										<td><span class="badge"
+											th:classappend="${u.status == 110 ? 'bg-success' : (u.status == 120 ? 'bg-info' : (u.status == 130 ? 'bg-warning' : 'bg-secondary'))}"
+											th:text="${u.status == 110 ? '사용중' : (u.status == 120 ? '등록대기' : (u.status == 130 ? '잠금' : '퇴사'))}">
+										</span></td>
+
+										<td><span class="badge"
+											th:classappend="${u.admin == 1 ? 'bg-danger' : 'bg-info'}"
+											th:text="${u.admin == 1 ? '관리자' : '일반'}"></span></td>
+										<td th:text="${u.email}"></td>
+										<td th:text="${#temporals.format(u.createTime, 'yyyy/MM/dd')}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 그룹 아코디언 -->
+		<div class="accordion-item">
+			<h2 class="accordion-header">
+				<button class="accordion-button collapsed" type="button"
+					data-coreui-toggle="collapse" data-coreui-target="#collapseGroup">
+					그룹 관리</button>
+			</h2>
+
+			<div id="collapseGroup" class="accordion-collapse collapse"
+				data-coreui-parent="#settingsAccordion">
+
+				<div class="accordion-body">
+
+					<!-- 검색 영역 (선택사항) -->
+					<div class="card mb-3">
+						<div class="card-body">
+							<form id="groupSearchForm" class="row g-2">
+								<div class="col-md-9">
+									<input type="text" id="groupKeyword" class="form-control"
+										placeholder="그룹명 검색">
+								</div>
+								<div class="col-md-3">
+									<div class="d-flex gap-2">
+										<button type="button" id="btnGroupSearch"
+											class="btn btn-primary w-100">검색</button>
+										<button type="button" id="btnGroupAdd"
+											class="btn btn-success w-100 text-white">
+											<i class="cil-plus"></i> 생성
+										</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+
+					<!-- 그룹 테이블 -->
+					<div class="card">
+						<div class="card-body p-0">
+							<table
+								class="table table-striped table-hover mb-0 text-center align-middle">
+								<thead class="table-light">
+									<tr>
+										<th>번호</th>
+										<th>그룹명</th>
+										<th class="text-center">인원 수</th>
+										<th>상태</th>
+										<th>관리</th>
+									</tr>
+								</thead>
+								<tbody id="groupTableBody">
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 역할 아코디언 -->
+		<div class="accordion-item">
+			<h2 class="accordion-header">
+				<button class="accordion-button collapsed" type="button"
+					data-coreui-toggle="collapse" data-coreui-target="#collapseRoles">
+					프로젝트 역할 관리</button>
+			</h2>
+			<div id="collapseRoles" class="accordion-collapse collapse"
+				data-coreui-parent="#settingsAccordion">
+				<div class="accordion-body">
+					<div class="card mb-3">
+						<div class="card-body">
+							<div class="row g-2">
+								<div class="col-md-9">
+									<input type="text" id="roleKeyword" class="form-control"
+										placeholder="역할명 검색">
+								</div>
+								<div class="col-md-3">
+									<div class="d-flex gap-2">
+										<button type="button" id="btnRoleSearch"
+											class="btn btn-primary w-100">검색</button>
+										<button type="button" id="btnRoleAdd"
+											class="btn btn-success w-100 text-white">
+											<i class="cil-plus"></i> 추가
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-body p-0">
+							<table
+								class="table table-striped table-hover mb-0 text-center align-middle">
+								<thead class="table-light">
+									<tr>
+										<th>역할명</th>
+										<th>관리</th>
+									</tr>
+								</thead>
+								<tbody id="roleTableBody">
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 일감 상태 아코디언 -->
+		<div class="accordion-item">
+			<h2 class="accordion-header">
+				<button class="accordion-button collapsed" type="button"
+					data-coreui-toggle="collapse"
+					data-coreui-target="#collapseJobStatus">일감 상태 관리</button>
+			</h2>
+			<div id="collapseJobStatus" class="accordion-collapse collapse"
+				data-coreui-parent="#settingsAccordion">
+				<div class="accordion-body">
+					<div class="card mb-3">
+						<div class="card-body">
+							<div class="row g-2">
+								<div class="col-md-9">
+									<input type="text" id="jobStatusKeyword" class="form-control"
+										placeholder="상태명 검색">
+								</div>
+								<div class="col-md-3">
+									<div class="d-flex gap-2">
+										<button type="button" id="btnJobStatusSearch"
+											class="btn btn-primary w-100">검색</button>
+										<button type="button" id="btnJobStatusAdd"
+											class="btn btn-success w-100 text-white">
+											<i class="cil-plus"></i> 추가
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-body p-0">
+							<table
+								class="table table-striped table-hover mb-0 text-center align-middle">
+								<thead class="table-light">
+									<tr>
+										<th>일감 상태명</th>
+										<th>관리</th>
+									</tr>
+								</thead>
+								<tbody id="jobStatusTableBody"></tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 일감 유형 아코디언 -->
+		<div class="accordion-item">
+			<h2 class="accordion-header">
+				<button class="accordion-button collapsed" type="button"
+					data-coreui-toggle="collapse" data-coreui-target="#collapseJobType">
+					일감 유형 관리</button>
+			</h2>
+			<div id="collapseJobType" class="accordion-collapse collapse"
+				data-coreui-parent="#settingsAccordion">
+				<div class="accordion-body">
+					<div class="card mb-3">
+						<div class="card-body">
+							<div class="row g-2">
+								<div class="col-md-9">
+									<input type="text" id="jobTypeKeyword" class="form-control"
+										placeholder="유형명 검색">
+								</div>
+								<div class="col-md-3">
+									<div class="d-flex gap-2">
+										<button type="button" id="btnJobTypeSearch"
+											class="btn btn-primary w-100">검색</button>
+										<button type="button" id="btnJobTypeAdd"
+											class="btn btn-success w-100 text-white">
+											<i class="cil-plus"></i> 추가
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-body p-0">
+							<table
+								class="table table-striped table-hover mb-0 text-center align-middle">
+								<thead class="table-light">
+									<tr>
+										<th>일감 유형명</th>
+										<th>관리</th>
+									</tr>
+								</thead>
+								<tbody id="jobTypeTableBody"></tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+	$(document).ready(function () {
+	    // 1. 초기화 및 공통 유틸
+	    const init = () => { performSearch(); loadUserStatusOptions(); performUserSearch(); loadGroups(); loadRoles(); loadJobStatus(); loadJobTypes(); };
+	    const apiCall = (url, type, data, success, error) => $.ajax({ url, type, data: typeof data === 'object' && type !== 'GET' ? JSON.stringify(data) : data, contentType: type !== 'GET' ? 'application/json' : undefined, success, error });
+
+	    // 2. 프로젝트 관리
+	    const performSearch = () => $.get('/settings/api/projects/search', { status: $('#projectStatusSelect').val(), keyword: $('#keyword').val() }, renderProjectTable);
+	    $('#btnSearch').on('click', performSearch);
+	    $('#keyword').on('keypress', e => { if(e.which == 13) { e.preventDefault(); performSearch(); } });
+
+	    function renderProjectTable(projects) {
+	        const $tbody = $('#projectTableBody').empty();
+	        if (!projects?.length) return $tbody.append('<tr><td colspan="6" class="py-4">검색 결과가 없습니다.</td></tr>');
+	        projects.forEach(p => {
+	            const isLocked = p.statusValue == 350;
+	            const date = p.createAt ? new Date(p.createAt).toLocaleDateString('ko-KR').replace(/\. /g, '/').replace('.', '') : "-";
+	            $tbody.append(`<tr><td>${p.projectNo}</td><td class="text-start">${p.projectName}</td><td><span class="badge ${p.statusValue == 330 ? 'bg-success' : isLocked ? 'bg-warning' : 'bg-info'}">${p.statusLabel}</span></td><td><span class="badge rounded-pill ${p.publicYn === 1 ? 'text-bg-light border' : 'text-bg-dark'}">${p.publicYnLabel}</span></td><td>${date}</td><td><button class="btn btn-sm btn-lock ${isLocked ? 'btn-outline-success' : 'btn-outline-warning'}" data-id="${p.projectNo}" data-status="${p.statusValue}"><i class="${isLocked ? 'cil-lock-locked' : 'cil-lock-unlocked'}"></i> ${isLocked ? '잠금해제' : '잠금'}</button> <button class="btn btn-sm btn-outline-danger btn-delete" data-id="${p.projectNo}">삭제</button></td></tr>`);
+	        });
+	    }
+
+	    $(document).on('click', '.btn-lock', function() {
+	        const id = $(this).data('id'), targetStatus = ($(this).data('status') == 350) ? 330 : 350;
+	        if(confirm(`해당 프로젝트를 ${targetStatus == 350 ? "잠금보관" : "진행중으로 변경"} 하시겠습니까?`)) $.ajax({ url: `/settings/api/projects/${id}/lock`, type: 'PATCH', data: { status: targetStatus }, success: performSearch });
+	    });
+	    $(document).on('click', '.btn-delete', function() { if(confirm(`${$(this).data('id')}번 프로젝트를 삭제하시겠습니까?`)) $.ajax({ url: `/settings/api/projects/${$(this).data('id')}`, type: 'DELETE', success: () => { alert("삭제되었습니다."); performSearch(); }, error: () => alert("삭제 실패") }); });
+
+	    // 3. 유저 관리
+	    const performUserSearch = () => $.get('/settings/api/users/search', { status: $('#userStatusSelect').val(), keyword: $('#userKeyword').val() }, renderUserTable);
+	    const loadUserStatusOptions = () => $.get('/settings/api/common/user-status-count', list => {
+	        const $select = $('#userStatusSelect'), cur = $select.val();
+	        $select.empty().append('<option value="">전체 상태</option>');
+	        list.forEach(s => $select.append(`<option value="${s.commonNo}" ${cur == s.commonNo ? 'selected' : ''}>${s.commonName} (${s.userCount})</option>`));
+	    });
+	    $('#btnUserSearch').on('click', performUserSearch);
+	    $('#userKeyword').on('keypress', e => { if(e.which == 13) { e.preventDefault(); performUserSearch(); } });
+
+	    function renderUserTable(users) {
+	        const $tbody = $('#userTableBody').empty();
+	        if (!users?.length) return $tbody.append('<tr><td colspan="7" class="py-4">검색 결과가 없습니다.</td></tr>');
+	        users.forEach(u => {
+	            const st = { 110:['사용중','bg-success'], 120:['등록대기','bg-info'], 130:['잠금','bg-warning'], 190:['퇴사','bg-secondary'] }[u.status] || ['알수없음','bg-dark'];
+	            const isPending = u.status === 120, isLocked = u.status === 130, isRetired = u.status === 190;
+	            const actionBtn = isPending ? `<button class="btn btn-sm btn-outline-primary btn-user-activate" data-id="${u.userId}">활성화</button>` : `<button class="btn btn-sm ${isLocked ? 'btn-outline-success' : 'btn-outline-warning'} btn-user-status" data-id="${u.userId}" data-status="${isLocked ? 110 : 130}" ${isRetired ? 'disabled' : ''}>${isLocked ? '잠금해제' : '잠금'}</button>`;
+	            $tbody.append(`<tr><td>${u.userId}</td><td class="text-start">${u.userName}</td><td><span class="badge ${st[1]}">${st[0]}</span></td><td><span class="badge ${u.admin === 1 ? 'bg-danger' : 'bg-info'}">${u.admin === 1 ? '관리자' : '일반'}</span></td><td>${u.email || '-'}</td><td>${u.createTime ? new Date(u.createTime).toLocaleDateString() : "-"}</td><td>${actionBtn} <button class="btn btn-sm ${isRetired ? 'btn-secondary' : 'btn-outline-danger'} btn-user-retire" data-id="${u.userId}" ${isRetired ? 'disabled' : ''}>${isRetired ? '퇴사완료' : '퇴사'}</button></td></tr>`);
+	        });
+	    }
+
+	    const updateUserStatus = (userId, status, msg) => apiCall('/settings/api/users/status', 'PATCH', { userId, status }, (res) => { if(res === "SUCCESS") { if(msg) alert(msg); performUserSearch(); loadUserStatusOptions(); } });
+	    $(document).on('click', '.btn-user-status', function() { updateUserStatus($(this).data('id'), $(this).data('status')); });
+	    $(document).on('click', '.btn-user-activate', function() { if(confirm("활성화 하시겠습니까?")) updateUserStatus($(this).data('id'), 110, "활성화 완료"); });
+	    $(document).on('click', '.btn-user-retire', function() { if(confirm("퇴사 처리하시겠습니까?")) updateUserStatus($(this).data('id'), 190, "퇴사 완료"); });
+
+	    // 4. 그룹/역할/일감 공통 핸들러
+	    const setupSection = (config) => {
+	        const load = () => $.get(config.listUrl, config.searchId ? { keyword: $(config.keywordId).val() } : renderTable);
+	        const renderTable = (data) => {
+	            const $tbody = $(config.tbodyId).empty();
+	            if(!data?.length) return $tbody.append(`<tr><td colspan="${config.cols}" class="py-4 text-center">${config.emptyMsg}</td></tr>`);
+	            data.forEach(item => $tbody.append(config.rowFn(item)));
+	        };
+	        $(config.searchBtnId).on('click', () => $.get(config.searchUrl, { keyword: $(config.keywordId).val() }, renderTable));
+	        $(config.keywordId).on('keypress', e => { if(e.which == 13) $(config.searchBtnId).click(); });
+	        $(config.addBtnId).on('click', () => {
+	            if ($(config.newInputId).length) return $(config.newInputId).focus();
+	            $(config.tbodyId).prepend(config.newRowHtml); $(config.newInputId).focus();
+	        });
+	        return { load, renderTable };
+	    };
+
+	    // 각 섹션 로드 함수 정의 (그룹, 역할, 상태, 유형)
+	    const gCtrl = setupSection({ listUrl:'/settings/api/groups', searchUrl:'/settings/api/groups/search', searchBtnId:'#btnGroupSearch', keywordId:'#groupKeyword', addBtnId:'#btnGroupAdd', tbodyId:'#groupTableBody', cols:5, emptyMsg:'등록된 그룹이 없습니다.', newInputId:'#groupNewInput', 
+	    	rowFn: g => `<tr>
+	    <td>${g.groupNo}</td>
+	    <td class="text-start group-name-cell" data-id="${g.groupNo}" style="cursor:pointer" title="더블클릭하여 수정">
+	        <span class="name-text">${g.groupName}</span>
+	    </td>
+	    <td class="text-center"><span class="badge bg-light text-dark">${g.memberCount||0} 명</span></td>
+	    <td><span class="badge ${g.status==510?'bg-success':'bg-warning'}">${g.statusName}</span></td>
+	    <td>
+	        <button class="btn btn-sm ${g.status==510?'btn-outline-warning':'btn-outline-success'} btn-group-toggle" data-id="${g.groupNo}" data-status="${g.status}">상태변경</button>
+	    </td>
+	</tr>`,
+	    	newRowHtml: `<tr class="table-info" id="rowGroupNew"><td>#</td><td><input type="text" id="groupNewInput" class="form-control form-control-sm" placeholder="그룹명 입력"></td><td class="text-center">0 명</td><td><span class="badge bg-warning">비활성(520)</span></td><td><button class="btn btn-sm btn-primary btn-group-save">저장</button> <button class="btn btn-sm btn-secondary btn-group-cancel">취소</button></td></tr>`
+	    });
+	    const loadGroups = gCtrl.load;
+
+	    const rCtrl = setupSection({ listUrl:'/settings/api/roles', searchUrl:'/settings/api/roles/search', searchBtnId:'#btnRoleSearch', keywordId:'#roleKeyword', addBtnId:'#btnRoleAdd', tbodyId:'#roleTableBody', cols:2, emptyMsg:'등록된 권한이 없습니다.', newInputId:'#roleNewInput', 
+	        rowFn: r => `<tr><td class="text-start ps-4">${r.roleName}</td><td><button class="btn btn-sm btn-outline-danger btn-role-delete" data-id="${r.roleNo}" data-name="${r.roleName}">삭제</button></td></tr>`,
+	        newRowHtml: `<tr class="table-info" id="rowRoleNew"><td><input type="text" id="roleNewInput" class="form-control form-control-sm" placeholder="역할명 입력"></td><td><button class="btn btn-sm btn-primary btn-role-save">저장</button> <button class="btn btn-sm btn-secondary btn-role-cancel">취소</button></td></tr>`
+	    });
+	    const loadRoles = rCtrl.load;
+
+	    const jsCtrl = setupSection({ listUrl:'/settings/api/job-status', searchUrl:'/settings/api/job-status/search', searchBtnId:'#btnJobStatusSearch', keywordId:'#jobStatusKeyword', addBtnId:'#btnJobStatusAdd', tbodyId:'#jobStatusTableBody', cols:2, emptyMsg:'데이터가 없습니다.', newInputId:'#jobStatusNewInput', 
+	        rowFn: i => `<tr><td class="text-start ps-4">${i.jobStatus}</td><td><button class="btn btn-sm btn-outline-danger btn-job-status-delete" data-id="${i.jobStatusNo}" data-name="${i.jobStatus}">삭제</button></td></tr>`,
+	        newRowHtml: `<tr class="table-info" id="rowJobStatusNew"><td><input type="text" id="jobStatusNewInput" class="form-control form-control-sm" placeholder="상태명 입력"></td><td><button class="btn btn-sm btn-primary btn-job-status-save">저장</button> <button class="btn btn-sm btn-secondary btn-job-status-cancel">취소</button></td></tr>`
+	    });
+	    const loadJobStatus = jsCtrl.load;
+
+	    const jtCtrl = setupSection({ listUrl:'/settings/api/job-types', searchUrl:'/settings/api/job-types/search', searchBtnId:'#btnJobTypeSearch', keywordId:'#jobTypeKeyword', addBtnId:'#btnJobTypeAdd', tbodyId:'#jobTypeTableBody', cols:2, emptyMsg:'데이터가 없습니다.', newInputId:'#jobTypeNewInput', 
+	        rowFn: i => `<tr><td class="text-start ps-4">${i.jobType}</td><td><button class="btn btn-sm btn-outline-danger btn-job-type-delete" data-id="${i.jobTypeNo}" data-name="${i.jobType}">삭제</button></td></tr>`,
+	        newRowHtml: `<tr class="table-info" id="rowJobTypeNew"><td><input type="text" id="jobTypeNewInput" class="form-control form-control-sm" placeholder="유형명 입력"></td><td><button class="btn btn-sm btn-primary btn-job-type-save">저장</button> <button class="btn btn-sm btn-secondary btn-job-type-cancel">취소</button></td></tr>`
+	    });
+	    const loadJobTypes = jtCtrl.load;
+
+	    // 공통 이벤트 (저장/취소/삭제/토글)
+	    const bindActions = (prefix, url, loadFn, dataFn) => {
+	        const save = () => { const val = $(`#${prefix}NewInput`).val().trim(); if(!val) return alert("입력해주세요."); apiCall(url, 'POST', dataFn(val), () => { alert("등록되었습니다."); loadFn(); }); };
+	        const cancel = () => $(`#row${prefix.charAt(0).toUpperCase()+prefix.slice(1)}New`).remove();
+
+	        $(document).on('click', `.btn-${prefix}-save`, save);
+	        $(document).on('click', `.btn-${prefix}-cancel`, cancel);
+	        
+	        // 📍 엔터/ESC 키 이벤트 통합 바인딩
+	        $(document).on('keydown', `#${prefix}NewInput`, e => { if(e.key==='Enter') { e.preventDefault(); save(); } if(e.key==='Escape') cancel(); });
+	    };
+	    bindActions('group', '/settings/api/groups', loadGroups, v => ({groupName:v, status:520}));
+	    bindActions('role', '/settings/api/roles', loadRoles, v => ({roleName:v}));
+	    bindActions('job-status', '/settings/api/job-status', loadJobStatus, v => ({jobStatus:v}));
+	    bindActions('job-type', '/settings/api/job-types', loadJobTypes, v => ({jobType:v}));
+
+	    $(document).on('click', '.btn-group-toggle', function(){ const id = $(this).data('id'), msg = $(this).data('status')===510?"비활성화":"활성화"; if(confirm(`${msg} 하시겠습니까?`)) $.ajax({ url: `/settings/api/groups/${id}/toggle-status`, type: 'PATCH', success: loadGroups }); });
+	    $(document).on('click', '.btn-role-delete', function() { if(confirm("삭제하시겠습니까?")) $.ajax({ url: `/settings/api/roles/${$(this).data('id')}`, type: 'DELETE', success: loadRoles }); });
+	    $(document).on('click', '.btn-job-status-delete', function() { if(confirm("삭제하시겠습니까?")) $.ajax({ url: `/settings/api/job-status/${$(this).data('id')}`, type: 'DELETE', success: loadJobStatus }); });
+	    $(document).on('click', '.btn-job-type-delete', function() { if(confirm("삭제하시겠습니까?")) $.ajax({ url: `/settings/api/job-types/${$(this).data('id')}`, type: 'DELETE', success: loadJobTypes }); });
+	 	// 그룹 이름 더블클릭 시 입력창으로 전환
+	    $(document).on('dblclick', '.group-name-cell', function() {
+	        if ($(this).find('input').length) return; // 이미 입력창이면 무시
+
+	        const $cell = $(this);
+	        const id = $cell.data('id');
+	        const oldName = $cell.find('.name-text').text();
+	        // 입력창으로 교체
+	        $cell.html(`<input type="text" class="form-control form-control-sm edit-group-input" value="${oldName}">`);
+	        const $input = $cell.find('input').focus();
+	        // 저장 함수
+	        const saveName = () => {
+	            const newName = $input.val().trim();
+	            if (!newName || newName === oldName) return $cell.html(`<span class="name-text">${oldName}</span>`);
+
+	            apiCall(`/settings/api/groups/${id}/name`, 'PATCH', { groupName: newName }, () => {
+	                $cell.html(`<span class="name-text">${newName}</span>`);
+	                // 성공 알림 없이 조용히 업데이트하거나 alert 추가 가능
+	            }, () => {
+	                alert("이름 변경 실패");
+	                $cell.html(`<span class="name-text">${oldName}</span>`);
+	            });
+	        };
+	        // 엔터 및 ESC 처리
+	        $input.on('keyup', e => {
+	            if (e.key === 'Enter') saveName();
+	            if (e.key === 'Escape') $cell.html(`<span class="name-text">${oldName}</span>`);
+	        });
+	        // 포커스 잃으면 자동 저장
+	        $input.on('blur', saveName);
+	    });
+
+	    init();
+	});
+</script>
+</div>
+</html>
