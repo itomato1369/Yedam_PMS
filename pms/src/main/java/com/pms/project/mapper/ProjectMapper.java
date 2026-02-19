@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.pms.project.dto.JobDTO;
 import com.pms.project.dto.MemberDTO;
+import com.pms.project.dto.NoticeDTO;
 import com.pms.project.dto.ParentProjectDTO;
 import com.pms.project.dto.ProjectInsertDTO;
 import com.pms.project.dto.ProjectSearchDTO;
@@ -32,6 +33,11 @@ public interface ProjectMapper {
     int insertProject(ProjectInsertDTO projectInsertDTO);
     
     
-    // 프로젝트 개요 페이지 - 자식 하위 프로젝트 목록 조회(이름, 식별자, 상태)
+    // 프로젝트 개요 페이지 
+    // 하위 프로젝트 목록 조회(이름, 식별자, 상태)
     List<ProjectSelectDTO> selectFirstChildsByCode(@Param("projectCode") String projectCode, Integer active, Integer locked );
+    
+    // 최신 공지사항 목록 조회
+    List<NoticeDTO> selectNotices();
+    
 }

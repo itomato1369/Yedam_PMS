@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.pms.project.dto.JobDTO;
 import com.pms.project.dto.MemberDTO;
+import com.pms.project.dto.NoticeDTO;
 import com.pms.project.dto.ParentProjectDTO;
 import com.pms.project.dto.ProjectInsertDTO;
 import com.pms.project.dto.ProjectSearchDTO;
@@ -195,6 +196,11 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public List<ProjectSelectDTO> findFirstChildsByCode(String projectCode) {
 		return projectMapper.selectFirstChildsByCode(projectCode, ProjectStatus.ACTIVE.getCode(), ProjectStatus.LOCKED.getCode());
+	}
+
+	@Override
+	public List<NoticeDTO> findNoties() {
+		return projectMapper.selectNotices();
 	}
 	
 }

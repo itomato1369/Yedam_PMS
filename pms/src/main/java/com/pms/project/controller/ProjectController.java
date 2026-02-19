@@ -16,6 +16,7 @@ import com.pms.project.dto.ProjectInsertDTO;
 import com.pms.project.dto.ProjectSearchDTO; // 추가
 import com.pms.project.service.ProjectService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -34,6 +35,12 @@ public class ProjectController {
     		) {
         // 실제 운영 시에는 세션 또는 SecurityContext에서 userId를 가져옴
         String currentUserId = customUser.getUserEntity().getUserId();
+        
+        
+		/*
+		 * if(customUser.getUserEntity().isAdmin() || 아니면 내가 pm) { // 내가 관리자 이거나 pm 이면
+		 * 해당프로젝트내부의 모든 정보 열람 가능 };
+		 */
         
         // 검색 조건이 있는지 확인 (projectName, projectStatus, projectAssignee 중 하나라도 값이 있으면 검색 조건으로 간주)
         boolean hasSearchCriteria = searchDTO.getProjectName() != null && !searchDTO.getProjectName().isEmpty() ||
@@ -97,9 +104,12 @@ public class ProjectController {
     
     // @PathVariable: 단일값 처리 + 매개변수에 어노테이션선언으로 필수값 선언, 반드시 받을거라 default 사용하지않기로
     @GetMapping("/{projectCode}/info")
-    public String getProjectInfo(@PathVariable String projectCode, Model model) {
-    	model.addAttribute("childProjects", projectService.findFirstChildsByCode(projectCode));
+    public String getProjectInfo(@PathVariable String projectCode, Model model, HttpSession session) {
+    	// 세션을 활용하여 pathVal 사용하지않는 페이지에서 프로젝트 코드값 조회
+    	session.setAttribute("projectCode", projectCode);
     	
+    	model.addAttribute("childProjects", projectService.findFirstChildsByCode(projectCode));
+		model.addAttribute("news", projectService.findNoties());
     	return "project/info";
     }
     

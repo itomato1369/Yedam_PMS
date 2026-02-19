@@ -86,32 +86,18 @@
   </div>
 
   <div class="card-body d-flex flex-column gap-2">
-    <!-- 안쪽 카드 (뉴스 항목 1) -->
-    <div class="card border mb-0">
-      <div class="card-body py-2 px-3">
-        <div class="d-flex align-items-center gap-2 mb-1">
-          <a href="#" class="fw-semibold text-decoration-none">이것이뉴스다</a>
-          <span class="badge bg-warning text-dark">NEW</span>
-        </div>
-        <div class="text-muted small">
-          <i class="cil-user"></i>
-          admin Admin이(가) 하루 전에 추가함
-        </div>
-      </div>
-    </div>
-
-    <!-- 안쪽 카드 (뉴스 항목 2) -->
-    <div class="card border mb-0">
-      <div class="card-body py-2 px-3">
-        <div class="d-flex align-items-center gap-2 mb-1">
-          <a href="#" class="fw-semibold text-decoration-none">스프린트 2 일정 업데이트</a>
-        </div>
-        <div class="text-muted small">
-          <i class="cil-user"></i>
-          admin Admin이(가) 3일 전에 추가함
-        </div>
-      </div>
-    </div>
+  	<!--/* 개별 뉴스 항목 */-->
+  	<div th:each="notice : ${news}" class="card border mb-0">
+	<div class="card-body py-2 px-3">
+	    <div class="d-flex align-items-center gap-2 mb-1">
+	      <a href="#" class="fw-semibold text-decoration-none" th:text="${notice.title}"></a>
+	    </div>
+	    <div class="text-muted small">
+	      <i class="cil-user"></i>
+	      <span th:text="|${notice.username}이(가) ${#dates.format(notice.addDate, 'yyyy-MM-dd HH:mm')}에 추가함|"></span>
+	    </div>
+	  </div>
+	</div>
   </div>
 
   <div class="card-footer d-flex gap-2">

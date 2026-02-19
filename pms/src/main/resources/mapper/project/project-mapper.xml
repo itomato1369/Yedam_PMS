@@ -163,7 +163,7 @@
     )
 	</insert>
 	
-	
+	<!--/* 개요페이지 */-->
 	<select id="selectFirstChildsByCode" resultType="ProjectSelectDTO">
 		SELECT 
 		  child.project_name
@@ -175,5 +175,28 @@
 		ON parent.project_no = child.parent_project_no
 		WHERE parent.project_code = #{projectCode}
 		AND child.status Between #{active} AND #{locked}
+	</select>
+	<select id="selectNotices" resultType="NoticeDTO">
+		SELECT
+		  n.notice_no
+		  , n.title
+		  , n.content
+		  , n.add_date
+		  , n.privacy_settings
+		  , u.username
+		FROM(
+		    SELECT 
+		      notice_no
+		      , title
+		      , content    
+		      , add_date
+		      , privacy_settings
+		      , user_id
+		    FROM notice
+		    ORDER BY add_date DESC
+		) n
+		JOIN users u
+		ON n.user_id = u.user_id
+		WHERE ROWNUM &lt;= 2
 	</select>
 </mapper>

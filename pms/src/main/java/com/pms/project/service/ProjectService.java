@@ -2,10 +2,7 @@
 	
 	import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
-import com.pms.project.dto.JobDTO;
-import com.pms.project.dto.MemberDTO;
+import com.pms.project.dto.NoticeDTO;
 import com.pms.project.dto.ParentProjectDTO;
 import com.pms.project.dto.ProjectInsertDTO;
 import com.pms.project.dto.ProjectSearchDTO;
@@ -32,4 +29,5 @@ import com.pms.project.dto.ProjectSelectDTO;
 	    
 	    // 개요페이지
 	    List<ProjectSelectDTO> findFirstChildsByCode(String projectCode);
+	    List<NoticeDTO> findNoties();
 	}
