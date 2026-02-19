@@ -5,114 +5,283 @@
 
 <div layout:fragment="Content">
     <div class="container-fluid">
+        <div class="card mb-4 border-top-primary border-top-4 shadow-sm">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-1">
+                            <li class="breadcrumb-item"><a th:href="@{/settings}">설정</a></li>
+                            <li class="breadcrumb-item active">그룹 상세 관리</li>
+                        </ol>
+                    </nav>
+                    <h3 class="mb-0">
+                        <i class="cil-group me-2"></i>
+                        <span id="groupTitle">그룹 정보 로딩 중...</span>
+                        <span id="groupStatusBadge" class="badge ms-2"></span>
+                    </h3>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-outline-secondary" onclick="history.back()">
+                        <i class="cil-arrow-left"></i> 뒤로가기
+                    </button>
+                    <button type="button" id="btnRefresh" class="btn btn-outline-primary">
+                        <i class="cil-reload"></i> 새로고침
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
-            <div class="col-md-4">
-                <div class="card mb-4">
-                    <div class="card-header fw-bold">
-                        <i class="cil-people"></i> 그룹 상세 정보
+            <div class="col-lg-7">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center py-3">
+                        <strong class="fs-5"><i class="cil-user me-2"></i>소속 멤버 명단</strong>
+                        <div>
+                            <button class="btn btn-primary btn-sm px-3" id="btnOpenModal">
+                                <i class="cil-user-follow me-1"></i> 멤버 추가
+                            </button>
+                            <span class="badge bg-info text-white ms-2" id="memberCount">0명</span>
+                        </div>
                     </div>
                     <div class="card-body">
-                        <form id="groupDetailForm">
-                            <div class="mb-3">
-                                <label class="form-label">그룹 번호</label>
-                                <input type="text" class="form-control" th:value="${group.groupNo}" readonly>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">그룹명</label>
-                                <input type="text" id="groupName" name="groupName" class="form-control" th:value="${group.groupName}">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">상태</label>
-                                <select class="form-select" id="groupStatus">
-                                    <option value="510" th:selected="${group.status == 510}">활성</option>
-                                    <option value="520" th:selected="${group.status == 520}">비활성</option>
-                                </select>
-                            </div>
-                            <hr>
-                            <button type="button" id="btnUpdateGroup" class="btn btn-primary w-100">정보 수정</button>
-                        </form>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle border-bottom">
+                                <thead class="table-light">
+                                    <tr class="text-center">
+                                        <th>아이디</th>
+                                        <th>이름</th>
+                                        <th>합류일</th>
+                                        <th>작업</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="memberListTable">
+                                    </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-8">
-                <div class="card mb-4">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <span class="fw-bold"><i class="cil-lock-locked"></i> 메뉴 접근 권한 설정</span>
-                        <button type="button" id="btnSaveAuth" class="btn btn-success btn-sm text-white">
-                            <i class="cil-save"></i> 권한 변경 저장
-                        </button>
+            <div class="col-lg-5">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-light py-3">
+                        <strong class="fs-5"><i class="cil-shield-alt me-2"></i>그룹 권한 설정</strong>
                     </div>
-                    <div class="card-body p-0">
-                        <table class="table table-hover align-middle mb-0 text-center">
-                            <thead class="table-light">
-                                <tr>
-                                    <th class="text-start ps-4">메뉴명</th>
-                                    <th>조회(R)</th>
-                                    <th>생성(C)</th>
-                                    <th>수정(U)</th>
-                                    <th>삭제(D)</th>
-                                    <th>전체선택</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="menu : ${menuList}" class="menu-auth-row" th:data-menu-id="${menu.menuId}">
-                                    <td class="text-start ps-4">
-                                        <div class="fw-bold" th:text="${menu.menuName}">메뉴명</div>
-                                        <small class="text-muted" th:text="${menu.urlData}">/url</small>
-                                    </td>
-                                    <td><input type="checkbox" class="form-check-input chk-r" th:checked="${menu.crudRead == 1}"></td>
-                                    <td><input type="checkbox" class="form-check-input chk-c" th:checked="${menu.crudCreate == 1}"></td>
-                                    <td><input type="checkbox" class="form-check-input chk-u" th:checked="${menu.crudUpdate == 1}"></td>
-                                    <td><input type="checkbox" class="form-check-input chk-d" th:checked="${menu.crudDelete == 1}"></td>
-                                    <td>
-                                        <input type="checkbox" class="form-check-input border-primary chk-all-row">
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="card-body">
+                        <p class="text-muted small mb-3">현재 그룹에 할당된 권한 목록입니다. 체크박스 기능은 추후 확장 가능합니다.</p>
+                        <hr>
+                        <div id="roleListContainer" class="list-group list-group-flush">
+                            </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script th:inline="javascript">
-        $(document).ready(function() {
-           
+    <div class="modal fade" id="userSearchModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="cil-user-plus me-2"></i>새 멤버 일괄 추가</h5>
+                    <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="input-group mb-4 shadow-sm">
+                        <span class="input-group-text bg-white border-end-0"><i class="cil-filter"></i></span>
+                        <input type="text" id="modalFilterInput" class="form-control border-start-0 ps-0" 
+                               placeholder="목록 내에서 이름 또는 아이디로 검색하세요...">
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light sticky-top" style="top: -1px; z-index: 10;">
+                                <tr>
+                                    <th style="width: 45px;">
+                                        <input type="checkbox" id="checkAll" class="form-check-input">
+                                    </th>
+                                    <th>아이디</th>
+                                    <th>이름</th>
+                                    <th>이메일</th>
+                                </tr>
+                            </thead>
+                            <tbody id="modalSearchResultTable">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-0">
+                    <button type="button" class="btn btn-secondary" data-coreui-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-primary px-4" id="btnBatchAdd">
+                        <i class="cil-check me-1"></i> 선택 멤버 추가
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            // 1. 행별 전체 선택 기능
-            $('.chk-all-row').on('change', function() {
-                $(this).closest('tr').find('.form-check-input').not(this).prop('checked', $(this).prop('checked'));
+    <script th:inline="javascript">
+        const GROUP_NO = [[${groupNo}]];
+        let searchModal;
+
+        $(document).ready(function() {
+            searchModal = new coreui.Modal(document.getElementById('userSearchModal'));
+            loadAllData();
+
+            // 1. 전체 데이터 로드
+            function loadAllData() {
+                $.get(`/api/groups/${GROUP_NO}`, function(data) {
+                    renderHeader(data);
+                    renderMembers(data.members); 
+                    renderRoles(data.roles);
+                });
+            }
+
+            function renderHeader(data) {
+                $('#groupTitle').text(data.groupName || '그룹 정보'); 
+                const $badge = $('#groupStatusBadge');
+                if(data.status === 510) {
+                    $badge.text('사용중').addClass('bg-success').removeClass('bg-warning');
+                } else {
+                    $badge.text('중지됨').addClass('bg-warning').removeClass('bg-success');
+                }
+            }
+
+            function renderMembers(members) {
+                const $tbody = $('#memberListTable').empty();
+                $('#memberCount').text(`${members ? members.length : 0}명`);
+                
+                if(!members || members.length === 0) {
+                    $tbody.append('<tr><td colspan="4" class="text-center py-5 text-muted">소속된 멤버가 없습니다.</td></tr>');
+                    return;
+                }
+
+                members.forEach(m => {
+                    $tbody.append(`
+                        <tr class="text-center">
+                            <td><code>${m.userId}</code></td>
+                            <td class="text-start ps-4"><strong>${m.userName}</strong></td>
+                            <td class="small text-muted">${m.accessDate || '-'}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-danger btn-remove-member" data-id="${m.userId}">
+                                    제외
+                                </button>
+                            </td>
+                        </tr>
+                    `);
+                });
+            }
+
+            function renderRoles(roles) {
+                const $container = $('#roleListContainer').empty();
+                if(!roles || roles.length === 0) {
+                    $container.append('<p class="text-center py-4 text-muted">부여된 권한이 없습니다.</p>');
+                    return;
+                }
+                roles.forEach(r => {
+                    $container.append(`
+                        <label class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
+                            <div>
+                                <input class="form-check-input me-3 role-checkbox" type="checkbox" checked data-id="${r.roleNo}">
+                                <span>${r.roleName}</span>
+                            </div>
+                            <span class="badge rounded-pill bg-light text-primary border border-primary">Active</span>
+                        </label>
+                    `);
+                });
+            }
+
+            // 📍 2. 모달 오픈 시 전체 가용 유저 로딩
+            $('#btnOpenModal').on('click', function() {
+                $('#modalFilterInput').val('');
+                $('#checkAll').prop('checked', false);
+                
+                // 검색어 없이 호출하여 전체 목록 가져오기
+                $.get(`/api/groups/${GROUP_NO}/available-users`, { keyword: '' }, function(users) {
+                    const $tbody = $('#modalSearchResultTable').empty();
+                    
+                    if(!users || users.length === 0) {
+                        $tbody.append('<tr><td colspan="4" class="text-center py-5 text-muted">추가 가능한 유저가 없습니다.</td></tr>');
+                    } else {
+                        users.forEach(u => {
+                            $tbody.append(`
+                                <tr class="user-row-item">
+                                    <td><input type="checkbox" class="form-check-input user-check" value="${u.userId}"></td>
+                                    <td><code>${u.userId}</code></td>
+                                    <td class="user-name"><strong>${u.userName || u.username}</strong></td>
+                                    <td class="small text-muted">${u.email || '-'}</td>
+                                </tr>
+                            `);
+                        });
+                    }
+                    searchModal.show();
+                });
             });
 
-            // 2. 권한 정보 저장 (JSON 방식)
-            $('#btnSaveAuth').on('click', function() {
-                if(!confirm("권한 설정을 저장하시겠습니까?")) return;
+            // 📍 3. 모달 내 실시간 필터링 (클라이언트 사이드)
+            $('#modalFilterInput').on('input', function() {
+                const searchVal = $(this).val().toLowerCase();
+                $('.user-row-item').each(function() {
+                    const rowText = $(this).text().toLowerCase();
+                    $(this).toggle(rowText.indexOf(searchVal) > -1);
+                });
+            });
 
-                const authData = [];
-                $('.menu-auth-row').each(function() {
-                    const row = $(this);
-                    authData.push({
-                        roleNo: groupId, // 현재는 그룹 번호를 역할 번호로 사용
-                        menuId: row.data('menu-id'),
-                        crudCreate: row.find('.chk-c').is(':checked') ? 1 : 0,
-                        crudRead: row.find('.chk-r').is(':checked') ? 1 : 0,
-                        crudUpdate: row.find('.chk-u').is(':checked') ? 1 : 0,
-                        crudDelete: row.find('.chk-d').is(':checked') ? 1 : 0
+            // 📍 4. 체크박스 전체 선택 기능
+            $('#checkAll').on('change', function() {
+                $('.user-check:visible').prop('checked', $(this).prop('checked'));
+            });
+
+            // 📍 5. 선택 멤버 일괄 추가 실행
+            $('#btnBatchAdd').on('click', function() {
+                const selectedIds = [];
+                $('.user-check:checked').each(function() {
+                    selectedIds.push($(this).val());
+                });
+
+                if(selectedIds.length === 0) {
+                    alert("추가할 사용자를 선택해주세요.");
+                    return;
+                }
+
+                if(!confirm(`${selectedIds.length}명의 사용자를 그룹에 추가하시겠습니까?`)) return;
+
+                // 순차적 AJAX 처리 (Promise.all)
+                const addRequests = selectedIds.map(id => {
+                    return $.ajax({
+                        url: `/api/groups/${GROUP_NO}/members`,
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ userId: id })
                     });
                 });
 
+                Promise.all(addRequests)
+                    .then(() => {
+                        alert("멤버 추가가 완료되었습니다.");
+                        searchModal.hide();
+                        loadAllData();
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert("처리 중 일부 오류가 발생했습니다.");
+                        loadAllData();
+                    });
+            });
+
+            // 멤버 삭제 (제외)
+            $(document).on('click', '.btn-remove-member', function() {
+                const userId = $(this).data('id');
+                if(!confirm(`[${userId}] 사용자를 그룹에서 제외하시겠습니까?`)) return;
+                
                 $.ajax({
-                    url: '/settings/api/groups/' + groupId + '/permissions',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(authData),
-                    success: function() {
-                        alert("권한이 성공적으로 저장되었습니다.");
-                    }
+                    url: `/api/groups/${GROUP_NO}/members/${userId}`,
+                    type: 'DELETE',
+                    success: function() { loadAllData(); },
+                    error: function() { alert("삭제 실패!"); }
                 });
             });
+
+            $('#btnRefresh').on('click', loadAllData);
         });
     </script>
 </div>
