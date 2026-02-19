@@ -1,9 +1,11 @@
 	package com.pms.project.service;
 	
 	import java.util.List;
+import java.util.Map;
 
 import com.pms.project.dto.NoticeDTO;
 import com.pms.project.dto.ParentProjectDTO;
+import com.pms.project.dto.ProjectGMemberDTO;
 import com.pms.project.dto.ProjectInsertDTO;
 import com.pms.project.dto.ProjectSearchDTO;
 import com.pms.project.dto.ProjectSelectDTO;
@@ -28,6 +30,7 @@ import com.pms.project.dto.ProjectSelectDTO;
 	    boolean addProject(ProjectInsertDTO projectInsertDTO);
 	    
 	    // 개요페이지
-	    List<ProjectSelectDTO> findFirstChildsByCode(String projectCode);
+	    Map<String, List<String>> findGroupMemberByCode(String projectCode);
 	    List<NoticeDTO> findNoties();
+	    List<ProjectSelectDTO> findFirstChildsByCode(String projectCode);
 	}

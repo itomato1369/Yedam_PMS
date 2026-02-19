@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,6 +17,7 @@ import com.pms.project.dto.JobDTO;
 import com.pms.project.dto.MemberDTO;
 import com.pms.project.dto.NoticeDTO;
 import com.pms.project.dto.ParentProjectDTO;
+import com.pms.project.dto.ProjectGMemberDTO;
 import com.pms.project.dto.ProjectInsertDTO;
 import com.pms.project.dto.ProjectSearchDTO;
 import com.pms.project.dto.ProjectSelectDTO;
@@ -193,14 +195,23 @@ public class ProjectServiceImpl implements ProjectService {
 
 
 	// 개요페이지
+	
 	@Override
-	public List<ProjectSelectDTO> findFirstChildsByCode(String projectCode) {
-		return projectMapper.selectFirstChildsByCode(projectCode, ProjectStatus.ACTIVE.getCode(), ProjectStatus.LOCKED.getCode());
+	public Map<String, List<String>> findGroupMemberByCode(String projectCode) {
+		return projectMapper.selectGroupMemberByCode(projectCode).stream()
+		        .collect(Collectors.groupingBy(
+		        		ProjectGMemberDTO::getGroupname,
+	                    LinkedHashMap::new,  // 순서 유지
+	                    Collectors.mapping(ProjectGMemberDTO::getUsername, Collectors.toList())
+		            ));
 	}
-
 	@Override
 	public List<NoticeDTO> findNoties() {
 		return projectMapper.selectNotices();
+	}
+	@Override
+	public List<ProjectSelectDTO> findFirstChildsByCode(String projectCode) {
+		return projectMapper.selectFirstChildsByCode(projectCode, ProjectStatus.ACTIVE.getCode(), ProjectStatus.LOCKED.getCode());
 	}
 	
 }
