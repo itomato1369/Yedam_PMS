@@ -1,6 +1,7 @@
 package com.pms.issue.web;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.apache.ibatis.type.Alias;
 
@@ -13,8 +14,8 @@ public class IssueDto {
 	private String managerId;
 	private Integer publicRole;
 	private String title;
-	private String content; 
-	private Integer priority; 
+	private String content;
+	private Integer priority;
 	private LocalDateTime addDate;
 	private LocalDateTime startDate;
 	private LocalDateTime endDate;
@@ -24,9 +25,8 @@ public class IssueDto {
 	private Integer jobStatusNo;
 	private Integer projectNo;
 	private Integer parentJobNo;
-	private String projectName;
-	private String jobStatusName;
-	private String jobTypeName;
-	private String priorityName;
-	
+
+	// 첨부파일 DTO
+	private List<IssueFileUploadDto> fileData;
+
 }

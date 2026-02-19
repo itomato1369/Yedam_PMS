@@ -15,9 +15,12 @@
                    , FN_GET_CODE_NAME(j.priority) AS priority_name
 		           , j.manager_id
 		FROM job j
-                 JOIN project p
+                 JOIN project p 
                  ON j.project_no = p.project_no
-        WHERE j.user_id = #{userId}
+        WHERE j.user_id = #{userId} 
+        
+        
+        
 	</select>
 
 
