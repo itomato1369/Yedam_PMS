@@ -36,7 +36,10 @@
 							<p class="mb-0" th:text="${success}"></p>
 						</div>
 
-						<div th:if="${param.error}" class="alert alert-danger">아이디 또는 비밀번호가 올바르지 않습니다.</div>
+						<div th:if="${param.error}" class="alert alert-danger">
+							<span th:if="${session['SPRING_SECURITY_LAST_EXCEPTION'] != null}" th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}"> 에러 메시지 </span>
+							<span th:if="${session['SPRING_SECURITY_LAST_EXCEPTION'] == null}"> 아이디 또는 비밀번호가 올바르지 않습니다. </span>
+						</div>
 
 						<!-- 로그인 폼 -->
 						<form th:action="@{/user/login}" th:object="${loginDto}" method="post">

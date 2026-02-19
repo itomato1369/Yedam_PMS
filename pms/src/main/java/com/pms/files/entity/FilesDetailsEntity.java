@@ -16,7 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "files_detailes")
+@Table(name = "files_details")
 @Getter
 @Builder
 @AllArgsConstructor
