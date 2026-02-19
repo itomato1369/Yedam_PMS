@@ -41,7 +41,7 @@
                             <p class="mb-0" th:text="${error}"></p>
                         </div>
 
-                        <form th:action="@{/user/pw}" method="post">
+                        <form th:action="@{/user/pw}" th:method="put">
 
                             <input type="hidden"
                                    name="token"

@@ -2,8 +2,6 @@ package com.pms.user.service;
 
 import java.util.UUID;
 
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,10 +20,8 @@ public class PwrTokenServiceImpl implements PwrTokenService {
 	private final UserRepository userRepository;
 	private final PwrTokenRepository pwrTokenRepository;
 	private final PasswordEncoder passwordEncoder;
-	private final JavaMailSender mailSender;
+	private final EmailService emailService;
 
-	// TODO 반환타입 void로 변경할 것
-	// String 테스트 용
 	@Override
 	@Transactional
 	public String sendResetMail(String userId) {
@@ -44,18 +40,10 @@ public class PwrTokenServiceImpl implements PwrTokenService {
 												.endTime(5)
 												.build();
 		// 메일 발송
-		sendMail(user.getEmail(), tokenValue);
+		emailService.sendMail(user.getEmail(), tokenValue);
 		pwrTokenRepository.save(newToken);
 
 		return tokenValue;
-	}
-	
-	private void sendMail(String userMail, String tokenValue) {
-		SimpleMailMessage message = new SimpleMailMessage();
-		message.setTo(userMail);
-		message.setSubject("[PMS Project] PW RESET");
-		message.setText("PW RESET LINK\n" + "http://localhost:8080/user/pwResetLink?token=" + tokenValue);
-		mailSender.send(message);
 	}
 
 	// 토큰 유효성 확인
