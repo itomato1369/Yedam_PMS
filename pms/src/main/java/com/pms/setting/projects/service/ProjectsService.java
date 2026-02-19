@@ -2,8 +2,8 @@ package com.pms.setting.projects.service;
 
 import java.util.List;
 
+import com.pms.setting.common.entity.CommonEntity;
 import com.pms.setting.projects.dto.SettingProjectDto;
-import com.pms.setting.projects.entity.CommonEntity;
 
 public interface ProjectsService {
     List<SettingProjectDto> getAllProjects();
@@ -11,7 +11,8 @@ public interface ProjectsService {
     List<SettingProjectDto> searchProjects(Integer status, String keyword);
     
     List<CommonEntity> getStatusList();
-
+    // 잠금,잠금해제 
+    void toggleLock(Long projectNo, Integer targetStatus);
     // 논리 삭제 기능 추가!
     void logicalDelete(Long projectNo); 
 }

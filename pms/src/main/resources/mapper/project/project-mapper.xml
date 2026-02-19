@@ -16,11 +16,12 @@
              SELECT
                  p.project_no,
                  p.project_name,
+                 p.project_code,
                  p.project_desc,
                  -- 1. 통합 인원수 (삭제 사용자 제외)
                  (SELECT COUNT(DISTINCT m.user_id)
                   FROM g_project gp
-                  JOIN members m ON gp.group_no = m.groupid
+                  JOIN members m ON gp.group_no = m.group_no
                  JOIN users u ON m.user_id = u.user_id
                  WHERE u.status != 190
                    AND gp.project_no IN (
@@ -56,14 +57,14 @@
                 -- 5. 로그인 사용자가 프로젝트에 참여했는지 여부
                 (SELECT CASE WHEN COUNT(m.user_id) > 0 THEN 1 ELSE 0 END
                  FROM members m
-                 JOIN g_project gp ON m.groupid = gp.group_no
+                 JOIN g_project gp ON m.group_no = gp.group_no
                  WHERE gp.project_no = p.project_no
                  AND m.user_id = #{userId}) AS has_login_user_joined
             FROM project p
             WHERE p.status != 390 -- 동적쿼리를 통해 관리자인경우에는 조건이 적용되지않도록 수정
               AND (p.project_no IN (
                   SELECT gp.project_no FROM g_project gp
-                  JOIN members m ON gp.group_no = m.groupid
+                  JOIN members m ON gp.group_no = m.group_no
                   WHERE m.user_id = #{userId}
               ) OR p.public_yn = 1)
               AND (p.parent_project_no = 0 OR p.parent_project_no IS NULL) -- 최상위 프로젝트만 조회 (parent_project_no가 0이거나 NULL인 경우)
@@ -71,7 +72,7 @@
         </select>
     
     <select id="selectImmediateChildren" resultMap="projectMap">
-            SELECT project_no, project_name, project_desc
+            SELECT project_no, project_name, project_desc, project_code
             FROM project
             WHERE parent_project_no = #{projectNo} AND status != 390
         </select>
@@ -84,7 +85,7 @@
             -- 1. 통합 인원수 (삭제 사용자 제외)
             (SELECT COUNT(DISTINCT m.user_id)
              FROM g_project gp
-             JOIN members m ON gp.group_no = m.groupid
+             JOIN members m ON gp.group_no = m.group_no
              JOIN users u ON m.user_id = u.user_id
              WHERE u.status != 190
                AND gp.project_no IN (
@@ -120,7 +121,7 @@
             -- 5. 로그인 사용자가 프로젝트에 참여했는지 여부 - 현재 로그인된 사용자 정보가 필요
             (SELECT CASE WHEN COUNT(m.user_id) > 0 THEN 1 ELSE 0 END
              FROM members m
-             JOIN g_project gp ON m.groupid = gp.group_no
+             JOIN g_project gp ON m.group_no = gp.group_no
              WHERE gp.project_no = p.project_no
              AND m.user_id = #{currentUserId}) AS has_login_user_joined
         FROM project p
@@ -138,10 +139,68 @@
             <!-- 검색할 때도 사용자의 접근 권한을 고려해야 함 -->
             AND (p.project_no IN (
                   SELECT gp.project_no FROM g_project gp
-                  JOIN members m ON gp.group_no = m.groupid
+                  JOIN members m ON gp.group_no = m.group_no
                   WHERE m.user_id = #{currentUserId}
               ) OR p.public_yn = 1)
         </where>
         ORDER BY p.create_at ASC
     </select>
+    
+    <!--/* insert-from에서 조회 할 프로젝트 목록 */-->
+    <select id="selectParentProjects" resultType="ParentProjectDTO">
+		SELECT project_no
+		  , project_name
+		FROM vw_project
+		WHERE status != 390
+		ORDER BY project_no
+	</select>
+	
+	<!--/* insert update delete: MyBatis가 내부적으로 실행 후 결과(Row 수)를 반환하는 구조 */-->
+	<insert id="insertProject" parameterType="projectInsertDTO">
+		INSERT INTO project (
+		    project_no,         -- 식별자
+		    parent_project_no,  -- 상위프로젝트
+		    project_name,       -- 프로젝트명
+		    user_id,            -- 제작자
+		    project_desc,       -- 설명
+		    project_home,       -- 홈페이지
+		    project_code,       -- URI
+		    create_at,          -- 생성일
+		    update_at,          -- 수정일
+		    start_date,         -- 시작일
+		    end_date,           -- 종료일
+		    parent_member_yn,   -- 멤버상속
+		    public_yn,          -- 공개여부
+		    status              -- 상태
+		) VALUES (
+	        PROJECT_SEQ.NEXTVAL               -- 시퀀스 자동 생성
+	        , NVL(#{parentProjectNo}, 0)      -- null able, default: 0
+	        , #{projectName}                  -- 필수값: 중복 가능
+	        , #{userId}                       -- 필수값: Service 에서 세팅
+	        , NVL(#{projectDesc}, '')         -- null able, 추후에 null 예외처리 가능성
+	        , NVL(#{projectHome}, '')         -- null able, 추후에 null 예외처리 가능성
+	        , #{projectCode}                  -- 필수값(Unique, 수정불가능)
+	        , SYSTIMESTAMP                    -- 생성일 자동
+	        , NULL                            -- 수정일은 생성 시 null
+	        , #{startDate}                    -- 필수값(오늘 이전 날짜 불가)
+	        , #{endDate}                      -- 필수값(오늘 이전 날짜 불가)
+	        , NVL(#{parentMemberYn}, 0)       -- null able, default: 0
+	        , NVL(#{publicYn}, 0)             -- null able, default: 0
+	        , #{status}                       -- 필수값: Service 에서 세팅
+    )
+	</insert>
+	
+	
+	<select id="selectFirstChildsByCode" resultType="ProjectSelectDTO">
+		SELECT 
+		  child.project_name
+		  , child.project_code
+		  , child.status
+		  , FN_GET_CODE_NAME(child.status) AS status_name
+		FROM project parent
+		JOIN project child
+		ON parent.project_no = child.parent_project_no
+		WHERE parent.project_code = #{projectCode}
+		AND child.status Between #{active} AND #{locked}
+	</select>
 </mapper>

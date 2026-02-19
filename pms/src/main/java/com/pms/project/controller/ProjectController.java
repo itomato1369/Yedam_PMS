@@ -1,11 +1,18 @@
 package com.pms.project.controller;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute; // 추가
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.pms.config.CustomUserDetails;
 import com.pms.project.common.mapper.ProjectCommonStatusMapper;
+import com.pms.project.dto.ProjectInsertDTO;
 import com.pms.project.dto.ProjectSearchDTO; // 추가
 import com.pms.project.service.ProjectService;
 
@@ -13,13 +20,14 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/project")
 public class ProjectController {
     
     // 인터페이스 타입으로 주입받아 결합도를 낮춤
     private final ProjectService projectService;
     private final ProjectCommonStatusMapper projectCommonStatusMapper;
     
-    @GetMapping("/projects")
+    @GetMapping("/list")
     public String listProjects(Model model, @ModelAttribute ProjectSearchDTO searchDTO) {
         // 실제 운영 시에는 세션 또는 SecurityContext에서 userId를 가져옴
         String currentUserId = "song";
@@ -44,4 +52,52 @@ public class ProjectController {
         
         return "project/list";
     }
+    
+	// 새 프로젝트 등록화면 불러오기
+    @GetMapping("/new")
+    public String getAddProject(Model model) {
+    	model.addAttribute("project", new ProjectInsertDTO()); // 전달받을 값을 입력하기위한 빈 객체
+    	model.addAttribute("parentProjects", projectService.findParentProjects()); // 빈객체에 입력할 상속 가능한 프로젝트 목록
+        model.addAttribute("mode", "new"); // 모드 구분
+        
+    	return "project/insert-form";
+    }
+    
+    // 프로젝트 입력 처리
+    @PostMapping("/new")
+	// TODO: dev 머지 이후 수정 - 매개변수에 추가
+    // 
+    public String addProject(
+    		@ModelAttribute ProjectInsertDTO dto
+    		, @AuthenticationPrincipal CustomUserDetails customUser 
+    		, RedirectAttributes redirectAttributes ) {
+    	// 로그인 사용자 정보에서 id 추출
+    	dto.setUserId(customUser.getUserEntity().getUserId());
+    	
+    	boolean success = projectService.addProject(dto);
+    	
+    	if (success) {
+    		redirectAttributes.addFlashAttribute("successMessage", "프로젝트가 등록되었습니다.");
+        } else {
+        	redirectAttributes.addFlashAttribute("errorMessage", "프로젝트 등록에 실패했습니다.");
+        }
+    	
+    	return "redirect:/project/new";
+    }
+    
+    // @PathVariable: 단일값 처리 + 매개변수에 어노테이션선언으로 필수값 선언, 반드시 받을거라 default 사용하지않기로
+    @GetMapping("/{projectCode}/info")
+    public String getProjectInfo(@PathVariable String projectCode, Model model) {
+    	model.addAttribute("childProjects", projectService.findFirstChildsByCode(projectCode));
+    	
+    	return "project/info";
+    }
+    
+    
+    // 프로젝트 list -> settings.project 로 이동
+    @GetMapping("/{projectCode}/edit")
+    public String getEditProject(@PathVariable String projectCode) {
+    	return "null";
+    }
+    
 }

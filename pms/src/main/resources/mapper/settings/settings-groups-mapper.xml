@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pms.setting.groups.mapper.GroupsMapper">
+
+	<select id="selectGroupAll"
+		resultType="com.pms.setting.groups.vo.GroupsVO">
+		SELECT
+		g.GROUP_NO AS groupNo,
+		g.GROUPNAME AS groupName,
+		g.STATUS AS status,
+		c.COMMON_NAME AS statusName,
+		(SELECT COUNT(*) FROM MEMBERS m WHERE m.GROUP_NO = g.GROUP_NO) AS memberCount
+		FROM GROUPS g
+		LEFT JOIN COMMON c
+		ON g.STATUS = c.COMMON_NO
+		AND c.PARENT_COMMON_NO = 500
+		AND c.DISPLAY_YN = 'Y'
+		ORDER BY g.GROUP_NO
+	</select>
+
+	<select id="searchGroup" parameterType="string"
+		resultType="com.pms.setting.groups.vo.GroupsVO">
+		SELECT
+		g.GROUP_NO AS groupNo,
+		g.GROUPNAME AS groupName,
+		g.STATUS AS status,
+		c.COMMON_NAME AS statusName,
+		(SELECT COUNT(*) FROM MEMBERS m WHERE m.GROUP_NO = g.GROUP_NO) AS memberCount
+		FROM GROUPS g
+		LEFT JOIN COMMON c
+		ON g.STATUS = c.COMMON_NO
+		AND c.PARENT_COMMON_NO = 500
+		AND c.DISPLAY_YN = 'Y'
+		WHERE g.GROUPNAME LIKE '%' || #{keyword} || '%'
+		ORDER BY g.GROUP_NO
+	</select>
+
+	<insert id="insertGroup"
+		parameterType="com.pms.setting.groups.vo.GroupsVO">
+		<selectKey keyProperty="groupNo" resultType="long"
+			order="BEFORE">
+			SELECT GROUP_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO GROUPS (
+		GROUP_NO,
+		GROUPNAME,
+		STATUS
+		) VALUES (
+		#{groupNo},
+		#{groupName},
+		520
+		)
+	</insert>
+
+	<update id="toggleGroupStatus">
+		UPDATE GROUPS
+		SET STATUS = CASE
+		WHEN STATUS = 510 THEN 520
+		WHEN STATUS = 520 THEN 510
+		ELSE STATUS
+		END
+		WHERE GROUP_NO = #{groupNo}
+	</update>
+
+	<update id="updateGroupName"
+		parameterType="com.pms.setting.groups.vo.GroupsVO">
+		UPDATE groups
+		SET GROUPNAME = #{groupName} -- VO의 groupName 필드 사용
+		WHERE GROUP_NO = #{groupNO} -- VO의 groupNo 필드 사용
+	</update>
+</mapper>
