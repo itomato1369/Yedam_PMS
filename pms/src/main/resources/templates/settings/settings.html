@@ -482,7 +482,18 @@
 		            <button class="btn btn-sm ${g.status==510?'btn-outline-warning':'btn-outline-success'} btn-group-toggle" 
 		                    data-id="${g.groupNo}" data-status="${g.status}">상태변경</button>
 		        </td>
-		    </tr>`
+		    </tr>`,
+		    newRowHtml: `
+		        <tr class="table-info" id="rowGroupNew">
+		            <td>-</td>
+		            <td colspan="3">
+		                <input type="text" id="groupNewInput" class="form-control form-control-sm" placeholder="새 그룹명 입력 후 엔터">
+		            </td>
+		            <td>
+		                <button class="btn btn-sm btn-primary btn-group-save">저장</button>
+		                <button class="btn btn-sm btn-secondary btn-group-cancel">취소</button>
+		            </td>
+		        </tr>`
 		});
 		    const rCtrl = setupSection({ 
 		        listUrl:'/settings/api/roles', 

@@ -45,6 +45,7 @@ public class GroupsServiceImpl implements GroupsService {
     public void register(GroupsVO vo) {
         groupsMapper.insertGroup(vo);
     }
+    
     @Override
     @Transactional
     public boolean modifyGroupDetail(GroupsVO groupsVO) {
