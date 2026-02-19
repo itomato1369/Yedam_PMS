@@ -73,4 +73,11 @@ public class ProjectServiceImpl implements ProjectService {
 	               .atZone(ZoneId.systemDefault())
 	               .toLocalDate();
 	}
+
+
+	// 개요페이지
+	@Override
+	public List<ProjectSelectDTO> findFirstChildsByCode(String projectCode) {
+		return projectMapper.selectFirstChildsByCode(projectCode, ProjectStatus.ACTIVE.getCode(), ProjectStatus.LOCKED.getCode());
+	}
 }

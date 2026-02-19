@@ -15,9 +15,13 @@ import lombok.ToString;
 @RequiredArgsConstructor
 @Alias("ProjectSelectDTO")
 public class ProjectSelectDTO {
-    private Long projectNo;
-    private String projectName;
-    private String projectDesc;
+    private Integer projectNo;
+    private String  projectCode;
+    private String  projectName;
+    private String  projectDesc;
+    private String  statusName;
+    private Integer status;
+    
     
     // 계층 구조용
     private List<ProjectSelectDTO> childProjects; 

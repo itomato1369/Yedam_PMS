@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pms.project.mapper.ProjectSecurityMapper">
+	<select id="checkAuth" resultType="int">
+		SELECT COUNT(*) FROM VW_SECURITY_AUTH
+		WHERE USER_ID = #{userId}
+		AND PROJECT_CODE = #{projectCode}
+		AND (
+		(#{action} = 'READ' AND CRUD_READ = 1) OR
+		(#{action} = 'CREATE' AND CRUD_CREATE = 1) OR
+		(#{action} = 'UPDATE' AND CRUD_UPDATE = 1) OR
+		(#{action} = 'DELETE' AND CRUD_DELETE = 1)
+		)
+	</select>
+</mapper>

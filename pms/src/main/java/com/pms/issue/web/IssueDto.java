@@ -13,8 +13,8 @@ public class IssueDto {
 	private String managerId;
 	private Integer publicRole;
 	private String title;
-	private String content; 
-	private Integer priority; 
+	private String content;
+	private Integer priority;
 	private LocalDateTime addDate;
 	private LocalDateTime startDate;
 	private LocalDateTime endDate;
@@ -24,5 +24,6 @@ public class IssueDto {
 	private Integer jobStatusNo;
 	private Integer projectNo;
 	private Integer parentJobNo;
-	
+	private Integer filesNo;
+
 }

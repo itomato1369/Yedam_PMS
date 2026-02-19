@@ -17,7 +17,7 @@
 <!-- 3. 한국어 캘린더-->
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/locales/bootstrap-datepicker.ko.min.js"></script>
-<title>일감 등록</title>
+<title>소요시간 수정</title>
 </head>
 <body>
 	<div class="container">
@@ -81,8 +81,8 @@
 			<!-- 목록으로 / 수정버튼 -->
 			<div class="row md-3">
 				<div class="d-flex gap-2">
-					<a th:href="@{/work/list}" class="btn btn-secondary flex-fill text-white">
-						목록으로</a>
+					<a th:href="@{/work/list}"
+						class="btn btn-secondary flex-fill text-white"> 목록으로</a>
 					<button type="button" class="btn btn-primary flex-fill"
 						data-bs-toggle="modal" data-bs-target="#workModifyModal">수정</button>
 				</div>

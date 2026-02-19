@@ -1,4 +1,11 @@
-<html layout:decorate="~{common/layouts/default_layout}">
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{common/layouts/default-layout}">
+
+<body>
 <div layout:fragment="Content">
 	<!-- 프로젝트 아코디언 -->
 	<div class="accordion" id="settingsAccordion">

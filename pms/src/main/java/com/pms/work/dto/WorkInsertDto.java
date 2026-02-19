@@ -16,13 +16,16 @@ import lombok.ToString;
 @Setter
 @Alias("WorkInsertDto")
 public class WorkInsertDto {
-	
-	private Integer jobNo; // FK
+	private Integer jobNo; // 일감 번호
+	private Integer userId; // 유저 아이디
+	private String title; // 일감 제목
+	private String managerId; // 담당자 이름
 	private String workers;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date workDate;
 	private Integer workTime;
 	private String workContent;
 	private Integer workDetailsNo;
+	
 
 }
