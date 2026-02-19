@@ -14,6 +14,7 @@ import com.pms.issue.mapper.IssueMapper;
 import com.pms.issue.web.IssueDto;
 import com.pms.issue.web.IssueFileDetailsDto;
 import com.pms.issue.web.IssueFileUploadDto;
+import com.pms.issue.web.projectIssueDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,7 +35,6 @@ public class IssueService {
 	public List<projectIssueDto> findProjectIssueList(String userId) {
 		List<projectIssueDto> issueList = issueMapper.selectProjectIssue(userId);
 		return issueList;              
-		return issueList;
 	}
 
 	// 일감 등록
