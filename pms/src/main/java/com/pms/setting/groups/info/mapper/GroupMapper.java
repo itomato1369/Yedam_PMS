@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.pms.setting.groups.info.dto.GroupDetailDto;
 import com.pms.setting.groups.info.vo.GroupVo;
+import com.pms.setting.groups.info.vo.RoleVo;
 import com.pms.setting.groups.info.vo.UserVo;
 
 @Mapper
@@ -31,8 +32,7 @@ public interface GroupMapper {
     /**
      * 4. 그룹에 새로운 역할 부여 (GROUPS_ROLES 테이블)
      */
-    int insertGroupRole(@Param("groupNo") Long groupNo, @Param("roleNo") Long roleNo);
-
+    void insertGroupRole(@Param("roleNo") Long roleNo, @Param("groupNo") Long groupNo);
     /**
      * 5. 그룹에서 역할 해제 (GROUPS_ROLES 테이블)
      */
@@ -47,4 +47,7 @@ public interface GroupMapper {
      * 7. 그룹에 아직 속하지 않은 사용자들 중에서 검색 (라이브 검색용)
      */
     List<UserVo> selectAvailableUsers(@Param("groupNo") Long groupNo, @Param("keyword") String keyword);
+    
+ // 📍 전체 역할 조회를 위한 메서드 추가
+    List<RoleVo> selectAllRoles();
 }

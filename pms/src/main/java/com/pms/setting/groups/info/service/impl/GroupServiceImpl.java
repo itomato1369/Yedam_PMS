@@ -9,12 +9,13 @@ import com.pms.setting.groups.info.dto.GroupDetailDto;
 import com.pms.setting.groups.info.mapper.GroupMapper;
 import com.pms.setting.groups.info.service.GroupService;
 import com.pms.setting.groups.info.vo.GroupVo;
+import com.pms.setting.groups.info.vo.RoleVo;
 import com.pms.setting.groups.info.vo.UserVo;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor // Lombok: Mapper 자동 주입
+@RequiredArgsConstructor
 public class GroupServiceImpl implements GroupService {
 
     private final GroupMapper groupMapper;
@@ -34,12 +35,10 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional
     public boolean addMemberToGroup(Long groupNo, String userId) {
-        // [비즈니스 로직] 이미 멤버인지 체크하는 과정이 필요할 수 있습니다.
-        // 여기서는 Mapper의 영향받은 행(row) 수로 성공 여부를 판단합니다.
         try {
+            // 매퍼 인터페이스의 파라미터 순서 확인 필요 (현재 groupNo, userId 순)
             return groupMapper.insertMember(groupNo, userId) > 0;
         } catch (Exception e) {
-            // PK 중복 등으로 인한 에러 발생 시 처리
             return false;
         }
     }
@@ -54,7 +53,7 @@ public class GroupServiceImpl implements GroupService {
     @Transactional
     public boolean grantRoleToGroup(Long groupNo, Long roleNo) {
         try {
-            return groupMapper.insertGroupRole(groupNo, roleNo) > 0;
+            return groupMapper.insertGroupRole(roleNo, groupNo) > 0;
         } catch (Exception e) {
             return false;
         }
@@ -63,14 +62,38 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional
     public boolean revokeRoleFromGroup(Long groupNo, Long roleNo) {
-        return groupMapper.deleteGroupRole(groupNo, roleNo) > 0;
+        // 단일 역할 삭제 시 roleNo를 파라미터로 전달
+        try {
+            groupMapper.deleteGroupRole(groupNo, roleNo);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<UserVo> searchAvailableUsers(Long groupNo, String keyword) {
-        // 이 부분은 Mapper에 "해당 groupNo에 없는 유저만 검색"하는 쿼리를 
-        // 추가로 작성한 뒤 호출하면 아주 완벽합니다!
         return groupMapper.selectAvailableUsers(groupNo, keyword);
+    }
+
+    // 📍 1. 모든 역할 목록 조회
+    @Override
+    @Transactional(readOnly = true)
+    public List<RoleVo> getAllRoles() {
+        return groupMapper.selectAllRoles(); 
+    }
+
+    // 📍 2. 그룹 역할 업데이트 (기존 권한 삭제 후 새 권한 부여)
+    @Override
+    @Transactional
+    public void updateGroupRole(Long groupNo, Long roleNo) {
+        // 1. 기존 그룹에 부여된 모든 역할을 삭제 (roleNo를 null로 전달)
+        groupMapper.deleteGroupRole(groupNo, null); 
+        
+        // 2. 새로운 역할 부여
+        if (roleNo != null) {
+            groupMapper.insertGroupRole(roleNo, groupNo);
+        }
     }
 }

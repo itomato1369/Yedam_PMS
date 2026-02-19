@@ -9,7 +9,8 @@
 
         <collection property="members" ofType="com.pms.setting.groups.info.vo.GroupMemberVo">
             <result property="userId" column="USER_ID" />
-            <result property="userName" column="USERNAME" /> <result property="email" column="EMAIL" />
+            <result property="userName" column="USERNAME" />
+            <result property="email" column="EMAIL" />
             <result property="accessDate" column="ACCESS_DATE_STR" />
         </collection>
 
@@ -18,17 +19,17 @@
             <result property="roleName" column="ROLE_NAME" />
         </collection>
     </resultMap>
-    
+
     <select id="selectGroupDetail" resultMap="GroupDetailMap">
-        SELECT 
-            g.GROUP_NO, 
-            g.GROUPNAME, 
+        SELECT
+            g.GROUP_NO,
+            g.GROUPNAME,
             g.STATUS,
-            u.USER_ID, 
-            u.USERNAME, 
+            u.USER_ID,
+            u.USERNAME,
             u.EMAIL,
             TO_CHAR(m.ACCESS_DATE, 'YYYY-MM-DD HH24:MI') AS ACCESS_DATE_STR,
-            r.ROLE_NO, 
+            r.ROLE_NO,
             r.ROLE_NAME
         FROM GROUPS g
         LEFT JOIN MEMBERS m ON g.GROUP_NO = m.GROUP_NO
@@ -38,20 +39,18 @@
         WHERE g.GROUP_NO = #{groupNo}
         ORDER BY m.ACCESS_DATE DESC, r.ROLE_NO ASC
     </select>
-    
+
     <select id="selectAvailableUsers" resultType="com.pms.setting.groups.info.vo.UserVo">
-        SELECT 
-            USER_ID, 
-            USERNAME, 
-            EMAIL, 
+        SELECT
+            USER_ID,
+            USERNAME,
+            EMAIL,
             STATUS
         FROM USERS u
         WHERE (USER_ID LIKE '%' || #{keyword} || '%' OR USERNAME LIKE '%' || #{keyword} || '%')
           AND NOT EXISTS (
-              SELECT 1 
-              FROM MEMBERS m 
-              WHERE m.USER_ID = u.USER_ID 
-                AND m.GROUP_NO = #{groupNo}
+              SELECT 1 FROM MEMBERS m 
+              WHERE m.USER_ID = u.USER_ID AND m.GROUP_NO = #{groupNo}
           )
           AND u.STATUS != 190
         ORDER BY USERNAME ASC
@@ -63,7 +62,7 @@
     </insert>
 
     <delete id="deleteMember">
-        DELETE FROM MEMBERS 
+        DELETE FROM MEMBERS
         WHERE GROUP_NO = #{groupNo} AND USER_ID = #{userId}
     </delete>
 
@@ -72,15 +71,27 @@
         VALUES (#{roleNo}, #{groupNo}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
     </insert>
 
-    <delete id="deleteGroupRole">
-        DELETE FROM GROUP_ROLES 
-        WHERE GROUP_NO = #{groupNo} AND ROLE_NO = #{roleNo}
-    </delete>
-
     <update id="updateGroup">
         UPDATE GROUPS
         SET GROUPNAME = #{groupName},
             STATUS = #{status}
         WHERE GROUP_NO = #{groupNo}
     </update>
+
+    <select id="selectAllRoles" resultType="com.pms.setting.groups.info.vo.RoleVo">
+        SELECT
+            ROLE_NO as roleNo,
+            ROLE_NAME as roleName
+        FROM ROLES
+        ORDER BY ROLE_NO ASC
+    </select>
+
+    <delete id="deleteGroupRole">
+        DELETE FROM GROUP_ROLES
+        WHERE GROUP_NO = #{groupNo}
+        <if test="roleNo != null">
+            AND ROLE_NO = #{roleNo}
+        </if>
+    </delete>
+
 </mapper>

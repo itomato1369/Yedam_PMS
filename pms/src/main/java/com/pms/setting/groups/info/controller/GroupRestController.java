@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pms.setting.groups.info.dto.GroupDetailDto;
 import com.pms.setting.groups.info.service.GroupService;
+import com.pms.setting.groups.info.vo.RoleVo;
 import com.pms.setting.groups.info.vo.UserVo;
 
 import lombok.RequiredArgsConstructor;
@@ -69,6 +71,22 @@ public class GroupRestController {
     @DeleteMapping("/{groupNo}/roles/{roleNo}")
     public ResponseEntity<Void> revokeRole(@PathVariable Long groupNo, @PathVariable Long roleNo) {
         groupService.revokeRoleFromGroup(groupNo, roleNo);
+        return ResponseEntity.ok().build();
+    }
+    
+ // [추가] 6. 시스템의 모든 역할 목록 조회 (우측 사이드바 렌더링용)
+    // 📍 자바스크립트의 $.get('/api/roles')와 매칭됩니다.
+    @GetMapping("/roles") // @RequestMapping이 /api/groups이므로 최종 주소는 /api/groups/roles가 됩니다.
+    public ResponseEntity<List<RoleVo>> getAllRoles() {
+        return ResponseEntity.ok(groupService.getAllRoles()); // Service에 findAll() 같은 메서드 필요
+    }
+
+    // [추가] 7. 그룹의 역할 단일 업데이트 (기존 권한 삭제 후 새 권한 부여)
+    // 📍 자바스크립트의 $.ajax({ url: `/api/groups/${GROUP_NO}/roles`, type: 'PUT' ... })와 매칭
+    @PutMapping("/{groupNo}/roles")
+    public ResponseEntity<Void> updateGroupRole(@PathVariable Long groupNo, @RequestBody Map<String, Long> payload) {
+        Long roleNo = payload.get("roleNo");
+        groupService.updateGroupRole(groupNo, roleNo); // 기존꺼 DELETE 후 신규 INSERT 하는 서비스 로직
         return ResponseEntity.ok().build();
     }
 }

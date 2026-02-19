@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.pms.setting.groups.info.dto.GroupDetailDto;
 import com.pms.setting.groups.info.vo.GroupVo;
+import com.pms.setting.groups.info.vo.RoleVo;
 import com.pms.setting.groups.info.vo.UserVo;
 
 public interface GroupService {
@@ -46,4 +47,8 @@ public interface GroupService {
      * (이미 그룹에 속한 유저는 제외하고 검색하는 로직 필요)
      */
     List<UserVo> searchAvailableUsers(Long groupNo, String keyword);
+    
+    // 📍 신규 추가
+    List<RoleVo> getAllRoles(); // 전체 역할 조회
+    void updateGroupRole(Long groupNo, Long roleNo); // 역할 수정 (Delete & Insert)
 }
