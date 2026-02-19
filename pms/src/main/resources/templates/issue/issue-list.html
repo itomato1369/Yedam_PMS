@@ -12,7 +12,7 @@
 		<div class="mb-4 mt-3">
 			<!-- #lists.isEmpty는 thymeleaf의 유틸함수 -->
 			<h3 class="fw-bold">
-				<label th:if="${not #lists.isEmpty(issueList)}"
+				<label th:if="${not #lists.isEmpty(issueList)}"             
 					th:text="${issueList[0].projectName}" class="text-primary"></label>
 				<small class="text-muted">의 일감 조회</small>
 			</h3>
