@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mapper.issueMapper.project-issue-mapper">
+<mapper namespace="com.pms.issue.mapper.IssueMapper">
 
 	<select id="selectProjectIssue" parameterType="projectIssueDto">
 		SELECT job_no
@@ -17,7 +17,17 @@
 		FROM job j
                  JOIN project p
                  ON j.project_no = p.project_no
+<<<<<<< Updated upstream:pms/src/main/resources/mapper/issueMapper/project-issue-mapper.xml
         WHERE j.user_id = #{userId}
+=======
+       <!--WHERE p.project_code = #{projectCode}--> 
+        <!-- <if test="userId != null">
+            AND j.user_id = #{userId} 
+        </if> -->
+        
+        
+        
+>>>>>>> Stashed changes:pms/src/main/resources/mapper/issueMapper/issue-project-mapper.xml
 	</select>
 
 

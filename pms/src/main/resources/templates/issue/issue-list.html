@@ -38,6 +38,7 @@
 
 				</ul>
 			</div>
+<<<<<<< Updated upstream
 				<div>
 			<button th:onclick="|location.href='@{/project/{code}/issue/new(code=${projectCode})}'|"
 			class="btn btn-primary text-white d-inline-flex">일감 추가</button>
@@ -47,6 +48,62 @@
 		</div>
 		<table class="table table-hover">
 			<thead>
+=======
+
+			<div
+				class="mb-3 d-flex align-items-stretch justify-content-end gap-2">
+				<div class="dropdown me-2">
+					<button class="btn btn-secondary dropdown-toggle" type="button"
+						data-bs-toggle="dropdown">검색조건 추가</button>
+
+					<ul class="dropdown-menu">
+						<li><a class="dropdown-item add-condition"
+							data-target="field-projectName" href="#">프로젝트
+								명</a></li>
+						<li><a class="dropdown-item add-condition"
+							data-target="field-jobNo" href="#">일감번호</a></li>
+						<li><a class="dropdown-item add-condition"
+							data-target="field-jobtitle" href="#">제목</a>
+						</li>
+						<li><a class="dropdown-item add-condition"
+							data-target="field-jobStatus" href="#">상태</a>
+						</li>
+						<li><a class="dropdown-item add-condition"
+							data-target="field-jobType" href="#">유형</a></li>
+						<li><a class="dropdown-item add-condition"
+							data-target="field-priority" href="#">우선순위</a>
+						</li>
+						<li><a class="dropdown-item add-condition"
+							data-target="field-manager" href="#">담당자</a>
+						</li>
+						<li><a class="dropdown-item add-condition"
+							data-target="field-startDate" href="#">일감
+								시작날짜</a></li>
+						<li><a class="dropdown-item add-condition"
+							data-target="field-endDate" href="#">일감
+								마감날짜</a></li>
+						<li><a class="dropdown-item add-condition"
+							data-target="field-progress" href="#">진척도</a>
+						</li>
+					</ul>
+				</div>
+
+				<div>
+					<button
+						th:onclick="|location.href='@{/project/{code}/issue/new(code=${projectCode})}'|"
+						class="btn btn-primary text-white d-inline-flex">
+						일감 추가</button>
+					<button th:onclick="|location.href='@{/work/list}'|"
+						class="btn btn-primary text-white d-inline-flex">
+						소요시간 조회</button>
+				</div>
+			</div>
+		</form>
+
+		<!-- 일감 전체 조회되는 테이블-->
+		<table class="table table-hover text-center">
+			<thead class="table-light">
+>>>>>>> Stashed changes
 				<tr>
 					<th scope="col">프로젝트 이름</th>
 					<th scope="col">일감번호</th>
@@ -61,13 +118,12 @@
 			</thead>
 			<tbody>
 				<tr th:each="issue : ${issueList}">
-					<td th:text="${issue.projectName}" th:value="${issue.projectNo}"></td>
+					<td th:text="${issue.projectName}" th:data-project-code="${issue.projectCode}"></td>
 					<td th:text="${issue.jobNo}"></td>
 					<td th:text="${issue.title}"></td>
-					<td th:text="${issue.jobStatusName}"
-						th:value="${issue.jobStatusNo}"></td>
-					<td th:text="${issue.jobTypeName}" th:value="${issue.jobTypeNo}"></td>
-					<td th:text="${issue.priorityName}" th:value="${issue.priority}"></td>
+					<td th:text="${issue.jobStatusName}" th:data-job-status-no="${issue.jobStatusNo}"></td>
+					<td th:text="${issue.jobTypeName}" th:data-job-type-no="${issue.jobTypeNo}"></td>
+					<td th:text="${issue.priorityName}" th:data-priority="${issue.priority}"></td>
 					<td th:text="${issue.managerId}"></td>
 					<td>
 						<div class="btn-group" role="group">
@@ -80,5 +136,9 @@
 		</table>
 	</div>
 
+<<<<<<< Updated upstream
+=======
+	<script th:src="@{/js/issue/dynamicSearch.js}"></script>
+>>>>>>> Stashed changes
 </body>
 </html>

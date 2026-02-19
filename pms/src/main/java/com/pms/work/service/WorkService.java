@@ -2,7 +2,6 @@ package com.pms.work.service;
 
 import java.util.List;
 
-import com.pms.work.dto.WorkDetailsDto;
 import com.pms.work.dto.WorkInsertDto;
 import com.pms.work.dto.WorkReportDto;
 import com.pms.work.dto.WorkSelectDto;
@@ -16,7 +15,7 @@ public interface WorkService {
 	WorkUpdateDto findWorkEntriesByNo(WorkUpdateDto workUpdateDto);
 	
 	// 내가 속한 프로젝트의 일감 조회
-	List<WorkInsertDto> findMyIssue(String userId);
+	List<WorkInsertDto> findMyIssue(WorkInsertDto workInsertDto);
 	
 	// 소요시간 등록 매개변수 타입은 WorkInsertDto
 	void addWorkEntries(WorkInsertDto workInsertDto);
@@ -24,11 +23,8 @@ public interface WorkService {
 	// 소요시간 수정 매개변수 타입은 WorkUpdateDto
 	void modifyWorkEntries(WorkUpdateDto workUpdateDto);
 	
-	// 작업분류 조회
-	List<WorkDetailsDto> findWorkDetails();
-	
     // 통합 보고서 조회 Method 
 	// type 은 일감, 프로젝트, 사용자, 주,월별
-	List<WorkReportDto> findWorkReport(String type, WorkSelectDto workSelectDto);
+	List<WorkReportDto> findWorkReport(String type, WorkReportDto workReportDto);
 
 }

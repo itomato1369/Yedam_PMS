@@ -12,8 +12,13 @@ public interface IssueMapper {
 
 	List<IssueDto> selectIssue(String userId);
 	
+<<<<<<< Updated upstream
 	// 테스트
 	List<projectIssueDto>selectProjectIssue(String userId);
+=======
+	// 테스트 String projectCode 추가 
+	List<projectIssueDto>selectProjectIssue(String userId);              
+>>>>>>> Stashed changes
 
 	Integer insertIssue(IssueDto issueDto);
 }
