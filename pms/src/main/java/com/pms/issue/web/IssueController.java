@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.pms.config.CustomUserDetails;
 import com.pms.issue.service.IssueService;
@@ -29,8 +30,6 @@ public class IssueController {
 		String userId = customUser.getUsername();
 		List<IssueDto> issueList = issueService.findIssueList(userId);
 		model.addAttribute("issueList", issueList);
-		System.out.println(userId);
-		System.out.println(issueList.toString());   
 		return "issue/issue-list";
 	}
 
@@ -43,10 +42,14 @@ public class IssueController {
 	// 일감 등록
 	@PostMapping("/insert")
 	public String addIssue(@AuthenticationPrincipal CustomUserDetails customUser, IssueDto issueDto,
-			@RequestParam("files") List<MultipartFile> files) {
-		issueDto.setUserId(customUser.getUsername());
-		Integer jobNo = issueService.addIssue(issueDto, files);
-
-		return "redirect:/issue/info?jobNo=" + jobNo;
+			@RequestParam("files") List<MultipartFile> files, RedirectAttributes redirectAttributes) {
+		try {
+			issueDto.setUserId(customUser.getUsername());
+			Integer jobNo = issueService.addIssue(issueDto, files);
+			return "redirect:/issue/info?jobNo=" + jobNo;
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+			return "redirect:/issue/new";
+		}
 	}
 }

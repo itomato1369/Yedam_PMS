@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.pms.files.entity.FilesDetailsEntity;
 
-public interface FilesDetailesRepository extends JpaRepository<FilesDetailsEntity, Integer> {
-	List<FilesDetailsEntity> findByFilesNo(Integer filesNo);
+public interface FilesDetailsRepository extends JpaRepository<FilesDetailsEntity, Integer> {
+	List<FilesDetailsEntity> findByFilesEntity_FilesNo(Integer filesNo);
 }

@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.pms.files.entity.FilesDetailsEntity;
 import com.pms.files.entity.FilesEntity;
-import com.pms.files.repository.FilesDetailesRepository;
+import com.pms.files.repository.FilesDetailsRepository;
 import com.pms.files.repository.FilesRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class FilesUploadService {
 
-    private final FilesDetailesRepository filesDetailesRepository;
+    private final FilesDetailsRepository filesDetailsRepository;
 
 	private final FilesRepository filesRepository;
 
@@ -62,7 +62,7 @@ public class FilesUploadService {
 												.filesType(file.getContentType())
 												.filesPath(uploadPath)
 												.build();
-			filesDetailesRepository.save(filesDetails);			
+			filesDetailsRepository.save(filesDetails);			
 		}
 		
 		return filesEntity.getFilesNo();
