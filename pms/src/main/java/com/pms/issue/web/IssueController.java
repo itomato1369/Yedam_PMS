@@ -29,7 +29,7 @@ public class IssueController {
 		List<IssueDto> issueList = issueService.findIssueList(userId);
 		model.addAttribute("issueList", issueList);
 		System.out.println(userId);
-		System.out.println(issueList.toString());
+		System.out.println(issueList.toString());   
 		return "issue/issue-list";
 	}
 

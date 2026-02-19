@@ -13,7 +13,7 @@ public interface IssueMapper {
 	List<IssueDto> selectIssue(String userId);
 	
 	// 테스트
-	List<projectIssueDto>selectProjectIssue(String userId);
+	List<projectIssueDto>selectProjectIssue(String userId);              
 
 	Integer insertIssue(IssueDto issueDto);
 }

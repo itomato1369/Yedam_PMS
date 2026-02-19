@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/project/{projectCode}/issue")
+@RequestMapping("/project/{projectCode}/issue")  
 public class projectIssueController {
 
 	private final IssueService issueService;

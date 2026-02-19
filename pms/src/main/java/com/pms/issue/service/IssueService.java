@@ -25,7 +25,7 @@ public class IssueService {
 	// 일감 리스트 테스트
 	public List<projectIssueDto> findProjectIssueList(String userId) {
 		List<projectIssueDto> issueList = issueMapper.selectProjectIssue(userId);
-		return issueList;
+		return issueList;              
 	}
 
 	// 일감 등록

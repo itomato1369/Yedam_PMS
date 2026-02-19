@@ -27,6 +27,8 @@ public class projectIssueDto {
 	private Integer jobTypeNo;
 	private Integer jobStatusNo;
 	private Integer projectNo;
-	private Integer parentJobNo;
+	private Integer parentJobNo;     
+	
+	
 
 }
