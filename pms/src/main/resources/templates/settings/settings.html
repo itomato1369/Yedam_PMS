@@ -520,34 +520,75 @@
 		    const loadGroups = gCtrl.load, loadRoles = rCtrl.load, loadJobStatus = jsCtrl.load, loadJobTypes = jtCtrl.load;
 
 		    // 5. 공통 액션 바인딩 (blur 처리/자동 저장/자동 취소 복구)
-		    const bindActions = (prefix, url, loadFn, dataFn, rowIdPrefix) => {
-		        const save = () => { 
-		            const val = $(`#${prefix}NewInput`).val()?.trim(); 
-		            if(!val) return cancel(); 
-		            apiCall(url, 'POST', dataFn(val), () => { alert("등록되었습니다."); loadFn(); }); 
-		        };
-		        const cancel = () => $(`#row${rowIdPrefix}New`).remove();
-		        const btnClassBase = prefix.replace(/([A-Z])/g, "-$1").toLowerCase();
+		 const bindActions = (prefix, url, loadFn, dataFn, rowIdPrefix) => {
+    // 중복 실행 방지용 상태 변수
+    let isProcessing = false;
 
-		        $(document).on('click', `.btn-${btnClassBase}-save`, save);
-		        $(document).on('click', `.btn-${btnClassBase}-cancel`, cancel);
-		        
-		        // 필드 이벤트: 엔터=저장, ESC=취소, Blur=값이 있으면 저장/없으면 취소
-		        $(document).on('keydown', `#${prefix}NewInput`, function(e) {
-		            if(e.key === 'Enter') { e.preventDefault(); save(); }
-		            if(e.key === 'Escape') cancel();
-		        });
-		        $(document).on('blur', `#${prefix}NewInput`, function() {
-		            setTimeout(() => { // 버튼 클릭 이벤트와 충돌 방지용 미세 지연
-		                if ($(`#row${rowIdPrefix}New`).length) save();
-		            }, 200);
-		        });
+    const save = () => { 
+        if (isProcessing) return; // 이미 처리 중이면 중단
+        
+        const $input = $(`#${prefix}NewInput`);
+        const val = $input.val()?.trim(); 
+        
+        if(!val) {
+            cancel();
+            return;
+        }
 
-		        $(document).on('click', `.btn-${btnClassBase}-delete`, function() {
-		            const id = $(this).data('id');
-		            if(confirm("정말로 삭제하시겠습니까?")) apiCall(`${url}/${id}`, 'DELETE', null, () => { alert("삭제되었습니다."); loadFn(); });
-		        });
-		    };
+        isProcessing = true; // 플래그 On
+        $input.prop('disabled', true); // 입력창 비활성화 (연타 방지)
+
+        apiCall(url, 'POST', dataFn(val), 
+            (res) => { 
+                alert("등록되었습니다."); 
+                isProcessing = false;
+                loadFn(); 
+            }, 
+            (err) => {
+                alert("등록 중 오류가 발생했습니다.");
+                isProcessing = false;
+                $input.prop('disabled', false);
+            }
+        ); 
+    };
+
+    const cancel = () => {
+        $(`#row${rowIdPrefix}New`).remove();
+    };
+
+    const btnClassBase = prefix.replace(/([A-Z])/g, "-$1").toLowerCase();
+
+    // 기존 이벤트 바인딩 초기화 후 재생성 (중복 바인딩 방지)
+    $(document).off('click', `.btn-${btnClassBase}-save`).on('click', `.btn-${btnClassBase}-save`, save);
+    $(document).off('click', `.btn-${btnClassBase}-cancel`).on('click', `.btn-${btnClassBase}-cancel`, cancel);
+    
+    $(document).off('keydown', `#${prefix}NewInput`).on('keydown', `#${prefix}NewInput`, function(e) {
+        if(e.key === 'Enter') { 
+            e.preventDefault(); 
+            save(); 
+        }
+        if(e.key === 'Escape') cancel();
+    });
+
+    // 📍 중복의 원인인 blur 이벤트를 제거했습니다.
+    // 만약 밖을 클릭했을 때 창이 닫히기만 원한다면 아래처럼 작성하세요.
+    $(document).off('blur', `#${prefix}NewInput`).on('blur', `#${prefix}NewInput`, function() {
+        setTimeout(() => {
+            // 값이 비어있을 때만 제거 (저장 버튼 클릭 시에는 위 save 로직이 우선됨)
+            if (!$(this).val()?.trim()) cancel();
+        }, 200);
+    });
+
+    $(document).off('click', `.btn-${btnClassBase}-delete`).on('click', `.btn-${btnClassBase}-delete`, function() {
+        const id = $(this).data('id');
+        if(confirm("정말로 삭제하시겠습니까?")) {
+            apiCall(`${url}/${id}`, 'DELETE', null, () => { 
+                alert("삭제되었습니다."); 
+                loadFn(); 
+            });
+        }
+    });
+};
 
 		    bindActions('group', '/settings/api/groups', loadGroups, v => ({groupName:v, status:520}), 'Group');
 		    bindActions('role', '/settings/api/roles', loadRoles, v => ({roleName:v}), 'Role');
