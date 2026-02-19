@@ -91,17 +91,19 @@
 			</thead>
 			<tbody>
 				<tr th:each="issue : ${issueList}">
-					<td th:text="${issue.jobNo}">1</td>
-					<td th:text="${issue.title}">제목</td>
-					<td th:text="${issue.jobStatusNo}">상태</td>
-					<td th:text="${issue.priority}">우선순위</td>
-					<td th:text="${issue.managerId}">담당자</td>
-
+					<td th:text="${issue.projectName}" th:value="${issue.projectNo}"></td>
+					<td th:text="${issue.jobNo}"></td>
+					<td th:text="${issue.title}"></td>
+					<td th:text="${issue.jobStatusName}"
+						th:value="${issue.jobStatusNo}"></td>
+					<td th:text="${issue.jobTypeName}" th:value="${issue.jobTypeNo}"></td>
+					<td th:text="${issue.priorityName}" th:value="${issue.priority}"></td>
+					<td th:text="${issue.managerId}"></td>
 					<td>
 						<div class="btn-group" role="group">
-						<!-- 상세랑 수정이랑 같음 -->
 							<a th:href="@{/issue/info(jobNo=${issue.jobNo})}"
-								class="btn btn-sm btn-outline-info">수정</a>
+								class="btn btn-sm btn-outline-info">상세</a>
+							<a class="btn btn-sm btn-outline-info">수정</a>
 						</div>
 					</td>
 				</tr>
