@@ -49,15 +49,15 @@ public class GroupServiceImpl implements GroupService {
         return groupMapper.deleteMember(groupNo, userId) > 0;
     }
 
-    @Override
-    @Transactional
-    public boolean grantRoleToGroup(Long groupNo, Long roleNo) {
-        try {
-            return groupMapper.insertGroupRole(roleNo, groupNo) > 0;
-        } catch (Exception e) {
-            return false;
-        }
-    }
+//    @Override
+//    @Transactional
+//    public boolean grantRoleToGroup(Long groupNo, Long roleNo) {
+//        try {
+//            return groupMapper.insertGroupRole(roleNo, groupNo) > 0;
+//        } catch (Exception e) {
+//            return false;
+//        }
+//    }
 
     @Override
     @Transactional

@@ -1,122 +1,137 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="https://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{common/layouts/default-layout}">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default-layout}">
 
 <div layout:fragment="Content">
-    <div class="container-fluid">
-        <div class="card mb-4 border-top-primary border-top-4 shadow-sm">
-            <div class="card-body d-flex justify-content-between align-items-center">
-                <div>
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb mb-1">
-                            <li class="breadcrumb-item"><a th:href="@{/settings}">설정</a></li>
-                            <li class="breadcrumb-item active">그룹 상세 관리</li>
-                        </ol>
-                    </nav>
-                    <h3 class="mb-0">
-                        <i class="cil-group me-2"></i>
-                        <span id="groupTitle">그룹 정보 로딩 중...</span>
-                        <span id="groupStatusBadge" class="badge ms-2"></span>
-                    </h3>
-                </div>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-outline-secondary" onclick="history.back()">
-                        <i class="cil-arrow-left"></i> 뒤로가기
-                    </button>
-                    <button type="button" id="btnRefresh" class="btn btn-outline-primary">
-                        <i class="cil-reload"></i> 새로고침
-                    </button>
-                </div>
-            </div>
-        </div>
+	<div class="container-fluid">
+		<div class="card mb-4 border-top-primary border-top-4 shadow-sm">
+			<div
+				class="card-body d-flex justify-content-between align-items-center">
+				<div>
+					<nav aria-label="breadcrumb">
+						<ol class="breadcrumb mb-1">
+							<li class="breadcrumb-item"><a th:href="@{/settings}">설정</a></li>
+							<li class="breadcrumb-item active">그룹 상세 관리</li>
+						</ol>
+					</nav>
+					<h3 class="mb-0">
+						<i class="cil-group me-2"></i> <span id="groupTitle">그룹 정보
+							로딩 중...</span> <span id="groupStatusBadge" class="badge ms-2"></span>
+					</h3>
+				</div>
+				<div class="btn-group">
+					<button type="button" class="btn btn-outline-secondary"
+						onclick="history.back()">
+						<i class="cil-arrow-left"></i> 뒤로가기
+					</button>
+					<button type="button" id="btnToggleStatus" class="btn">
+						<i id="statusIcon"></i> <span id="statusText">로딩 중...</span>
+					</button>
+				</div>
+			</div>
+		</div>
 
-        <div class="row">
-            <div class="col-lg-7">
-                <div class="card mb-4 shadow-sm">
-                    <div class="card-header bg-light d-flex justify-content-between align-items-center py-3">
-                        <strong class="fs-5"><i class="cil-user me-2"></i>소속 멤버 명단</strong>
-                        <div>
-                            <button class="btn btn-primary btn-sm px-3" id="btnOpenModal">
-                                <i class="cil-user-follow me-1"></i> 멤버 추가
-                            </button>
-                            <span class="badge bg-info text-white ms-2" id="memberCount">0명</span>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle border-bottom">
-                                <thead class="table-light">
-                                    <tr class="text-center">
-                                        <th>아이디</th>
-                                        <th>이름</th>
-                                        <th>합류일</th>
-                                        <th>작업</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="memberListTable"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+		<div class="row">
+			<div class="col-lg-7">
+				<div class="card mb-4 shadow-sm">
+					<div
+						class="card-header bg-light d-flex justify-content-between align-items-center py-3">
+						<strong class="fs-5"><i class="cil-user me-2"></i>소속 멤버
+							명단</strong>
+						<div>
+							<button class="btn btn-primary btn-sm px-3" id="btnOpenModal">
+								<i class="cil-user-follow me-1"></i> 멤버 추가
+							</button>
+							<span class="badge bg-info text-white ms-2" id="memberCount">0명</span>
+						</div>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive">
+							<table class="table table-hover align-middle border-bottom">
+								<thead class="table-light">
+									<tr class="text-center">
+										<th>아이디</th>
+										<th>이름</th>
+										<th>합류일</th>
+										<th>작업</th>
+									</tr>
+								</thead>
+								<tbody id="memberListTable"></tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
 
-            <div class="col-lg-5">
-                <div class="card mb-4 shadow-sm border-top-info border-top-4">
-                    <div class="card-header bg-light py-3 d-flex justify-content-between align-items-center">
-                        <strong class="fs-5"><i class="cil-shield-alt me-2"></i>그룹 권한 설정</strong>
-                        <span id="saveStatus" class="badge bg-secondary opacity-50">자동 저장됨</span>
-                    </div>
-                    <div class="card-body">
-                        <p class="text-muted small mb-3">
-                            이 그룹에 부여할 역할을 선택하세요. <strong>그룹당 하나의 역할만</strong> 부여할 수 있으며, 선택 시 즉시 반영됩니다.
-                        </p>
-                        <div id="roleListContainer" class="list-group shadow-sm">
-                            <div class="text-center py-5">
-                                <div class="spinner-border text-primary" role="status"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+			<div class="col-lg-5">
+				<div class="card mb-4 shadow-sm border-top-info border-top-4">
+					<div
+						class="card-header bg-light py-3 d-flex justify-content-between align-items-center">
+						<strong class="fs-5"><i class="cil-shield-alt me-2"></i>그룹
+							권한 설정</strong> <span id="saveStatus" class="badge bg-secondary opacity-50">자동
+							저장됨</span>
+					</div>
+					<div class="card-body">
+						<p class="text-muted small mb-3">
+							이 그룹에 부여할 역할을 선택하세요. <strong>그룹당 하나의 역할만</strong> 부여할 수 있으며, 선택 시
+							즉시 반영됩니다.
+						</p>
+						<div id="roleListContainer" class="list-group shadow-sm">
+							<div class="text-center py-5">
+								<div class="spinner-border text-primary" role="status"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <div class="modal fade" id="userSearchModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title"><i class="cil-user-plus me-2"></i>새 멤버 일괄 추가</h5>
-                    <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <div class="input-group mb-4 shadow-sm">
-                        <span class="input-group-text bg-white border-end-0"><i class="cil-filter"></i></span>
-                        <input type="text" id="modalFilterInput" class="form-control border-start-0 ps-0" placeholder="이름 또는 아이디로 검색...">
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead class="table-light sticky-top">
-                                <tr>
-                                    <th style="width: 45px;"><input type="checkbox" id="checkAll" class="form-check-input"></th>
-                                    <th>아이디</th>
-                                    <th>이름</th>
-                                    <th>이메일</th>
-                                </tr>
-                            </thead>
-                            <tbody id="modalSearchResultTable"></tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer bg-light border-0">
-                    <button type="button" class="btn btn-secondary" data-coreui-dismiss="modal">취소</button>
-                    <button type="button" class="btn btn-primary px-4" id="btnBatchAdd">선택 멤버 추가</button>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="modal fade" id="userSearchModal" tabindex="-1"
+		aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-scrollable">
+			<div class="modal-content border-0 shadow-lg">
+				<div class="modal-header bg-primary text-white">
+					<h5 class="modal-title">
+						<i class="cil-user-plus me-2"></i>새 멤버 일괄 추가
+					</h5>
+					<button type="button" class="btn-close btn-close-white"
+						data-coreui-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body p-4">
+					<div class="input-group mb-4 shadow-sm">
+						<span class="input-group-text bg-white border-end-0"><i
+							class="cil-filter"></i></span> <input type="text" id="modalFilterInput"
+							class="form-control border-start-0 ps-0"
+							placeholder="이름 또는 아이디로 검색...">
+					</div>
+					<div class="table-responsive">
+						<table class="table table-hover align-middle">
+							<thead class="table-light sticky-top">
+								<tr>
+									<th style="width: 45px;"><input type="checkbox"
+										id="checkAll" class="form-check-input"></th>
+									<th>아이디</th>
+									<th>이름</th>
+									<th>이메일</th>
+								</tr>
+							</thead>
+							<tbody id="modalSearchResultTable"></tbody>
+						</table>
+					</div>
+				</div>
+				<div class="modal-footer bg-light border-0">
+					<button type="button" class="btn btn-secondary"
+						data-coreui-dismiss="modal">취소</button>
+					<button type="button" class="btn btn-primary px-4" id="btnBatchAdd">선택
+						멤버 추가</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
-<script th:inline="javascript">
+	<script th:inline="javascript">
         // 타임리프를 통해 전달받은 그룹 번호
         const GROUP_NO = [[${groupNo}]];
         let searchModal;
@@ -342,9 +357,56 @@
                     }
                 });
             });
+            function loadAllData() {
+                $.get(`/api/groups/${GROUP_NO}`, function(data) {
+                    renderHeader(data);    
+                    renderMembers(data.members);
+                    loadAllRoles(data.roles); 
+                    // 📍 버튼 UI 업데이트를 위해 renderHeader에 데이터 전달
+                });
+            }
 
-            // 새로고침 버튼
-            $('#btnRefresh').on('click', loadAllData);
+            function renderHeader(data) {
+                $('#groupTitle').text(data.groupName || '그룹 상세');
+                const $badge = $('#groupStatusBadge');
+                const $btn = $('#btnToggleStatus');
+                const $icon = $('#statusIcon');
+                const $text = $('#statusText');
+
+                // 상태 코드 510(사용중), 그 외(중지됨) 가정
+                if(data.status === 510) {
+                    $badge.text('사용중').attr('class', 'badge ms-2 bg-success');
+                    $btn.attr('class', 'btn btn-outline-warning'); // 중지시킬 수 있게 경고색
+                    $icon.attr('class', 'cil-media-pause me-1');
+                    $text.text('그룹 중지');
+                } else {
+                    $badge.text('중지됨').attr('class', 'badge ms-2 bg-warning');
+                    $btn.attr('class', 'btn btn-outline-success'); // 사용가능하게 성공색
+                    $icon.attr('class', 'cil-media-play me-1');
+                    $text.text('그룹 사용');
+                }
+            }
+
+            /**
+             * 📍 기존 GroupsController의 toggle-status API 호출
+             */
+            $('#btnToggleStatus').on('click', function() {
+                const msg = "그룹 상태를 변경하시겠습니까?";
+                if(!confirm(msg)) return;
+
+                $.ajax({
+                    // 📍 센세가 보여주신 컨트롤러의 Mapping 주소 그대로 사용!
+                    url: `/settings/api/groups/${GROUP_NO}/toggle-status`,
+                    type: 'PATCH',
+                    success: function() {
+                        // 성공 시 다시 데이터를 읽어와서 UI 갱신
+                        loadAllData();
+                    },
+                    error: function() {
+                        alert("상태 변경에 실패했습니다. API 경로를 확인해주세요.");
+                    }
+                });
+            });
         });
     </script>
 </div>

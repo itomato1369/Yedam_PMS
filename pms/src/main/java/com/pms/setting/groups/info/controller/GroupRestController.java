@@ -61,13 +61,6 @@ public class GroupRestController {
         return ResponseEntity.ok().build();
     }
 
-    // 5. 역할(권한) 부여/회수
-    @PostMapping("/{groupNo}/roles/{roleNo}")
-    public ResponseEntity<Void> grantRole(@PathVariable Long groupNo, @PathVariable Long roleNo) {
-        groupService.grantRoleToGroup(groupNo, roleNo);
-        return ResponseEntity.ok().build();
-    }
-
     @DeleteMapping("/{groupNo}/roles/{roleNo}")
     public ResponseEntity<Void> revokeRole(@PathVariable Long groupNo, @PathVariable Long roleNo) {
         groupService.revokeRoleFromGroup(groupNo, roleNo);

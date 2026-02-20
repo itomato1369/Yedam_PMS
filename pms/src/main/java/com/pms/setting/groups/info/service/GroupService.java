@@ -35,7 +35,7 @@ public interface GroupService {
     /**
      * 5. 그룹 권한(역할) 부여
      */
-    boolean grantRoleToGroup(Long groupNo, Long roleNo);
+//    boolean grantRoleToGroup(Long groupNo, Long roleNo);
 
     /**
      * 6. 그룹 권한(역할) 회수
