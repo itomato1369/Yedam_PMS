@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{common/layouts/default-layout}"
+      layout:decorate="~{common/layouts/full-default-layout}"
       layout:fragment="Content">
 <head>
     <meta charset="UTF-8">
@@ -35,17 +35,15 @@
         <div id="gantt_here"></div>
     </div>
 
-    <script th:inline="javascript">
-    gantt.plugins({
-        marker: true
-    });
+<script th:inline="javascript">
+    gantt.plugins({ marker: true });
 
     function initGantt(tasks) {
         gantt.i18n.setLocale("kr");
-        gantt.setSkin("meadow");
+        
+        // [수정됨] 둥글둥글하고 부드러운 디자인의 스킨으로 변경
+        gantt.setSkin("terrace"); 
 
-        // [추가] 백엔드(DB)에서 넘어오는 String 날짜 포맷 명시 (예: "yyyy-MM-dd")
-        // 만약 시간까지 넘어온다면 "%Y-%m-%d %H:%i:%s" 로 설정하세요.
         gantt.config.date_format = "%d-%m-%Y";
 
         gantt.config.columns = [
@@ -86,17 +84,41 @@
         }, 1000 * 60);
     }
 
-    // 1. Thymeleaf 인라인을 통해 Java List를 JSON 배열로 파싱
-    // 데이터가 비어있을 경우를 대비해 기본값 [] 할당
+    // 1. 서버에서 데이터 가져오기 (links는 빈 배열로 초기화)
     const backendData = /*[[${ganttData}]]*/ { data: [], links: [] }; 
 
-    // 2. DHTMLX가 요구하는 객체 포맷으로 래핑
-    const parsedData = {
-        data: backendData,
-        links: [] // 추후 의존성 선 렌더링 시 여기에 링크 배열 추가
-    };
+    // 2. JS에서 데이터를 순회하며 속성 및 연결선(Links) 자동 부여
+    let linkIdCounter = 1;
+    let previousTaskByParent = {}; // 부모 ID별로 '직전 작업'을 기억하기 위한 객체
 
-    // 3. 차트 초기화
+    backendData.data.forEach(task => {
+        
+        // [요구사항 1 & 3] 최상위(parent가 0)이거나 하위 '프로젝트(p)'인 경우
+        if (task.parent === "0" || String(task.id).startsWith("p")) {
+            task.open = true;        // 폴더를 기본으로 열어둠
+            task.type = "project";   // 모양을 '요약 바'로 바꾸고, 날짜 자동 계산 활성화
+        }
+
+        // [요구사항 2] 노란색 연결선(Link) 자동 생성
+        // 같은 부모(parent) 안에 있는 작업들끼리 순서대로 선을 긋습니다.
+        let parentId = task.parent || "0";
+        let prevSibling = previousTaskByParent[parentId]; // 같은 부모의 직전 작업
+
+        if (prevSibling) {
+            // 직전 작업과 현재 작업을 연결하는 링크 데이터를 추가
+            backendData.links.push({
+                id: linkIdCounter++,
+                source: prevSibling.id,
+                target: task.id,
+                type: "0" // 0 = Finish-to-Start (앞 작업 끝나면 뒤 작업 시작)
+            });
+        }
+        
+        // 현재 작업을 이 부모 그룹의 '직전 작업'으로 기록하여 다음 루프 때 쓰도록 갱신
+        previousTaskByParent[parentId] = task; 
+    });
+
+    // 3. 가공이 완료된 데이터로 차트 렌더링
     initGantt(backendData);
 </script>
 
