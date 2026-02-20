@@ -74,7 +74,7 @@
     <span class="text-muted">|</span>
     <a class="text-decoration-none">변경 사항 보기</a>
     <span class="text-muted">|</span>
-    <a class="text-decoration-none">Gantt 차트</a>
+    <a th:href="@{/project/{projectCode}/gantt(projectCode=${projectCode})}" class="text-decoration-none">Gantt 차트</a>
   </div>
 </div>
 
@@ -86,32 +86,18 @@
   </div>
 
   <div class="card-body d-flex flex-column gap-2">
-    <!-- 안쪽 카드 (뉴스 항목 1) -->
-    <div class="card border mb-0">
-      <div class="card-body py-2 px-3">
-        <div class="d-flex align-items-center gap-2 mb-1">
-          <a href="#" class="fw-semibold text-decoration-none">이것이뉴스다</a>
-          <span class="badge bg-warning text-dark">NEW</span>
-        </div>
-        <div class="text-muted small">
-          <i class="cil-user"></i>
-          admin Admin이(가) 하루 전에 추가함
-        </div>
-      </div>
-    </div>
-
-    <!-- 안쪽 카드 (뉴스 항목 2) -->
-    <div class="card border mb-0">
-      <div class="card-body py-2 px-3">
-        <div class="d-flex align-items-center gap-2 mb-1">
-          <a href="#" class="fw-semibold text-decoration-none">스프린트 2 일정 업데이트</a>
-        </div>
-        <div class="text-muted small">
-          <i class="cil-user"></i>
-          admin Admin이(가) 3일 전에 추가함
-        </div>
-      </div>
-    </div>
+  	<!--/* 개별 뉴스 항목 */-->
+  	<div th:each="notice : ${news}" class="card border mb-0">
+	<div class="card-body py-2 px-3">
+	    <div class="d-flex align-items-center gap-2 mb-1">
+	      <a href="#" class="fw-semibold text-decoration-none" th:text="${notice.title}"></a>
+	    </div>
+	    <div class="text-muted small">
+	      <i class="cil-user"></i>
+	      <span th:text="|${notice.username}이(가) ${#dates.format(notice.addDate, 'yyyy-MM-dd HH:mm')}에 추가함|"></span>
+	    </div>
+	  </div>
+	</div>
   </div>
 
   <div class="card-footer d-flex gap-2">
@@ -127,22 +113,34 @@
   </div>
 
   <div class="card-body d-flex flex-column gap-2">
-    <!-- 개발자 라벨 -->
+  <!--/* 그룹별로 반복 */-->
+  <div th:each="entry : ${groupMembers}">
+    
+    <!--/* 라벨 (그룹명) */-->
     <div class="text-muted small">
-      <i class="cil-code"></i> 개발자
+      <i class="cil-people"></i>
+      <span th:text="${entry.key}">그룹명</span>
     </div>
 
-    <!-- 안쪽 카드 -->
-    <div class="card border mb-0">
+    <!--/* 안쪽 카드 (멤버 목록) */-->
+    <div class="card border mb-2">
       <div class="card-body py-2 px-3 d-flex flex-wrap gap-2">
-        <a href="#" class="badge bg-primary-subtle text-primary text-decoration-none">ht kim</a>
-        <a href="#" class="badge bg-primary-subtle text-primary text-decoration-none">user1 user1</a>
-        <a href="#" class="badge bg-primary-subtle text-primary text-decoration-none">배 진욱</a>
-        <a href="#" class="badge bg-primary-subtle text-primary text-decoration-none">승일 송</a>
-        <a href="#" class="badge bg-primary-subtle text-primary text-decoration-none">유저 난</a>
+        <a th:each="userName : ${entry.value}" 
+           href="#" 
+           class="badge bg-primary-subtle text-primary text-decoration-none"
+           th:text="${userName}">
+        </a>
       </div>
     </div>
   </div>
+
+  <!--/* 구성원 없을 때 */-->
+  <div th:if="${#maps.isEmpty(groupMembers)}" 
+       class="d-flex align-items-center justify-content-center py-4">
+    <span class="text-secondary">구성원이 없습니다.</span>
+  </div>
+</div>
+  
 </div>
 
 <!--/* ━━━━━━━━━━━━━━━━━━━━ 카드 4: 하위 프로젝트 ━━━━━━━━━━━━━━━━━━━━ */-->

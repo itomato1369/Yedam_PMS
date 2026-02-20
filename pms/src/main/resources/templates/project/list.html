@@ -85,107 +85,61 @@
     </form>
   </div>
   <!--/* Card */-->
-  <div class="card mb-3 shadow-sm" th:each="project, stats : ${projects}">
-    <div
-      class="card-body d-flex justify-content-between align-items-center flex-wrap"
-    >
-      <!--/* Left-프로젝트 타이틀: 프로젝트 제목/설명, 하위프로젝트 들의 제목/설명 , '나'의 PM여부 */-->
-      <div class="project-info ms-3">
-        <h5 class="card-title fw-bold text-primary mb-0" >
-        	<a class="text-decoration-none" th:text="${project.projectName}" th:href="@{/project/{projectCode}/info(projectCode=${project.projectCode})}"></a>
-        </h5>
-        <h5
-          class="card-title text-medium-emphasis mb-2"
-          th:text="${project.projectDesc}"
-        ></h5>
+<div class="card mb-4 shadow-sm" th:each="project : ${projects}" th:if="${project.le == 1}">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start">
+            
+            <div class="project-info" style="flex: 1;">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <h5 class="fw-bold text-primary mb-0">
+                        <a th:text="${project.projectName}" 
+                           th:href="@{/project/{code}/info(code=${project.projectCode})}" 
+                           class="text-decoration-none"></a>
+                    </h5>
+                    <span th:if="${project.publicYn == 1}" class="badge bg-info-light text-info small" style="font-size: 0.7rem;">Public</span>
+                </div>
+                <p class="text-muted small mb-3" th:text="${project.projectDesc}"></p>
 
-        <div>
-          <th:block
-            th:insert="~{project/list :: projectHierarchy(projectsToDisplay=${project.childProjects}, level=0)}"
-          ></th:block>
-        </div>
-      </div>
+                <div class="mt-2">
+                    <th:block th:replace="~{::recursiveTree(parentNo=${project.projectNo}, allProjects=${projects})}"></th:block>
+                </div>
+            </div>
 
-      <!--/* Right-프로젝트 상세: 일감 총 갯수, 소속 인원수, 예상진척도 대비 실제 진척도 */-->
-      <div
-        class="project-stats d-flex gap-4 gap-md-5 text-end mt-2 mt-md-0 me-3"
-      >
-        <div class="stat-item">
-          <div class="stat-title text-secondary small">
-            일감 수
-            <span
-              class="text-success fw-bold fs-4"
-              th:text="${project.totalJobCount}"
-            ></span
-            >개
-          </div>
-          <div
-            class="stat-desc text-muted small"
-            style="font-size: 0.9rem"
-            th:if="${project.latestJobContent}"
-          >
-            <!-- TODO:여기에 최신으로 추가된 일감이나 최신으로 갱신된 일감에 대한 정보 -->
-            <span th:text="${project.latestJobContent}"></span>
-          </div>
+            <div class="project-stats d-flex gap-5 text-end ms-4" th:if="${project.projectTotalDTO != null}">
+                <div class="stat-item">
+                    <div class="small text-secondary">일감 수 <span class="text-success fw-bold fs-4" th:text="${project.projectTotalDTO.totalJobCount}">0</span>개</div>
+                    <div class="text-muted" style="font-size: 0.75rem;" th:text="${project.latestJobTitle ?: '일감 없음'}"></div>
+                </div>
+                <div class="stat-item">
+                    <div class="small text-secondary">참여 인원 <span class="text-warning fw-bold fs-4" th:text="${project.projectTotalDTO.totalMemberCount}">0</span>명</div>
+                    <div class="text-muted" style="font-size: 0.75rem;" th:text="${project.projectHome ?: '-'}"></div>
+                </div>
+                <div class="stat-item" style="min-width: 140px;">
+                    <div class="small text-secondary">진행률 <span class="text-danger fw-bold fs-5" th:text="${project.projectTotalDTO.currentProgress + '%'}"></span></div>
+                    <div class="progress" style="height: 5px; margin-top: 4px;">
+                        <div class="progress-bar bg-danger" th:style="'width:' + ${project.projectTotalDTO.currentProgress} + '%'"></div>
+                    </div>
+                    <div class="text-muted mt-1" style="font-size: 0.7rem;">목표: <span th:text="${project.projectTotalDTO.targetProgress + '%'}"></span></div>
+                </div>
+            </div>
         </div>
-
-        <div class="stat-item">
-          <div class="stat-title text-secondary small">
-            참여 인원
-            <span
-              class="text-warning fw-bold fs-4"
-              th:text="${project.memberCount}"
-            ></span
-            >명
-          </div>
-          <div class="stat-desc text-muted small" style="font-size: 0.9rem">
-            <span
-              th:if="${project.hasLoginUserJoined and project.memberCount > 1}"
-            >
-              login-user 외 <span th:text="${project.memberCount - 1}"></span>명
-            </span>
-            <span
-              th:unless="${project.hasLoginUserJoined and project.memberCount > 1}"
-            >
-              <span th:text="${project.memberCount}"></span>명
-            </span>
-          </div>
-        </div>
-
-        <div class="stat-item">
-          <div class="stat-title text-secondary small">
-            진행률 <span class="text-danger fw-bold fs-4">??.?%</span>
-          </div>
-          <div
-            class="stat-desc text-muted small"
-            style="font-size: 0.9rem"
-            th:if="${project.latestJobTitle}"
-          >
-            <span th:text="${project.latestJobTitle}"></span>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
-  <th:block th:fragment="projectHierarchy(projectsToDisplay, level)">
-    <div
-      th:each="proj : ${projectsToDisplay}"
-      th:with="newLevel = ${level + 1}"
-      class="border-start border-secondary border-4"
-      th:style="'margin-left: ' + (${level} * 15) + 'px; padding-left: 15px;'"
-    >
-      <p
-        class="card-text fw-bold text-primary mb-0"
-      ><a class="text-decoration-none" th:text="${proj.projectName}" th:href="@{/project/{projectCode}/info(projectCode=${proj.projectCode})}"></a></p>
-      <p
-        class="card-text text-medium-emphasis mb-0"
-        th:text="${proj.projectDesc}"
-      ></p>
-      <th:block th:if="${not #lists.isEmpty(proj.childProjects)}">
-        <!-- <th:block th:insert="~{project/list :: projectHierarchy(projectsToDisplay=${proj.childProjects}, level=${newLevel})}"></th:block> -->
-      </th:block>
+</div>
+
+<th:block th:fragment="recursiveTree(parentNo, allProjects)">
+    <div th:each="sub : ${allProjects}" th:if="${sub.parentProjectNo == parentNo}" 
+         class="border-start border-secondary border-4 ms-3 ps-3 mb-0"> <div class="d-flex align-items-center gap-2">
+            <h6 class="fw-bold text-primary mb-0">
+                <a th:href="@{/project/{code}/info(code=${sub.projectCode})}" 
+                   th:text="${sub.projectName}" class="text-decoration-none"></a>
+            </h6>
+            <span th:if="${sub.publicYn == 1}" class="badge bg-info-light text-info small" style="font-size: 0.65rem;">Public</span>
+        </div>
+        <p class="text-muted mb-0" style="font-size: 0.85rem;" th:text="${sub.projectDesc}"></p>
+        
+        <th:block th:replace="~{::recursiveTree(parentNo=${sub.projectNo}, allProjects=${allProjects})}"></th:block>
     </div>
-  </th:block>
+</th:block>
 	<script>
 	document.addEventListener('DOMContentLoaded', function() {
 	    const btn = document.getElementById('btnAddNewProject');

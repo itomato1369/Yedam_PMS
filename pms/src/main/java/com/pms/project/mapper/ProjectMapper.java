@@ -1,11 +1,17 @@
 package com.pms.project.mapper;
 
-import com.pms.project.dto.ParentProjectDTO;
-import com.pms.project.dto.ProjectInsertDTO;
-import com.pms.project.dto.ProjectSearchDTO;
 import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import com.pms.project.dto.JobDTO;
+import com.pms.project.dto.MemberDTO;
+import com.pms.project.dto.NoticeDTO;
+import com.pms.project.dto.ParentProjectDTO;
+import com.pms.project.dto.ProjectGMemberDTO;
+import com.pms.project.dto.ProjectInsertDTO;
+import com.pms.project.dto.ProjectSearchDTO;
 import com.pms.project.dto.ProjectSelectDTO;
 
 @Mapper
@@ -18,9 +24,23 @@ public interface ProjectMapper {
     List<ProjectSelectDTO> selectProjectsByOptions(ProjectSearchDTO searchDTO);
     List<ParentProjectDTO> selectParentProjects();
     
+    // 조회 가속을 위한 메서드 추가 (List<Integer>를 파라미터로 받음)
+    List<JobDTO> selectJobsByProjectNos(@Param("projectNos") List<Integer> projectNos);
+    List<MemberDTO> selectMembersByProjectNos(@Param("projectNos") List<Integer> projectNos);
+    
+    // 프로젝트 code 중복 검사
+    int selectByProjectCode(String projectCode);
     // 사용자의 입력값을 바탕으로 프로젝트 추가
     int insertProject(ProjectInsertDTO projectInsertDTO);
     
-    // 프로젝트 개요 페이지 - 자식 하위 프로젝트 목록 조회(이름, 식별자, 상태)
+    
+    // 프로젝트 개요 페이지 
+
+    // 프로젝트에 소속된 모든 그룹의 모든 멤버 표시
+    List<ProjectGMemberDTO> selectGroupMemberByCode(@Param("projectCode") String projectCode);
+    // 최신 공지사항 목록 조회
+    List<NoticeDTO> selectNotices();
+    // 하위 프로젝트 목록 조회(이름, 식별자, 상태)
     List<ProjectSelectDTO> selectFirstChildsByCode(@Param("projectCode") String projectCode, Integer active, Integer locked );
+    
 }

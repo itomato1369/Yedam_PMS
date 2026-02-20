@@ -16,6 +16,7 @@ import com.pms.project.dto.ProjectInsertDTO;
 import com.pms.project.dto.ProjectSearchDTO; // 추가
 import com.pms.project.service.ProjectService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -28,9 +29,18 @@ public class ProjectController {
     private final ProjectCommonStatusMapper projectCommonStatusMapper;
     
     @GetMapping("/list")
-    public String listProjects(Model model, @ModelAttribute ProjectSearchDTO searchDTO) {
+    public String listProjects(Model model 
+    		, @ModelAttribute ProjectSearchDTO searchDTO
+    		, @AuthenticationPrincipal CustomUserDetails customUser 
+    		) {
         // 실제 운영 시에는 세션 또는 SecurityContext에서 userId를 가져옴
-        String currentUserId = "song";
+        String currentUserId = customUser.getUserEntity().getUserId();
+        
+        
+		/*
+		 * if(customUser.getUserEntity().isAdmin() || 아니면 내가 pm) { // 내가 관리자 이거나 pm 이면
+		 * 해당프로젝트내부의 모든 정보 열람 가능 };
+		 */
         
         // 검색 조건이 있는지 확인 (projectName, projectStatus, projectAssignee 중 하나라도 값이 있으면 검색 조건으로 간주)
         boolean hasSearchCriteria = searchDTO.getProjectName() != null && !searchDTO.getProjectName().isEmpty() ||
@@ -66,7 +76,6 @@ public class ProjectController {
     // 프로젝트 입력 처리
     @PostMapping("/new")
 	// TODO: dev 머지 이후 수정 - 매개변수에 추가
-    // 
     public String addProject(
     		@ModelAttribute ProjectInsertDTO dto
     		, @AuthenticationPrincipal CustomUserDetails customUser 
@@ -74,12 +83,20 @@ public class ProjectController {
     	// 로그인 사용자 정보에서 id 추출
     	dto.setUserId(customUser.getUserEntity().getUserId());
     	
-    	boolean success = projectService.addProject(dto);
-    	
-    	if (success) {
-    		redirectAttributes.addFlashAttribute("successMessage", "프로젝트가 등록되었습니다.");
+    	// 중복코드 검사 -> 중복된값이 있다면 true 반환
+    	if (projectService.findByProjectCode(dto.getProjectCode())) {
+    		redirectAttributes.addFlashAttribute("errorMessage", "중복되는 식별자는 등록할 수 없습니다.");
         } else {
-        	redirectAttributes.addFlashAttribute("errorMessage", "프로젝트 등록에 실패했습니다.");
+        	// 부모프로젝트 멤버 상속여부에따라 분기
+        	if (dto.getParentMemberYn() == 1) {
+				// 멤버상속 있으면 ..
+			}else {
+				
+				//projectService.addProject(dto); 부모프로젝트 멤버상속 없으면 단순 생성
+			}
+        	redirectAttributes.addFlashAttribute("successMessage", "프로젝트가 정상적으로 등록 되었습니다.");
+        	
+        	return "redirect:/project/list"; // 성공 시 목록 페이지로 이동
         }
     	
     	return "redirect:/project/new";
@@ -87,10 +104,15 @@ public class ProjectController {
     
     // @PathVariable: 단일값 처리 + 매개변수에 어노테이션선언으로 필수값 선언, 반드시 받을거라 default 사용하지않기로
     @GetMapping("/{projectCode}/info")
-    public String getProjectInfo(@PathVariable String projectCode, Model model) {
-    	model.addAttribute("childProjects", projectService.findFirstChildsByCode(projectCode));
+    public String getProjectInfo(@PathVariable String projectCode, Model model, HttpSession session) {
+    	// 세션을 활용하여 pathVal 사용하지않는 페이지에서 프로젝트 코드값 조회
+    	session.setAttribute("projectCode", projectCode);
     	
-    	return "project/info";
+    	model.addAttribute("groupMembers", projectService.findGroupMemberByCode(projectCode));
+    	model.addAttribute("childProjects", projectService.findFirstChildsByCode(projectCode));
+		model.addAttribute("news", projectService.findNoties());
+    	
+		return "project/info";
     }
     
     
@@ -100,4 +122,8 @@ public class ProjectController {
     	return "null";
     }
     
+    @GetMapping("/{projectCode}/gantt")
+    public String getGantProject(@PathVariable String projectCode) {
+    	return "project/gantt";
+    }
 }
