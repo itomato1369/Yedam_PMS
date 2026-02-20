@@ -28,7 +28,7 @@ public class ProjectController {
     private final ProjectService projectService;
     private final ProjectCommonStatusMapper projectCommonStatusMapper;
     
-    @GetMapping("/list")
+    @GetMapping("/")
     public String listProjects(Model model 
     		, @ModelAttribute ProjectSearchDTO searchDTO
     		, @AuthenticationPrincipal CustomUserDetails customUser 
@@ -103,7 +103,7 @@ public class ProjectController {
     }
     
     // @PathVariable: 단일값 처리 + 매개변수에 어노테이션선언으로 필수값 선언, 반드시 받을거라 default 사용하지않기로
-    @GetMapping("/{projectCode}/info")
+    @GetMapping("/user/{projectCode}/info")
     public String getProjectInfo(@PathVariable String projectCode, Model model, HttpSession session) {
     	// 세션을 활용하여 pathVal 사용하지않는 페이지에서 프로젝트 코드값 조회
     	session.setAttribute("projectCode", projectCode);
@@ -117,12 +117,12 @@ public class ProjectController {
     
     
     // 프로젝트 list -> settings.project 로 이동
-    @GetMapping("/{projectCode}/edit")
+    @GetMapping("/user/{projectCode}/edit")
     public String getEditProject(@PathVariable String projectCode) {
     	return "null";
     }
     
-    @GetMapping("/{projectCode}/gantt")
+    @GetMapping("/user/{projectCode}/gantt")
     public String getGantProject(@PathVariable String projectCode) {
     	return "project/gantt";
     }
