@@ -38,7 +38,7 @@ public class SecurityConfig {
 					.requestMatchers("/coreui/**").permitAll()
 					.requestMatchers("/home/**", "/user/**").permitAll()
 					.requestMatchers("/settings/**").hasRole("ADMIN")
-					.requestMatchers("/project/{projectCode}/**").access(projectAuthorizationManager)
+					.requestMatchers("/project/user/{projectCode}/**").access(projectAuthorizationManager)
 					.anyRequest().authenticated()
 					)
 			.formLogin(form -> form
