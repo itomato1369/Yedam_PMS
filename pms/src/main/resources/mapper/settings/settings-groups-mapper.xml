@@ -69,7 +69,7 @@
         UPDATE groups
         <set>
             <if test="groupName != null and groupName != ''">
-                group_name = #{groupName},
+                GROUPNAME = #{groupName},
             </if>
             <if test="status != null">
                 status = #{status},

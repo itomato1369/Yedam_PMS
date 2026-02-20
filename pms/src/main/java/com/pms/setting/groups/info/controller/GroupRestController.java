@@ -67,14 +67,14 @@ public class GroupRestController {
         return ResponseEntity.ok().build();
     }
     
- // [추가] 6. 시스템의 모든 역할 목록 조회 (우측 사이드바 렌더링용)
+    //  6. 시스템의 모든 역할 목록 조회 (우측 사이드바 렌더링용)
     // 📍 자바스크립트의 $.get('/api/roles')와 매칭됩니다.
     @GetMapping("/roles") // @RequestMapping이 /api/groups이므로 최종 주소는 /api/groups/roles가 됩니다.
     public ResponseEntity<List<RoleVo>> getAllRoles() {
         return ResponseEntity.ok(groupService.getAllRoles()); // Service에 findAll() 같은 메서드 필요
     }
 
-    // [추가] 7. 그룹의 역할 단일 업데이트 (기존 권한 삭제 후 새 권한 부여)
+    //  7. 그룹의 역할 단일 업데이트 (기존 권한 삭제 후 새 권한 부여)
     // 📍 자바스크립트의 $.ajax({ url: `/api/groups/${GROUP_NO}/roles`, type: 'PUT' ... })와 매칭
     @PutMapping("/{groupNo}/roles")
     public ResponseEntity<Void> updateGroupRole(@PathVariable Long groupNo, @RequestBody Map<String, Long> payload) {
