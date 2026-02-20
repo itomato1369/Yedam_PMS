@@ -6,8 +6,8 @@
 
 <body>
 	<div layout:fragment="Content">
-		<!-- 프로젝트 아코디언 -->
 		<div class="accordion" id="settingsAccordion">
+			<!-- 프로젝트 아코디언 -->
 			<div class="accordion-item">
 				<h2 class="accordion-header">
 					<button class="accordion-button" type="button"
@@ -230,7 +230,7 @@
 											<th>상태</th>
 											<th>그룹명</th>
 											<th class="text-center">인원 수</th>
-								
+
 											<th>관리</th>
 										</tr>
 									</thead>
@@ -386,7 +386,7 @@
 				</div>
 			</div>
 		</div>
-<script>
+		<script>
 $(document).ready(function () {
 	// 📍 1. 전역 Map 추가 (잠금 전 원래 상태를 기억함)
     const projectOriginMap = {};
@@ -792,7 +792,14 @@ $(document).ready(function () {
     // 사용자 상태 변경 시 즉시 검색
     $('#userStatusSelect').on('change', performUserSearch);
     
-    
+ 	// 📍 사용자 등록 버튼 클릭 시 회원가입 페이지로 이동
+    $('#btnUserAdd').on('click', function() {
+        location.href = '/user/new';
+    });
+ 	
+    $('#btnProjectAdd').on('click', function() {
+        location.href = '/project/new';
+    });
     init();
 });
 </script>
