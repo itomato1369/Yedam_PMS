@@ -22,5 +22,8 @@ public class WorkUpdateDto {
 	private String workContent;
 	private Integer workDetailsNo;
 	private String workType;
+	private Integer projectNo;
+	private String projectName;
+	
 
 }

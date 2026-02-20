@@ -21,7 +21,7 @@
 </head>
 <body>
 	<div class="container">
-		<form id="workUpdate" method="post">
+		<form id="workUpdate" method="post" th:action="@{/project/{projectCode}/work/update(projectCode=${projectCode})}">
 			<!-- 일감번호 -->
 			<!-- 해당 일감번호에 대한 값을 가져옴 readonly -->
 			<div class="row mb-3">
