@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.pms.files.service.FilesUploadService;
 import com.pms.issue.mapper.IssueMapper;
 import com.pms.issue.web.IssueDto;
-import com.pms.issue.web.projectIssueDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,12 +24,6 @@ public class IssueService {
 	public List<IssueDto> findIssueList(String userId) {
 		List<IssueDto> issueList = issueMapper.selectIssue(userId);
 		System.out.println(issueList.toString());
-		return issueList;
-	}
-
-	// 일감 리스트 테스트
-	public List<projectIssueDto> findProjectIssueList(String userId) {
-		List<projectIssueDto> issueList = issueMapper.selectProjectIssue(userId);
 		return issueList;
 	}
 

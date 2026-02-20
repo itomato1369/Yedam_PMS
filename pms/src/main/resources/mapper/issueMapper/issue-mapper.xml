@@ -12,7 +12,8 @@
 		WHERE user_id = #{userId}
 		ORDER BY job_no
 	</select>
-
+	
+    <!-- 일감 등록 기능 -->
 	<insert id="insertIssue" parameterType="IssueDto">
 		<selectKey keyProperty="jobNo" resultType="Integer" order="BEFORE">
 			SELECT JOB_SEQ.NEXTVAL FROM DUAL
