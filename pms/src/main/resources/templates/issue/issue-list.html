@@ -12,7 +12,7 @@
 		<div class="mb-4 mt-3">
 			<!-- #lists.isEmpty는 thymeleaf의 유틸함수 -->
 			<h3 class="fw-bold">
-				<label th:if="${not #lists.isEmpty(issueList)}"             
+				<label th:if="${not #lists.isEmpty(issueList)}"
 					th:text="${issueList[0].projectName}" class="text-primary"></label>
 				<small class="text-muted">의 일감 조회</small>
 			</h3>
@@ -24,7 +24,6 @@
 				<div
 					th:replace="~{common/fragments/issue/dynamic-issue-list-search}"></div>
 			</div>
-
 			<div>
 				<button
 					th:onclick="|location.href='@{/project/{code}/issue/new(code=${projectCode})}'|"
@@ -72,17 +71,16 @@
 						</li>
 					</ul>
 				</div>
+			</div>
 
-				<div>
-					<button type="submit" class="btn btn-primary"></button>
-					<button
-						th:onclick="|location.href='@{/project/{code}/issue/new(code=${projectCode})}'|"
-						class="btn btn-primary text-white d-inline-flex">
-						일감 추가</button>
-					<button th:onclick="|location.href='@{/work/list}'|"
-						class="btn btn-primary text-white d-inline-flex">
-						소요시간 조회</button>
-				</div>
+			<div>
+				<button
+					th:onclick="|location.href='@{/project/{code}/issue/new(code=${projectCode})}'|"
+					class="btn btn-primary text-white d-inline-flex">
+					일감 추가</button>
+				<button th:onclick="|location.href='@{/work/list}'|"
+					class="btn btn-primary text-white d-inline-flex">
+					소요시간 조회</button>
 			</div>
 		</form>
 
@@ -103,13 +101,16 @@
 			</thead>
 			<tbody>
 				<tr th:each="issue : ${issueList}">
-					<td th:text="${issue.projectName}" th:value="${issue.projectNo}"></td>
+					<td th:text="${issue.projectName}"
+						th:data-project-code="${issue.projectCode}"></td>
 					<td th:text="${issue.jobNo}"></td>
 					<td th:text="${issue.title}"></td>
 					<td th:text="${issue.jobStatusName}"
-						th:value="${issue.jobStatusNo}"></td>
-					<td th:text="${issue.jobTypeName}" th:value="${issue.jobTypeNo}"></td>
-					<td th:text="${issue.priorityName}" th:value="${issue.priority}"></td>
+						th:data-job-status-no="${issue.jobStatusNo}"></td>
+					<td th:text="${issue.jobTypeName}"
+						th:data-job-type-no="${issue.jobTypeNo}"></td>
+					<td th:text="${issue.priorityName}"
+						th:data-priority="${issue.priority}"></td>
 					<td th:text="${issue.managerId}"></td>
 					<td>
 						<div class="btn-group" role="group">
@@ -123,6 +124,6 @@
 		</table>
 	</div>
 
-	<script th:src="{/js/issue/dynamicSearch.js}"></script>
+	<script th:src="@{/js/issue/dynamicSearch.js}"></script>
 </body>
 </html>

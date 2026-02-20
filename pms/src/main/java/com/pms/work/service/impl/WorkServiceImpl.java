@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.pms.work.dto.WorkDetailsDto;
 import com.pms.work.dto.WorkInsertDto;
 import com.pms.work.dto.WorkReportDto;
 import com.pms.work.dto.WorkSelectDto;
@@ -21,12 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class WorkServiceImpl implements WorkService {
 	// mapper와 연결
 	private final WorkMapper workMapper;
-	// 작업분류 조회
-	@Override
-	public List<WorkDetailsDto> findWorkDetails() {
-		return workMapper.selectWorkDetails();
-	};
-
+	
 	// 소요시간 전체 조회 + 검색기능
 	@Override
 	public List<WorkSelectDto> findAllWorkEntries(WorkSelectDto workSelectDto) {
@@ -54,8 +48,8 @@ public class WorkServiceImpl implements WorkService {
 	
 	// 내가 속한 프로젝트의 일감
 	@Override
-	public List<WorkInsertDto> findMyIssue(String userId) {
-		return workMapper.selectIssueInProject(userId);
+	public List<WorkInsertDto> findMyIssue(WorkInsertDto workInsertDto) {
+		return workMapper.selectIssueInProject(workInsertDto);
 	}
 
 	// 소요시간 등록
@@ -93,19 +87,20 @@ public class WorkServiceImpl implements WorkService {
 
 		workMapper.updateWorkEntries(workUpdateDto);
 	}
-	// 통합 소요시간 보고서
+	
+	// 통합 소요시간 보고서 
 	@Override
-	public List<WorkReportDto> findWorkReport(String type, WorkSelectDto workSelectDto) {
+	public List<WorkReportDto> findWorkReport(String type, WorkReportDto workReportDto) {
 		if (type == null) {
 			return null;
 		}
 		// 전달받은 type에 따라 각기 다른 mapper의 Method호출
 		switch (type.toLowerCase()) {
-		case "job": return workMapper.selectJobReport(workSelectDto);
-		case "project": return workMapper.selectProjectReport(workSelectDto);
-		case "users": return workMapper.selectUserReport(workSelectDto);
-		case "week": return workMapper.selectWeekReport(workSelectDto);
-		case "month": return workMapper.selectMonthReport(workSelectDto);
+		case "job": return workMapper.selectJobReport(workReportDto);
+		case "project": return workMapper.selectProjectReport(workReportDto);
+		case "users": return workMapper.selectUserReport(workReportDto);
+		case "week": return workMapper.selectWeekReport(workReportDto);
+		case "month": return workMapper.selectMonthReport(workReportDto);
 		default: return null; // 잘못된 type이 들어왔을 때
 		}
 	};

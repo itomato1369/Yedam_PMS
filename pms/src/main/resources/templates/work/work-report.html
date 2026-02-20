@@ -27,11 +27,15 @@
 <body>
 	<div class="container">
 		<div class="mb-3">
-			<label class="fw-bold fs-4">소요시간 보고서 조회</label>
+			<h3 class="fw-bold">
+				<label th:if="${reportList != null and !#lists.isEmpty(reportList)}"
+					th:text="${reportList[0].managerId}" class="text-primary"></label>
+				<small class="text-muted">의 소요시간 보고서</small>
+			</h3>
 		</div>
 
 		<!-- 검색조건  -->
-		<form th:action="@{/work/report}" method="get" id="reportSearchForm">
+		<form th:action="@{/project/{projectCode}/work/report(projectCode=${projectCode})}" method="get" id="reportSearchForm">
 			<div id="dynamicReportSearch" class="row g-3 mb-3">
 				<div
 					th:replace="~{common/fragments/work/dynamic-work-report-search}"></div>
@@ -49,7 +53,7 @@
 						<li><a class="dropdown-item add-condition" href="#"
 							data-target="field-project">프로젝트별</a></li>
 						<li><a class="dropdown-item add-condition" href="#"
-							data-target="field-users">사용자별</a></li>
+							data-target="field-users">담당자별</a></li>
 						<li><a class="dropdown-item add-condition" href="#"
 							data-target="field-projectWeek">프로젝트 주별</a></li>
 						<li><a class="dropdown-item add-condition" href="#"
@@ -60,7 +64,7 @@
 				<!-- 조회 버튼 -->
 				<button type="submit" class="btn btn-primary">조회</button>
 				<!-- 소요시간 조회로 이동-->
-				<a th:href="@{/work/list}"
+				<a th:href="@{/project/{projectCode}/work/list(projectCode=${projectCode})}"
 					class="btn btn-success text-white d-inline-flex align-items-center justify-content-center">소요시간
 					조회</a>
 			</div>
@@ -75,7 +79,7 @@
 						or reportType == 'week' or reportType == 'month'}"
 							class="bi bi-folder2-open me-1">프로젝트</th>
 						<th th:if="${reportType == 'users'}"
-							class="bi bi-person-badge me-1">사용자</th>
+							class="bi bi-person-badge me-1">담당자</th>
 						<th th:if="${reportType == 'job'}"
 							class="bi bi-card-checklist me-1">일감</th>
 						<th class="bi bi-calendar-range me-1">기간</th>
@@ -91,7 +95,7 @@
 							<span th:if="${reportType != 'job' and reportType != 'users'}"
 							th:text="${row.projectName}"></span> <span
 							th:if="${reportType == 'users'}"
-							th:text="${row.userId} + ' (' + ${row.projectName} + ')'"></span>
+							th:text="${row.managerId} + ' (' + ${row.projectName} + ')'"></span>
 						</td>
 						<td><span th:if="${reportType == 'week'}"
 							th:text="${row.workWeek}"></span> <span

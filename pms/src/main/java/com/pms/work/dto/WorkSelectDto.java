@@ -12,7 +12,8 @@ import lombok.Setter;
 @Setter
 @Alias("WorkSelectDto")
 public class WorkSelectDto {
-	private String type; // 보고서 종류 일감, 프로젝트, 사용자, 주월별 
+	
+	private String projectCode;
 	private Integer projectNo;
 	private String projectName;
 	private String userId;
