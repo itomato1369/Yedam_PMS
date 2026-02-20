@@ -1,5 +1,7 @@
 package com.pms.project.controller;
 
+import java.util.List;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.pms.config.CustomUserDetails;
 import com.pms.project.common.mapper.ProjectCommonStatusMapper;
+import com.pms.project.dto.GanttDTO;
 import com.pms.project.dto.ProjectInsertDTO;
 import com.pms.project.dto.ProjectSearchDTO; // 추가
 import com.pms.project.service.ProjectService;
@@ -123,7 +126,9 @@ public class ProjectController {
     }
     
     @GetMapping("/user/{projectCode}/gantt")
-    public String getGantProject(@PathVariable String projectCode) {
+    public String getGantProject(@PathVariable String projectCode, Model model) {
+    	model.addAttribute("ganttData", projectService.findGanttDataByCode(projectCode));
+    	
     	return "project/gantt";
     }
 }

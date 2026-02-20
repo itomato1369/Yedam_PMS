@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.pms.project.dto.GanttDTO;
 import com.pms.project.dto.JobDTO;
 import com.pms.project.dto.MemberDTO;
 import com.pms.project.dto.NoticeDTO;
@@ -43,4 +44,8 @@ public interface ProjectMapper {
     // 하위 프로젝트 목록 조회(이름, 식별자, 상태)
     List<ProjectSelectDTO> selectFirstChildsByCode(@Param("projectCode") String projectCode, Integer active, Integer locked );
     
+    
+    // GanttChart
+    List<GanttDTO> selectGanttData(@Param("projectCode") String projectCode);
+
 }

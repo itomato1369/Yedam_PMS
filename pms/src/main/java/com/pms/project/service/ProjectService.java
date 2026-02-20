@@ -3,9 +3,9 @@
 	import java.util.List;
 import java.util.Map;
 
+import com.pms.project.dto.GanttDTO;
 import com.pms.project.dto.NoticeDTO;
 import com.pms.project.dto.ParentProjectDTO;
-import com.pms.project.dto.ProjectGMemberDTO;
 import com.pms.project.dto.ProjectInsertDTO;
 import com.pms.project.dto.ProjectSearchDTO;
 import com.pms.project.dto.ProjectSelectDTO;
@@ -33,4 +33,7 @@ import com.pms.project.dto.ProjectSelectDTO;
 	    Map<String, List<String>> findGroupMemberByCode(String projectCode);
 	    List<NoticeDTO> findNoties();
 	    List<ProjectSelectDTO> findFirstChildsByCode(String projectCode);
+	    
+	    // 간트차트
+	    Map<String, Object> findGanttDataByCode(String projectCode);
 	}

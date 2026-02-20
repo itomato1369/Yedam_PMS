@@ -2,6 +2,8 @@ package com.pms.project.service.impl;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -13,6 +15,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.pms.project.dto.GanttDTO;
 import com.pms.project.dto.JobDTO;
 import com.pms.project.dto.MemberDTO;
 import com.pms.project.dto.NoticeDTO;
@@ -212,6 +215,26 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public List<ProjectSelectDTO> findFirstChildsByCode(String projectCode) {
 		return projectMapper.selectFirstChildsByCode(projectCode, ProjectStatus.ACTIVE.getCode(), ProjectStatus.LOCKED.getCode());
+	}
+
+	@Override
+	public Map<String, Object> findGanttDataByCode(String projectCode) {
+		List<GanttDTO> list = projectMapper.selectGanttData(projectCode);
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		
+		list.forEach(dto -> {
+			if (dto.getStartDate() != null && dto.getEndDate() != null) {
+	            LocalDate start = LocalDate.parse(dto.getStartDate(), formatter);
+	            LocalDate end   = LocalDate.parse(dto.getEndDate(), formatter);
+	            dto.setDuration((int) ChronoUnit.DAYS.between(start, end) + 1);
+	        }
+		});
+		
+		Map<String, Object> result = new LinkedHashMap<>();
+	    result.put("data", list);
+	    result.put("links", List.of());
+	    return result;
 	}
 	
 }
