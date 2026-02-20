@@ -122,4 +122,8 @@ public class ProjectController {
     	return "null";
     }
     
+    @GetMapping("/{projectCode}/gantt")
+    public String getGantProject(@PathVariable String projectCode) {
+    	return "project/gantt";
+    }
 }
