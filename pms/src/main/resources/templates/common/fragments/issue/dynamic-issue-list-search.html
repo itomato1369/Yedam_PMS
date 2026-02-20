@@ -1,0 +1,124 @@
+<!-- 조건을 추가하여 검색 -->
+<!-- 프로젝트 명 -->
+<div th:fragment="ProjectNameField" class="col-md-3 condition-field d-none"
+	id="field-projectName">
+	<div class="card card-body bg-light shadow-sm">
+		<div class="d-flex justify-content-between align-items-center mb-2">
+			<label class="fw-bold small">프로젝트 명</label>
+			<button type="button" class="btn-close btn-remove"
+				data-target="field-projectName"></button>
+		</div>
+		<input type="text" name="projectName" class="form-control form-control-sm"
+			placeholder="프로젝트 명을 입력하세요">
+	</div>
+</div>
+
+<!-- 일감번호 -->
+<div th:fragment="JobNoField" class="col-md-3 condition-field d-none"
+	id="field-jobNo">
+	<div class="card card-body bg-light shadow-sm">
+		<div class="d-flex justify-content-between align-items-center mb-2">
+			<label class="fw-bold small">일감 번호</label>
+			<button type="button" class="btn-close btn-remove"
+				data-target="field-jobNo"></button>
+		</div>
+		<input type="number" name="jobNo" class="form-control form-control-sm"
+			placeholder="일감 번호를 선택하세요">
+	</div>
+</div>
+<!-- 일감제목 -->
+<div th:fragment="JobTitleField" class="col-md-3 condition-field d-none"
+	id="field-jobTitle">
+	<div class="card card-body bg-light shadow-sm">
+		<div class="d-flex justify-content-between align-items-center mb-2">
+			<label class="fw-bold small">일감 제목</label>
+			<button type="button" class="btn-close btn-remove"
+				data-target="field-jobTitle"></button>
+		</div>
+		<input type="text" name="title" class="form-control form-control-sm"
+			placeholder="일감 제목을 입력하세요">
+	</div>
+</div>
+<!-- 일감상태 value option 사용해서 다시-->
+<div th:fragment="JobStatusField" class="col-md-3 condition-field d-none"
+	id="field-jobStatus">
+	<div class="card card-body bg-light shadow-sm">
+		<div class="d-flex justify-content-between align-items-center mb-2">
+			<label class="fw-bold small">상태</label>
+			<button type="button" class="btn-close btn-remove"
+				data-target="field-jobStatus"></button>
+		</div>
+		<input type="text" name="status" class="form-control form-control-sm"
+			placeholder="일감 상태를 입력하세요">
+	</div>
+</div>
+
+<!-- 우선순위 value option 사용해서 다시-->
+<div th:fragment="JobPriorityField" class="col-md-3 condition-field d-none"
+	id="field-priority">
+	<div class="card card-body bg-light shadow-sm">
+		<div class="d-flex justify-content-between align-items-center mb-2">
+			<label class="fw-bold small">우선순위</label>
+			<button type="button" class="btn-close btn-remove"
+				data-target="field-priority"></button>
+		</div>
+		<input type="text" name="status" class="form-control form-control-sm"
+			placeholder="우선순위를 입력하세요">
+	</div>
+</div>
+
+<!-- 일감 담당자 -->
+<div th:fragment="WorkersField" class="col-md-3 condition-field d-none"
+	id="field-manager">
+	<div class="card card-body bg-light shadow-sm">
+		<div class="d-flex justify-content-between align-items-center mb-2">
+			<label class="fw-bold small">담당자</label>
+			<button type="button" class="btn-close btn-remove"
+				data-target="field-manager"></button>
+		</div>
+		<input type="text" name="manager" class="form-control form-control-sm"
+			placeholder="담당자를 선택하세요">
+	</div>
+</div>
+<!-- 시작 날짜 -->
+<div th:fragment="JobStartDateField" class="col-md-3 condition-field d-none"
+	id="field-startDate">
+	<div class="card card-body bg-light shadow-sm">
+		<div class="d-flex justify-content-between align-items-center mb-2">
+			<label class="fw-bold small">시작 날짜</label>
+			<button type="button" class="btn-close btn-remove"
+				data-target="field-startDate"></button>
+		</div>
+		<input type="text" name="jobStart"
+			class="form-control form-control-sm datepicker"
+			placeholder="시작 날짜를 선택하세요">
+	</div>
+</div>
+<!-- 마감 날짜 -->
+<div th:fragment="JobEndDateField" class="col-md-3 condition-field d-none"
+	id="field-endDate">
+	<div class="card card-body bg-light shadow-sm">
+		<div class="d-flex justify-content-between align-items-center mb-2">
+			<label class="fw-bold small">마감 날짜</label>
+			<button type="button" class="btn-close btn-remove"
+				data-target="field-endDate"></button>
+		</div>
+		<input type="text" name="jobEnd"
+			class="form-control form-control-sm datepicker"
+			placeholder="마감 날짜를 선택하세요">
+	</div>
+</div>
+<!-- 진척도 -->
+<div th:fragment="JobProgress"
+	class="col-md-3 condition-field d-none" id="field-progress">
+	<div class="card card-body bg-light shadow-sm">
+		<div class="d-flex justify-content-between align-items-center mb-2">
+			<label class="fw-bold small">진척도</label>
+			<button type="button" class="btn-close btn-remove"
+				data-target="field-progress"></button>
+		</div>
+		<input type="text" name="progress"
+			class="form-control form-control-sm" placeholder="진척도를 입력하세요">
+	</div>
+</div>
+

@@ -15,19 +15,18 @@
                    , FN_GET_CODE_NAME(j.priority) AS priority_name
 		           , j.manager_id
 		FROM job j
-                 JOIN project p
+                 JOIN project p 
                  ON j.project_no = p.project_no
-<<<<<<< Updated upstream:pms/src/main/resources/mapper/issueMapper/project-issue-mapper.xml
         WHERE j.user_id = #{userId}
-=======
+
        <!--WHERE p.project_code = #{projectCode}--> 
         <!-- <if test="userId != null">
             AND j.user_id = #{userId} 
         </if> -->
         
+        WHERE j.user_id = #{userId} 
         
         
->>>>>>> Stashed changes:pms/src/main/resources/mapper/issueMapper/issue-project-mapper.xml
 	</select>
 
 

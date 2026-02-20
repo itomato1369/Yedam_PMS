@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/project/{projectCode}/issue")
+@RequestMapping("/project/{projectCode}/issue")  
 public class projectIssueController {
 
 	private final IssueService issueService;
@@ -43,7 +43,7 @@ public class projectIssueController {
 	@PostMapping("/insert")
 	public String addIssue(@AuthenticationPrincipal CustomUserDetails customUser, @PathVariable String projectCode, IssueDto issueDto) {
 		issueDto.setUserId(customUser.getUsername());
-		Integer jobNo = issueService.addIssue(issueDto);
+		Integer jobNo = issueService.addIssue(issueDto, null);
 
 		return "redirect:/issue/info?jobNo=" + jobNo;
 	}

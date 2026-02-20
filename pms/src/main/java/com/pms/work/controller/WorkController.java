@@ -24,11 +24,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-<<<<<<< Updated upstream
-@RequestMapping("/project/{projectCode}/{issueNo}/work")
-=======
 @RequestMapping("/project/{projectCode}/work")
->>>>>>> Stashed changes
 public class WorkController {
 	private final WorkService workService;
 
