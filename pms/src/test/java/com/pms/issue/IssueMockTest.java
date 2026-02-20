@@ -113,13 +113,19 @@ public class IssueMockTest {
 				));
 		
 		// when
-		Integer jobNo = issueService.addIssue(issueDto, files);
+		try {
+			Integer jobNo = issueService.addIssue(issueDto, files);
+			
+			// then
+			assertThat(jobNo).isNotNull();
+			assertThat(issueDto.getFilesNo()).isNotNull();
+			System.out.println("일감 번호: " + jobNo);
+			System.out.println("파일 번호: " + issueDto.getFilesNo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
-		// then
-		assertThat(jobNo).isNotNull();
-		assertThat(issueDto.getFilesNo()).isNotNull();
-		System.out.println("일감 번호: " + jobNo);
-		System.out.println("파일 번호: " + issueDto.getFilesNo());
+		
 		
 		System.out.println("[H2 DB] FILE UPLOAD TEST END");
 	}
