@@ -46,6 +46,7 @@ public class IssueService {
 			Integer filesNo = filesUploadService.uploadFiles(files, userId);
 			issueDto.setFilesNo(filesNo);
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new RuntimeException("파일 저장 중 에러가 발생하였습니다.");
 		}
 

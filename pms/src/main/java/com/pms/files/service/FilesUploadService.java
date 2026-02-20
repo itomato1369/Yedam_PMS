@@ -1,7 +1,9 @@
 package com.pms.files.service;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,6 +16,7 @@ import com.pms.files.entity.FilesDetailsEntity;
 import com.pms.files.entity.FilesEntity;
 import com.pms.files.repository.FilesDetailsRepository;
 import com.pms.files.repository.FilesRepository;
+import com.pms.files.util.FileCryptoUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,13 +26,13 @@ import lombok.RequiredArgsConstructor;
 public class FilesUploadService {
 
     private final FilesDetailsRepository filesDetailsRepository;
-
 	private final FilesRepository filesRepository;
+	private final FileCryptoUtil fileCryptoUtil;
 
 	@Value("${file.upload.path}")
 	private String uploadPath;
 
-	public Integer uploadFiles(List<MultipartFile> files, String userId) throws IllegalStateException, IOException {
+	public Integer uploadFiles(List<MultipartFile> files, String userId) throws Exception {
 		if(files == null || files.isEmpty()) {
 			return null;
 		}
@@ -50,8 +53,12 @@ public class FilesUploadService {
 		for (MultipartFile file : files) {
 			String fileName = file.getOriginalFilename();
 			String fileUuid = UUID.randomUUID().toString() + "_" + fileName;
-
-			file.transferTo(new File(uploadPath + fileUuid));
+			File target = new File(uploadDir, fileUuid);
+			
+			try (InputStream is = file.getInputStream();
+				OutputStream os = new FileOutputStream(target)) {
+				fileCryptoUtil.encrypt(is, os);
+			}
 			
 			FilesDetailsEntity filesDetails = FilesDetailsEntity
 												.builder()
