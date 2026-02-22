@@ -34,6 +34,8 @@ public interface ProjectMapper {
     int insertProject(ProjectInsertDTO projectInsertDTO);
     // 신규 프로젝트 등록 시 상위프로젝트 멤버 상속
     int insertInheritedGroups(@Param("newProjectNo") int newProjectNo, @Param("parentProjectNo") int parentProjectNo);
+    // 상위 프로젝트의 시작-종료 기간 조회 
+    ProjectInsertDTO selectParentProjectDuration(ProjectInsertDTO projectInsertDTO);
     
     // 프로젝트 개요 페이지 
 

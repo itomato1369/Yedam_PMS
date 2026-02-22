@@ -170,6 +170,14 @@
 	        pm                FROM g_project
 	    WHERE project_no = #{parentProjectNo}
 	</insert>
+	<!--/* 상위프로젝트 기간 조회 */-->
+	<select id="selectParentProjectDuration">
+		SELECT
+		  start_date
+		  , end_date
+		FROM project
+		WHERE project_no = #{parentProjectNo}
+	</select>
 	
 	<!--/* 개요페이지 */-->
 	<!--/* 프로젝트의 모든 그룹의 모든 멤버 조회 */-->

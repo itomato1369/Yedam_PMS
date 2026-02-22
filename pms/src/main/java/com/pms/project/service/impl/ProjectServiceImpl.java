@@ -169,7 +169,29 @@ public class ProjectServiceImpl implements ProjectService {
 		return projectMapper.selectParentProjects();
 	}
 
-	// 새 프로젝트 페이지 - INSERT 결과로 생성된 row count 확인하여 성공 여부 판단, 복수테이블에 복수컬럼에 작업이 들어가야해서 트랜잭션
+	// 새 프로젝트 페이지
+	@Override
+	public boolean findParentProjectDuration(ProjectInsertDTO projectInsertDTO) {
+		// 1. 부모 프로젝트가 지정되지 않은 경우 (최상위 프로젝트 생성) 바로 통과
+	    if (projectInsertDTO.getParentProjectNo() == null || projectInsertDTO.getParentProjectNo() == 0) {
+	        return true; 
+	    }
+		ProjectInsertDTO parent = projectMapper.selectParentProjectDuration(projectInsertDTO);
+		
+		// 2. 조회결과에 오류있을 시
+		if (parent == null || parent.getStartDate() == null || parent.getEndDate() == null) {
+	        return false;
+	    }
+		
+		// 3. 기간설정 잘못된 경우 (자식 시작일 < 부모시작일 || 자식종료일 > 부모 종료일) 에러반환 
+		if ( convertToLocalDate(projectInsertDTO.getStartDate()).isBefore(convertToLocalDate(parent.getStartDate()))
+				|| 
+			convertToLocalDate(projectInsertDTO.getEndDate()).isAfter( convertToLocalDate(parent.getEndDate())) ) {
+			return false;
+		}
+		return true;
+	}
+	// INSERT 결과로 생성된 row count 확인하여 성공 여부 판단, 복수테이블에 복수컬럼에 작업이 들어가야해서 트랜잭션
 	@Override
 	@Transactional
 	public boolean addProject(ProjectInsertDTO projectInsertDTO) {

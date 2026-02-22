@@ -84,6 +84,12 @@ public class ProjectController {
     	// 로그인 사용자 정보에서 id 추출
     	dto.setUserId(customUser.getUserEntity().getUserId()); 
     	
+    	if(!projectService.findParentProjectDuration(dto)) {
+    		redirectAttributes.addFlashAttribute("errorMessage", "하위프로젝트의 작업기간은 상위프로젝트의 작업기간을 벗어날 수 없습니다.");
+			redirectAttributes.addFlashAttribute("project", dto);
+			return "redirect:/project/new";
+    	}
+    	
     	boolean isSuccess = projectService.addProject(dto);
     	if (isSuccess) {
     		// 임시 flash 메모리에 Toast 표시값 저장 

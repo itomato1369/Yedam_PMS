@@ -24,6 +24,8 @@ public interface ProjectService {
     
     // 새 프로젝트 페이지
     boolean addProject(ProjectInsertDTO projectInsertDTO);
+    // 상위프로젝트가 존재한다면 새프로젝트 등록 전 기간 유효성검사
+    boolean findParentProjectDuration(ProjectInsertDTO projectInsertDTO);
     
     // 개요페이지
     Map<String, List<String>> findGroupMemberByCode(String projectCode);
