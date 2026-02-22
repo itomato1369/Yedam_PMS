@@ -32,8 +32,8 @@ public class ProjectSecurityTest {
     }
 
 	@Test
-	@DisplayName("프로젝트 멤버 접근 확인(아직 페이지가 없어서 isNotFound)")
-	public void project_member_get() throws Exception {
+	@DisplayName("프로젝트 멤버 접근 확인")
+	public void projectMemberCheck() throws Exception {
 		mockMvc.perform(get("/project/user/PMS100/")
 						.with(user(createCustomUser("song", false)))
 						.with(csrf()))
@@ -42,7 +42,7 @@ public class ProjectSecurityTest {
 	
 	@Test
 	@DisplayName("권한 없는 유저의 접근 확인(403 error)")
-	public void unauthorized_get() throws Exception {
+	public void unauthorizedCheck() throws Exception {
 		mockMvc.perform(get("/project/user/PMS100/")
 						.with(user(createCustomUser("tester", false)))
 						.with(csrf()))
@@ -50,11 +50,29 @@ public class ProjectSecurityTest {
 	}
 	
 	@Test
-	@DisplayName("관리자 접근 확인(아직 페이지가 없어서 isNotFound)")
-	public void admin_get() throws Exception {
+	@DisplayName("관리자 접근 확인")
+	public void adminCheck() throws Exception {
 		mockMvc.perform(get("/project/user/PMS100/")
 						.with(user(createCustomUser("admin", true)))
 						.with(csrf()))
 				.andExpect(status().isNotFound());
+	}
+	
+	@Test
+	@DisplayName("프로젝트 접근 시 PM 권한 확인(권한 있음)")
+	public void IsPm() throws Exception {
+		mockMvc.perform(get("/project/user/PMS100/")
+							.with(user(createCustomUser("song", false)))
+							.with(csrf()))
+				.andExpect(status().isNotFound());
+	}
+	
+	@Test
+	@DisplayName("프로젝트 접근 시 PM 권한 확인(권한 없음)")
+	public void IsNotPm() throws Exception {
+		mockMvc.perform(get("/project/user/PMS100/")
+							.with(user(createCustomUser("tester", false)))
+							.with(csrf()))
+				.andExpect(status().isForbidden());
 	}
 }
