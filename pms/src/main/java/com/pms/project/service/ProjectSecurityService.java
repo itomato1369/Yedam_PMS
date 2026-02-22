@@ -15,6 +15,10 @@ public class ProjectSecurityService {
 
 	@Transactional(readOnly = true)
 	public boolean isAuth(String userId, String projectCode, String action) {
-		return projectSecurityMapper.checkAuth(userId, projectCode, action) > 0;
+		if(projectSecurityMapper.checkPm(userId, projectCode)) {
+			return true;
+		}
+		
+		return projectSecurityMapper.checkAuth(userId, projectCode, action);
 	}
 }

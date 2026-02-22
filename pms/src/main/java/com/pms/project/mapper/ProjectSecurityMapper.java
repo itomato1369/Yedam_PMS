@@ -5,9 +5,14 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface ProjectSecurityMapper {
-	int checkAuth(
+	boolean checkAuth(
 		@Param("userId") String userId,
 		@Param("projectCode") String projectCode,
 		@Param("action") String action
 		);
+	
+	boolean checkPm(
+			@Param("userId") String userId, 
+			@Param("projectCode") String projectCode
+			);
 }
