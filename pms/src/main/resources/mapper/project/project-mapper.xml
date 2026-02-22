@@ -142,7 +142,6 @@
 		    update_at,          -- 수정일
 		    start_date,         -- 시작일
 		    end_date,           -- 종료일
-		    parent_member_yn,   -- 멤버상속
 		    public_yn,          -- 공개여부
 		    status              -- 상태
 		) VALUES (
@@ -157,7 +156,6 @@
 	        , NULL                            -- 수정일은 생성 시 null
 	        , #{startDate}                    -- 필수값(오늘 이전 날짜 불가)
 	        , #{endDate}                      -- 필수값(오늘 이전 날짜 불가)
-	        , NVL(#{parentMemberYn}, 0)       -- null able, default: 0
 	        , NVL(#{publicYn}, 0)             -- null able, default: 0
 	        , #{status}                       -- 필수값: Service 에서 세팅
     )
