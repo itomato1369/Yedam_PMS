@@ -110,6 +110,7 @@ public class ProjectController {
     	// 세션을 활용하여 pathVal 사용하지않는 페이지에서 프로젝트 코드값 조회
     	session.setAttribute("projectCode", projectCode);
     	
+    	model.addAttribute("trackerData", projectService.findJobTrackerPivot(projectCode));
     	model.addAttribute("groupMembers", projectService.findGroupMemberByCode(projectCode));
     	model.addAttribute("childProjects", projectService.findFirstChildsByCode(projectCode));
 		model.addAttribute("news", projectService.findNoties());

@@ -3,6 +3,7 @@ package com.pms.project.service;
 import java.util.List;
 import java.util.Map;
 
+import com.pms.project.dto.IssueTrackerDTO;
 import com.pms.project.dto.NoticeDTO;
 import com.pms.project.dto.ParentProjectDTO;
 import com.pms.project.dto.ProjectInsertDTO;
@@ -28,6 +29,7 @@ public interface ProjectService {
     boolean findParentProjectDuration(ProjectInsertDTO projectInsertDTO);
     
     // 개요페이지
+    IssueTrackerDTO findJobTrackerPivot(String projectCode);
     Map<String, List<String>> findGroupMemberByCode(String projectCode);
     List<NoticeDTO> findNoties();
     List<ProjectSelectDTO> findFirstChildsByCode(String projectCode);

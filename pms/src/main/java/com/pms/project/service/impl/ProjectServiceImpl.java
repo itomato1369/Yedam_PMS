@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.pms.project.dto.GanttDTO;
+import com.pms.project.dto.IssueTrackerDTO;
 import com.pms.project.dto.JobDTO;
 import com.pms.project.dto.MemberDTO;
 import com.pms.project.dto.NoticeDTO;
@@ -239,6 +240,50 @@ public class ProjectServiceImpl implements ProjectService {
 
 
 	// 개요페이지
+	@Override
+	@Transactional(readOnly = true)
+	public IssueTrackerDTO findJobTrackerPivot(String projectCode) {
+		
+		IssueTrackerDTO trackerDTO = new IssueTrackerDTO();
+		
+		// 피벗 In 절 쿼리를 만들기 위한 상태목록조회 쿼리 - oracle g11 에는 피벗 in 절 동적쿼리 지원안한다고함
+		List<String> headers = projectMapper.selectJobStatusNames();
+		trackerDTO.setHeaders(headers);
+
+		if (headers != null && !headers.isEmpty()) {
+	        // 3. 가져온 리스트로 반복문을 돌려 오라클 PIVOT IN 절 문자열 조립
+	        StringBuilder pivotBuilder = new StringBuilder();
+	        for (int i = 0; i < headers.size(); i++) {
+	            String status = headers.get(i);
+	            pivotBuilder.append("'").append(status).append("' AS \"").append(status).append("\"");
+	            
+	            // 마지막 요소가 아니면 쉼표 추가
+	            if (i < headers.size() - 1) {
+	                pivotBuilder.append(", ");
+	            }
+	        }
+	        
+	        String pivotInSQL = pivotBuilder.toString(); 
+	        
+	        // 조립된 문자열을 매퍼로 넘겨 피벗 데이터(Map 리스트) 조회
+	        List<Map<String, Object>> rows = projectMapper.selectJobTrackerPivot(projectCode, pivotInSQL);
+	        
+	        // 5. 가로행 합계(Total) 계산 로직
+	        for (Map<String, Object> row : rows) {
+	            long total = 0;
+	            for (String header : headers) {
+	                Object val = row.get(header); // AS "상태명" 덕분에 키값은 상태명과 동일
+	                if (val instanceof Number) {
+	                    total += ((Number) val).longValue();
+	                }
+	            }
+	            row.put("합계", total); // 계산된 합계를 Map에 추가
+	        }
+	        trackerDTO.setRows(rows);
+	    }
+		
+		return trackerDTO;
+	}
 	
 	@Override
 	public Map<String, List<String>> findGroupMemberByCode(String projectCode) {
@@ -277,5 +322,5 @@ public class ProjectServiceImpl implements ProjectService {
 	    result.put("links", List.of());
 	    return result;
 	}
-	
+
 }

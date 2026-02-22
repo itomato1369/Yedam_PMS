@@ -1,6 +1,7 @@
 package com.pms.project.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -38,7 +39,12 @@ public interface ProjectMapper {
     ProjectInsertDTO selectParentProjectDuration(ProjectInsertDTO projectInsertDTO);
     
     // 프로젝트 개요 페이지 
-
+    
+    // 테이블 헤더 및 반복문 기준이 될 상태 목록 조회
+    List<String> selectJobStatusNames();
+    // 테이블 데이터 조회
+    List<Map<String, Object>> selectJobTrackerPivot(@Param("projectCode") String projectCode, @Param("pivotInSQL") String pivotInSQL);
+    
     // 프로젝트에 소속된 모든 그룹의 모든 멤버 표시
     List<ProjectGMemberDTO> selectGroupMemberByCode(@Param("projectCode") String projectCode);
     // 최신 공지사항 목록 조회
