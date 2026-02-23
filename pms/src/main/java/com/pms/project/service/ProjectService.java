@@ -31,6 +31,7 @@ public interface ProjectService {
     boolean findParentProjectDuration(ProjectInsertDTO projectInsertDTO);
     
     // 개요페이지
+    ProjectInsertDTO findInfoByCode(String projectCode);
     IssueTrackerDTO findJobTrackerPivot(String projectCode);
     Map<String, List<String>> findGroupMemberByCode(String projectCode);
     List<NoticeDTO> findNoties();

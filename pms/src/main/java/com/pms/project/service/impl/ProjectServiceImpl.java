@@ -239,6 +239,11 @@ public class ProjectServiceImpl implements ProjectService {
 
 	// 개요페이지
 	@Override
+	public ProjectInsertDTO findInfoByCode(String projectCode) {
+		return projectMapper.selectInfoByCode(projectCode);
+	}
+	
+	@Override
 	@Transactional(readOnly = true)
 	public IssueTrackerDTO findJobTrackerPivot(String projectCode) {
 		

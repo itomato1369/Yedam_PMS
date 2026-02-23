@@ -41,7 +41,7 @@ public interface ProjectMapper {
     ProjectInsertDTO selectParentProjectDuration(ProjectInsertDTO projectInsertDTO);
     
     // 프로젝트 개요 페이지 
-    
+    ProjectInsertDTO selectInfoByCode(@Param("projectCode") String projectCode);
     // 테이블 헤더 및 반복문 기준이 될 상태 목록 조회
     List<String> selectJobStatusNames();
     // 테이블 데이터 조회
