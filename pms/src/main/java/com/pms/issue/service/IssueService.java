@@ -1,12 +1,15 @@
 package com.pms.issue.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.pms.files.repository.FilesDetailsRepository;
+import com.pms.files.service.FilesDeleteService;
 import com.pms.files.service.FilesUploadService;
 import com.pms.issue.mapper.IssueMapper;
 import com.pms.issue.web.IssueDto;
@@ -18,8 +21,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class IssueService {
 
+
 	private final FilesUploadService filesUploadService;
+	private final FilesDeleteService filesDeleteService;
+	private final FilesDetailsRepository filesDetailsRepository;
 	private final IssueMapper issueMapper;
+
 
 	// 일감 리스트 전체 조회 + 조건 검색기능
 	public List<IssueSelectDto> findIssueList(IssueSelectDto issueSelectDto) {
@@ -70,6 +77,20 @@ public class IssueService {
 		Integer jobNo = issueDto.getJobNo();
 
 		return jobNo;
+	}
+	
+	// 일감 수정
+	@Transactional
+	public void modifyIssue(IssueDto issueDto, List<Integer> deleteFileList) {
+		// 파일 삭제
+		filesDeleteService.deleteFiles(deleteFileList);
+		
+		// 일감 업데이트 -> 히스토리 저장
+		Optional.ofNullable(issueDto.getFilesNo())
+	    		.filter(filesNo -> !filesDetailsRepository.existsByFilesEntity_FilesNo(filesNo))
+	    		.ifPresent(filesNo -> issueDto.setFilesNo(null));
+		issueMapper.updateIssue(issueDto);
+		issueMapper.insertIssueHistory(issueDto);
 	}
 
 }

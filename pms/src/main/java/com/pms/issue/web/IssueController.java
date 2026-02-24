@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -88,13 +89,26 @@ public class IssueController {
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	// 일감 수정
+	@PutMapping("/update")
+	public String modifyIssue(
+					@AuthenticationPrincipal CustomUserDetails customUser,
+					@PathVariable String projectCode,
+					IssueDto issueDto,
+					@RequestParam(value = "deleteFiles", required = false) List<Integer> deleteFiles,
+					// TODO 추후에 파일 추가 구현하기
+					//@RequestParam(value = "files", required = false) List<MultipartFile> newFiles,
+					RedirectAttributes redirectAttributes) {
+		try {
+			issueDto.setUserId(customUser.getUsername());
+			issueService.modifyIssue(issueDto, deleteFiles);
+			redirectAttributes.addFlashAttribute("message", "일감이 수정되었습니다.");
+			return "redirect:/project/user/" + projectCode + "/issue/info?jobNo=" + issueDto.getJobNo();
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("error", "일감이 수정 중 오류가 발생하였습니다.");
+			return "redirect:/project/user/" + projectCode + "/issue/info?jobNo=" + issueDto.getJobNo();
+		}		
+	}
+		
 }

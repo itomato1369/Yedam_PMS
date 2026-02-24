@@ -134,8 +134,6 @@ public class IssueMockTest {
 			e.printStackTrace();
 		}
 		
-		
-		
 		System.out.println("[H2 DB] FILE UPLOAD TEST END");
 	}
 	

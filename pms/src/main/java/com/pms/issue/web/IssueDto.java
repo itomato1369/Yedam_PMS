@@ -35,4 +35,13 @@ public class IssueDto {
 	private Integer filesNo;
     private Integer commonNo;
     private String commonName;
+    
+    // 히스토리
+    private Integer historyNo;
+    private String comment;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date historyDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date deleteDate;
+    
 }

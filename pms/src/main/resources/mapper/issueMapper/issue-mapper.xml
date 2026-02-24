@@ -112,6 +112,42 @@
 		#{parentJobNo}
 		)
 	</insert>
-	
+
 	<!-- 일감 수정 -->
+	<update id="updateIssue" parameterType="IssueDto">
+		UPDATE JOB
+		SET PUBLIC_ROLE = #{publicRole},
+		TITLE = #{title},
+		CONTENT = #{content},
+		PRIORITY = #{priority},
+		START_DATE = #{startDate},
+		END_DATE = #{endDate},
+		PROGRESS = #{progress},
+		JOB_TYPE_NO = #{jobTypeNo},
+		JOB_STATUS_NO = #{jobStatusNo},
+		PARENT_JOB_NO = #{parentJobNo, jdbcType=INTEGER},
+		FILES_NO = #{filesNo, jdbcType=INTEGER}
+		WHERE JOB_NO = #{jobNo}
+	</update>
+
+	<!-- 히스토리 저장 -->
+	<insert id="insertIssueHistory" parameterType="IssueDto">
+		INSERT INTO HISTORY (
+		history_no
+		, comment
+		, user_id
+		, history_date
+		, delete_date
+		, job_no
+		) VALUES (
+		HISTORY_SEQ.NEXTVAL
+		, #{comment}
+		, #{userId}
+		, CURRENT_TIMESTAMP
+		, #{deleteDate}
+		, #{jobNo}
+		)
+	</insert>
+	
+	
 </mapper>

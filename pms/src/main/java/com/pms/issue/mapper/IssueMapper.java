@@ -22,6 +22,12 @@ public interface IssueMapper {
 	// 상위 일감 조회
 	List<IssueDto> selectParentIssue(IssueDto issueDto);
 	
+	// 일감 수정
+	Integer updateIssue(IssueDto issueDto);
+	
+	// 히스토리 저장
+	Integer insertIssueHistory(IssueDto issueDto);
+	
 	Integer insertIssue(IssueDto issueDto);
 
 }
