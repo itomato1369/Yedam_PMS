@@ -532,15 +532,66 @@ function hideMemoForm() { document.getElementById('memoInputForm').classList.add
 function saveMemo() {
     const content = document.getElementById('memoTextarea').value.trim();
     if (!content) return;
+
     const csrf = getCsrf();
-    fetch('/api/memos', { method: 'POST', headers: { 'Content-Type': 'application/json', [csrf.header]: csrf.token }, body: JSON.stringify({ content }) })
-    .then(res => res.ok ? location.reload() : alert("저장 실패"));
+    const headers = {
+        'Content-Type': 'application/json'
+    };
+
+    // CSRF 헤더 이름과 토큰이 모두 존재할 때만 추가
+    if (csrf.header && csrf.token) {
+        headers[csrf.header] = csrf.token;
+    } else {
+        console.warn("CSRF 정보를 찾을 수 없습니다.");
+    }
+
+    fetch('/api/memos', { 
+        method: 'POST', 
+        headers: headers, 
+        body: JSON.stringify({ content }) 
+    })
+    .then(res => {
+        if (res.ok) {
+            location.reload();
+        } else {
+            return res.text().then(text => { throw new Error(text) });
+        }
+    })
+    .catch(err => {
+        console.error("메모 저장 중 오류:", err);
+        alert("저장 실패: " + err.message);
+    });
 }
 function deleteMemo(memoNo, event) {
-    if (event) event.stopPropagation();
+    if (event) event.stopPropagation(); // 메모 상세보기 모달이 뜨지 않게 방지
     if (!confirm("삭제하시겠습니까?")) return;
+
     const csrf = getCsrf();
-    fetch(`/api/memos/${memoNo}`, { method: 'DELETE', headers: { [csrf.header]: csrf.token } }).then(res => res.ok ? location.reload() : alert("실패"));
+    const headers = {};
+
+    // CSRF 헤더가 유효한지 확인 후 추가 (Invalid name 에러 방지)
+    if (csrf.header && csrf.token) {
+        headers[csrf.header] = csrf.token;
+    }
+
+    fetch(`/api/memos/${memoNo}`, { 
+        method: 'DELETE', 
+        headers: headers 
+    })
+    .then(res => {
+        if (res.ok) {
+            alert("삭제되었습니다.");
+            location.reload();
+        } else {
+            return res.text().then(text => { 
+                alert("삭제 실패: " + text); 
+            });
+        }
+    })
+    .catch(err => {
+        console.error("Delete fetch error:", err);
+        alert("삭제 중 오류가 발생했습니다.");
+    });
 }
 function viewMemoDetail(content) { document.getElementById('fullMemoContent').innerText = content; new bootstrap.Modal(document.getElementById('memoDetailModal')).show(); }
 
