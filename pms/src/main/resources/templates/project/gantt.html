@@ -36,13 +36,19 @@
     </div>
 
 <script th:inline="javascript">
+    const projectCode = /*[[${projectCode}]]*/ null;
+    // 이후 script에서 자유롭게 사용
+    const url = /*[[@{/project/user/{code}/gantt/data(code=${projectCode})}]]*/ '/';
+
+    // 차트에서 오늘 날짜에 해당하는 표시선 그려주는 기능 활성화
     gantt.plugins({ marker: true });
 
+    // 간트 옵션 설정
     function initGantt(tasks) {
         gantt.i18n.setLocale("kr");
         
         // [수정됨] 둥글둥글하고 부드러운 디자인의 스킨으로 변경
-        gantt.setSkin("terrace"); 
+        gantt.setSkin("meadow");
 
         gantt.config.date_format = "%d-%m-%Y";
 
@@ -50,7 +56,7 @@
             { name: "text",       label: "작업명",  tree: true, width: "*" },
             { name: "start_date", label: "시작일",  align: "center" },
             { name: "duration",   label: "기간(일)", align: "center" },
-            /* { name: "add",        label: "",       width: 44 } */
+            { name: "add",        label: "",       width: 44 }
         ];
 
         gantt.config.scales = [
@@ -83,52 +89,58 @@
             gantt.updateMarker(todayMarkerId);
         }, 1000 * 60);
     }
-
-    // 1. 서버에서 데이터 가져오기 (links는 빈 배열로 초기화)
-    const backendData = /*[[${ganttData}]]*/ { data: [], links: [] }; 
-
-    // 2. JS에서 데이터를 순회하며 속성 및 연결선(Links) 자동 부여
-    let linkIdCounter = 1;
-    let previousTaskByParent = {}; // 부모 ID별로 '직전 작업'을 기억하기 위한 객체
-
-    backendData.data.forEach(task => {
+    
+    // 3. Fetch API를 사용하여 서버의 데이터를 비동기 호출
+    fetch(url)
+    .then(response => {
+    	if(!response.ok) {
+    		throw new Error("서버에서 데이터를 가져오는데 실패했습니다. 상태코드 "+response.status);
+    	}
+    	return response.json(); // 전송받은 데이터를 json 객체로 변환
+    })
+    .then(ganttData => {
+    	// JS에서 데이터를 순회하며 속성 및 연결선(Links) 자동 부여
+        let linkIdCounter = 1;
+        let previousTaskByParent = {}; // 부모 ID별로 '직전 작업'을 기억하기 위한 객체
         
-        // [요구사항 1 & 3] 최상위(parent가 0)이거나 하위 '프로젝트(p)'인 경우
+        ganttData.data.forEach( task => {
+        // 최상위(parent가 0)이거나 하위 '프로젝트(p)'인 경우
         if (task.parent === "0" || String(task.id).startsWith("p")) {
             task.open = true;        // 폴더를 기본으로 열어둠
             task.type = "project";   // 모양을 '요약 바'로 바꾸고, 날짜 자동 계산 활성화
+            
+            // [색상 설정] 프로젝트(Project) 색상
+            task.color = "#10c16f";          // 전체 바 색상 (초록색 예시)
+            task.progressColor = "#65c16f"; // 진행 바 색상 (진한 초록색)
+        }else{
+            // [색상 설정] 일반 일감(Task) 색상
+            task.color = "#3db9d3";          // 전체 바 색상 (하늘색 예시)
+            task.progressColor = "#2a8e9d"; // 진행 바 색상 (진한 하늘색)
         }
 
-        // [요구사항 2] 노란색 연결선(Link) 자동 생성
-        // 같은 부모(parent) 안에 있는 작업들끼리 순서대로 선을 긋습니다.
+        //부모 프로젝트에서 하위 일감으로 선(Link) 긋기
         let parentId = task.parent || "0";
-        let prevSibling = previousTaskByParent[parentId]; // 같은 부모의 직전 작업
 
-        if (prevSibling) {
-            // 직전 작업과 현재 작업을 연결하는 링크 데이터를 추가
-            backendData.links.push({
-                id: linkIdCounter++,
-                source: prevSibling.id,
-                target: task.id,
-                type: "0" // 0 = Finish-to-Start (앞 작업 끝나면 뒤 작업 시작)
-            });
-        }else if (parentId !== "0") {
-            // 2. [추가된 로직] prevSibling이 없고 부모가 "0"이 아니라면 -> 이 작업이 부모의 '첫 번째 자식'임
-            // 부모(Project)와 첫 번째 자식(Task)을 연결합니다.
-            backendData.links.push({
+        if (parentId !== "0") {
+            // 부모(Project)와 현재 자식(Task)을 연결합니다.
+            ganttData.links.push({
                 id: linkIdCounter++,
                 source: parentId, // 선의 시작점: 부모 프로젝트 ID
-                target: task.id,  // 선의 도착점: 첫 번째 자식 작업 ID
+                target: task.id,  // 선의 도착점: 자식 작업 ID
                 type: "1"         // 타입 "1" (Start-to-Start): 프로젝트 시작과 동시에 일감 시작
             });
         }
         
         // 현재 작업을 이 부모 그룹의 '직전 작업'으로 기록하여 다음 루프 때 쓰도록 갱신
         previousTaskByParent[parentId] = task; 
+	});
+    	// 3. 가공이 완료된 데이터로 차트 렌더링
+    	initGantt(ganttData);
+    })
+    .catch(err => {
+    	console.log(err);
+    	alert("데이터 호출 중 문제가 발생했습니다.");
     });
-
-    // 3. 가공이 완료된 데이터로 차트 렌더링
-    initGantt(backendData);
 </script>
 
 </body>

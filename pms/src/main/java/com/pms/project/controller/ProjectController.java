@@ -1,5 +1,7 @@
 package com.pms.project.controller;
 
+import java.util.Map;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.pms.config.CustomUserDetails;
@@ -123,10 +126,17 @@ public class ProjectController {
     	return "null";
     }
     
+    // 페이지 전달 
     @GetMapping("/user/{projectCode}/gantt")
     public String getGantProject(@PathVariable String projectCode, Model model) {
-    	model.addAttribute("ganttData", projectService.findGanttDataByCode(projectCode));
-    	
     	return "project/gantt";
     }
+    
+    // 데이터 전달
+    @GetMapping("/user/{projectCode}/gantt/data")
+    @ResponseBody // 타임리프가 개입하여 웹페이지를 찾지않고 JSON을 반환
+    public Map<String, Object> getGanttDataApi(@PathVariable String projectCode) {
+    	return projectService.findGanttDataByCode(projectCode);
+    }
+    
 }
