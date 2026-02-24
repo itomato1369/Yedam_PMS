@@ -303,7 +303,7 @@
 		aria-hidden="true">
 		<div class="modal-dialog modal-lg modal-dialog-centered">
 			<div class="modal-content border-0 shadow-lg">
-				<form id="noticeForm">
+				<form id="noticeForm" enctype="multipart/form-data">
 					<div class="modal-header bg-warning text-dark">
 						<h5 class="modal-title fw-bold" id="noticeModalLabel">공지사항 상세</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -312,19 +312,26 @@
 						<input type="hidden" id="noticeId" name="noticeNo">
 						<div class="mb-3">
 							<label class="form-label fw-bold">제목</label> <input type="text"
-								id="noticeTitle" class="form-control" required>
+								id="noticeTitle" name="title" class="form-control" required>
 						</div>
 						<div class="mb-3">
 							<label class="form-label fw-bold">공개 설정</label> <select
-								id="noticePrivacy" class="form-select">
+								id="noticePrivacy" name="privacySettings" class="form-select">
 								<option value="1">전체 공개</option>
 								<option value="0">비공개</option>
 							</select>
 						</div>
 						<div class="mb-3">
 							<label class="form-label fw-bold">내용</label>
-							<textarea id="noticeContent" class="form-control" rows="6"
-								style="resize: none;" required></textarea>
+							<textarea id="noticeContent" name="content" class="form-control"
+								rows="6" style="resize: none;" required></textarea>
+						</div>
+						<div class="mb-3">
+							<label class="form-label fw-bold"><i
+								class="cil-paperclip"></i> 첨부파일</label> <input type="file"
+								id="noticeFiles" name="uploadFiles" class="form-control"
+								multiple>
+							<div id="existingFileList" class="mt-2 small text-muted"></div>
 						</div>
 					</div>
 					<div class="modal-footer bg-light">
@@ -356,7 +363,7 @@
 		</div>
 	</div>
 
-	<script th:inline="javascript">
+<script th:inline="javascript">
 /* --- 1. 초기화 로직 (페이지네이션, 정렬) --- */
 document.addEventListener("DOMContentLoaded", function () {
     function initWidgetPagination(widgetId, itemsPerPage) {
@@ -408,6 +415,10 @@ function showNoticeAddModal() {
     document.getElementById('noticeId').value = '';
     document.getElementById('noticeModalLabel').innerText = '공지사항 등록';
     document.getElementById('btnDeleteNotice').style.display = 'none';
+    
+    // 파일 관련 영역 초기화
+    document.getElementById('existingFileList').innerHTML = ''; 
+    
     new bootstrap.Modal(document.getElementById('noticeModal')).show();
 }
 
@@ -415,14 +426,37 @@ async function showNoticeEditModal(noticeNo) {
     try {
         const res = await fetch(`/api/notices/${noticeNo}`);
         const data = await res.json();
+        
         document.getElementById('noticeId').value = data.noticeNo;
         document.getElementById('noticeTitle').value = data.title;
         document.getElementById('noticeContent').value = data.content;
         document.getElementById('noticePrivacy').value = data.privacySettings;
         document.getElementById('noticeModalLabel').innerText = '공지사항 상세/수정';
         document.getElementById('btnDeleteNotice').style.display = 'block';
+
+        // --- 첨부파일 목록 표시 로직 추가 ---
+        const fileListDiv = document.getElementById('existingFileList');
+        fileListDiv.innerHTML = ''; // 초기화
+        
+        if (data.files && data.files.length > 0) {
+            let fileHtml = '<p class="fw-bold mb-1 small mt-2">저장된 파일:</p><ul class="list-unstyled small">';
+            data.files.forEach(file => {
+                fileHtml += `
+                    <li class="mb-1">
+                        <i class="cil-file text-primary"></i> 
+                        <a href="/download/${file.fileUuid}" class="text-decoration-none">${file.fileName}</a>
+                        <span class="text-muted">(${file.fileSize})</span>
+                    </li>`;
+            });
+            fileHtml += '</ul>';
+            fileListDiv.innerHTML = fileHtml;
+        }
+
         new bootstrap.Modal(document.getElementById('noticeModal')).show();
-    } catch (e) { alert("상세 정보를 가져올 수 없습니다."); }
+    } catch (e) { 
+        console.error(e);
+        alert("상세 정보를 가져올 수 없습니다."); 
+    }
 }
 
 document.getElementById('noticeForm').onsubmit = async function(e) {
@@ -430,32 +464,27 @@ document.getElementById('noticeForm').onsubmit = async function(e) {
     const id = document.getElementById('noticeId').value;
     const csrf = getCsrf();
     
-    // 1. 기본 헤더 설정
-    const headers = { 
-        'Content-Type': 'application/json' 
-    };
-
-    // 2. CSRF 헤더가 유효할 때만 추가 (핵심 수정)
+    // 1. FormData 객체 생성
+    const formData = new FormData(document.getElementById('noticeForm'));
+    
+    // 4. 헤더 설정 (Multipart 전송이므로 Content-Type은 명시하지 않음)
+    const headers = {};
     if (csrf.header && csrf.token) {
         headers[csrf.header] = csrf.token;
-    } else {
-        console.warn("CSRF token or header is missing!");
     }
 
-    const body = {
-        title: document.getElementById('noticeTitle').value,
-        content: document.getElementById('noticeContent').value,
-        privacySettings: document.getElementById('noticePrivacy').value
-    };
-
     try {
-        const res = await fetch(id ? `/api/notices/${id}` : '/api/notices', {
+        const url = id ? `/api/notices/${id}` : '/api/notices';
+        // 수정 시에는 Multipart 전송을 위해 method를 POST로 쓰고 _method=PUT 파라미터를 붙이거나, 
+        // 서버 설정에 따라 PUT으로 직접 보낼 수 있습니다. (여기서는 PUT 사용)
+        const res = await fetch(url, {
             method: id ? 'PUT' : 'POST',
-            headers: headers, // 안전하게 구성된 헤더 사용
-            body: JSON.stringify(body)
+            headers: headers,
+            body: formData 
         });
 
         if (res.ok) {
+            alert("성공적으로 저장되었습니다.");
             location.reload();
         } else {
             const errorText = await res.text();
@@ -474,18 +503,14 @@ async function handleDeleteNotice() {
 
     const csrf = getCsrf();
     const headers = {};
-
-    // 핵심: 헤더 이름(csrf.header)이 유효할 때만 객체에 추가합니다.
     if (csrf.header && csrf.token) {
         headers[csrf.header] = csrf.token;
-    } else {
-        console.warn("CSRF 헤더 정보를 찾을 수 없습니다. 시큐리티 설정을 확인하세요.");
     }
 
     try {
         const res = await fetch(`/api/notices/${id}`, { 
             method: 'DELETE', 
-            headers: headers // 안전하게 생성된 헤더 전달
+            headers: headers 
         });
 
         if (res.ok) {

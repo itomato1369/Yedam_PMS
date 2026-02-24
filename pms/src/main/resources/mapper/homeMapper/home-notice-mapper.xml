@@ -6,10 +6,13 @@
 		SELECT
 		notice_no AS noticeNo,
 		title,
-		content, privacy_settings AS privacySettings, user_id AS userId, add_date AS
-		addDate
+		content,
+		privacy_settings AS privacySettings,
+		user_id AS userId,
+		files_no AS filesNo, add_date AS addDate
 		FROM notice
-		ORDER BY add_date DESC, notice_no DESC
+		ORDER BY add_date
+		DESC, notice_no DESC
 	</select>
 
 	<select id="getNotice" resultType="HomeNoticeDto">
@@ -19,7 +22,7 @@
 		content,
 		privacy_settings AS privacySettings,
 		user_id AS userId,
-		add_date AS addDate
+		files_no AS filesNo, add_date AS addDate
 		FROM notice
 		WHERE notice_no = #{noticeNo}
 	</select>
@@ -29,16 +32,17 @@
 		notice_no,
 		title,
 		content,
-		add_date,
 		privacy_settings,
-		user_id
-		) VALUES (
+		user_id,
+		files_no, add_date
+		)
+		VALUES (
 		notice_seq.NEXTVAL,
 		#{title},
 		#{content},
-		SYSDATE,
 		#{privacySettings},
-		#{userId}
+		#{userId},
+		#{filesNo}, SYSDATE
 		)
 	</insert>
 
@@ -50,13 +54,15 @@
 		privacy_settings = #{privacySettings},
 		update_date = SYSDATE
 		WHERE notice_no = #{noticeNo}
-		AND user_id = #{userId}
+		AND user_id =
+		#{userId}
 	</update>
 
 	<delete id="deleteNotice">
 		DELETE FROM notice
 		WHERE notice_no = #{noticeNo}
-		AND user_id = #{userId}
+		AND
+		user_id = #{userId}
 	</delete>
 
 </mapper>
