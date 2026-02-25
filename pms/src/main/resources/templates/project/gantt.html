@@ -1,149 +1,299 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{common/layouts/full-default-layout}"
-      layout:fragment="Content">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/full-default-layout}"
+	layout:fragment="Content">
 <head>
-    <meta charset="UTF-8">
-    <title>Gantt Chart</title>
-    <style>
-        /*
-         The gantt chart container needs a defined height.
-         The default layout (CoreUI) uses flexbox, but the intermediate containers don't have a height set.
-         We will use viewport height (vh) units and CSS calc() to set the height of our chart's wrapper,
-         subtracting the approximate height of the header and padding to make it fit nicely.
-        */
-        .gantt-wrapper {
-            /* 100vh = 100% of the viewport height. 120px is an estimate for header/padding. Adjust if needed. */
-            height: calc(100vh - 120px);
-            width: 100%;
-        }
-        /* The gantt container itself should fill its wrapper */
-        #gantt_here {
-            height: 100%;
-            width: 100%;
-        }
-    </style>
-    <!--/* <link th:href="@{/dhtmlx/gantt/dhtmlxgantt.css}" rel="stylesheet">
+<meta charset="UTF-8">
+<title>PMS Project</title>
+<style>
+.gantt-wrapper {
+	/* 100vh = 100% of the viewport height. 120px is an estimate for header/padding. Adjust if needed. */
+	height: calc(100vh - 120px);
+	width: 100%;
+}
+/* The gantt container itself should fill its wrapper */
+#gantt_here {
+	height: 100%;
+	width: 100%;
+}
+
+/* 입력 버튼 헤더 css 수정 */
+.gantt_grid_head_add::before {
+	display: none !important;
+	content: "" !important;
+}
+
+.gantt_grid_head_add {
+	cursor: default !important; /* 손가락 모양(pointer)을 기본 화살표로 변경 */
+	opacity: 1 !important; /* 흐릿한 효과 제거 */
+}
+/* 그리드 헤더 셀 디자인 수정 */
+.gantt_grid_head_cell {
+	line-height: center; /* 헤더 높이에 맞춘 세로 중앙 정렬 */
+}
+
+.gantt_grid_head_cell, .gantt_cell, .gantt_scale_cell, .gantt_task_cell {
+    border-right: 1px solid #d9d9d9 !important; 
+}
+
+.gantt_grid_head_cell, .gantt_scale_cell {
+    font-size: 1rem !important;
+}
+</style>
+<!--/* <link th:href="@{/dhtmlx/gantt/dhtmlxgantt.css}" rel="stylesheet">
     <script th:src="@{/dhtmlx/gantt/dhtmlxgantt.js}"></script> */-->
-    <link href="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.css" rel="stylesheet">
-    <script src="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.js"></script>
-    <!-- <script src="https://cdn.dhtmlx.com/gantt/edge/locales/locale_kr.js"></script> -->
+<link href="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.css"
+	rel="stylesheet">
+<script src="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.js"></script>
+<!-- <script src="https://cdn.dhtmlx.com/gantt/edge/locales/locale_kr.js"></script> -->
 </head>
 <body>
-    <div class="gantt-wrapper">
-        <div id="gantt_here"></div>
-    </div>
-
-<script th:inline="javascript">
+	<div class="gantt-wrapper">
+		<div id="gantt_here"></div>
+	</div>
+	<script th:inline="javascript">
     const projectCode = /*[[${projectCode}]]*/ null;
-    // 이후 script에서 자유롭게 사용
     const url = /*[[@{/project/user/{code}/gantt/data(code=${projectCode})}]]*/ '/';
+    const add_url = /*[[@{/project/user/{code}/gantt/insert(code=${projectCode})}]]*/ '/';
 
-    // 차트에서 오늘 날짜에 해당하는 표시선 그려주는 기능 활성화
     gantt.plugins({ marker: true });
 
-    // 간트 옵션 설정
-    function initGantt(tasks) {
+    // ==========================================
+    // 1. 차트 외형(UI) 및 이벤트 설정 함수
+    // ==========================================
+    function initGanttUI() {
         gantt.i18n.setLocale("kr");
-        
-        // [수정됨] 둥글둥글하고 부드러운 디자인의 스킨으로 변경
         gantt.setSkin("meadow");
-
         gantt.config.date_format = "%d-%m-%Y";
 
+        // 헤더 높이 60px 조절
+        gantt.config.grid_header_height = 60; 
+        gantt.config.scale_height = 60;       
+
+        // ★ [리사이즈 해결 핵심] 
+        gantt.config.grid_resize = true;       // 왼쪽 테이블과 오른쪽 차트 사이의 경계선 드래그 허용
+        gantt.config.keep_grid_width = false;  // 내부 컬럼 크기 조절 시 테이블 전체 넓이도 같이 변하도록 허용
+        
+        // 진척도 드래그불가능
+        gantt.config.drag_progress = false;
+        
         gantt.config.columns = [
-            { name: "text",       label: "작업명",  tree: true, width: "*" },
-            { name: "start_date", label: "시작일",  align: "center" },
-            { name: "displayEnd", label: "종료일",  align: "center" },
-            { name: "duration",   label: "기간(일)", align: "center" },
-            { name: "workerName",  label: "담당자",   align: "center", width: 80 },
-            { name: "jobPriority", label: "우선순위", align: "center", width: 70 },
-            { name: "add",        label: "추가",       width: 44 }
+            { name: "text",       label: "작업명",  tree: true, width: "*", min_width: 150, resize: true },
+            /* { name: "duration",   label: "기간(일)", align: "center" }, */
+            { name: "start_date", label: "시작일", width: "*", min_width: 90, align: "center", resize: true },
+            { name: "displayEnd", label: "종료일", width: "*", min_width: 90, align: "center", resize: true
+            	, template: function(task) {
+                        if(!task.displayEnd) return "";
+                        var parts = task.displayEnd.split("-");
+                        return parts[2] + "-" + parts[1] + "-" + parts[0]; 
+                    }
+            	},
+            { name: "workerName", label: "담당자",   align: "center", width: 80, resize: true },
+            { name: "jobPriority",label: "우선순위", align: "center", width: 70, resize: true },
+            { name: "add",        label: "추가",     width: 44 }
         ];
 
         gantt.config.scales = [
             { unit: "month", step: 1, format: "%Y년 %n월" },
-            { unit: "day",   step: 1, format: "%d일 (%D)" } 
+            { unit: "day",   step: 1, format: "%d일(%D)" } 
         ];
+        
+        // --- 이벤트 설정들 ---
+        gantt.attachEvent("onBeforeLightbox", function(id) {
+            var task = gantt.getTask(id);
+            var taskId = String(task.id);
+            var isNew = task.$new || (!taskId.startsWith("p") && !taskId.startsWith("j"));
+            var parentId = String(task.parent);
 
+            if (isNew) {
+                if (parentId.startsWith("p")) {
+                    gantt.config.lightbox.sections = [
+                        { name: "description", height: 38, map_to: "text", type: "textarea", focus: true },
+                        { name: "worker", height: 30, map_to: "workerName", type: "textarea" },
+                        { name: "priority", map_to: "jobPriority", type: "select", options: [ {key:"High", label:"높음"}, {key:"Normal", label:"보통"} ] },
+                        { name: "time", type: "duration", map_to: "auto" }
+                    ];
+                } else if (parentId.startsWith("j")) {
+                    gantt.config.lightbox.sections = [
+                        { name: "description", height: 38, map_to: "text", type: "textarea", focus: true },
+                        { name: "worker", height: 30, map_to: "workerName", type: "textarea" },
+                        { name: "time", type: "duration", map_to: "auto" }
+                    ];
+                }
+            } else {
+                if (taskId.startsWith("p")) {
+                    gantt.config.lightbox.sections = [ /* 프로젝트 수정 항목 */ ];
+                } else {
+                    gantt.config.lightbox.sections = [ /* 일감 수정 항목 */ ];
+                }
+            }
+            gantt.resetLightbox(); 
+            return true; 
+        });
+
+        gantt.templates.lightbox_header = function(start, end, task){
+            var taskId = String(task.id);
+            var isNew = task.$new || (!taskId.startsWith("p") && !taskId.startsWith("j"));
+
+            if (isNew) {
+                var parentId = String(task.parent);
+                if (parentId.startsWith("p")) return "새 일감 생성";
+                else return "새 하위 일감 생성";
+                	/* if (parentId.startsWith("j")) return "새 하위 일감 생성";
+                return "최상위 프로젝트 생성";  */
+            } else {
+                if (taskId.startsWith("p")) return "프로젝트 정보 수정: " + task.text;
+                else if (taskId.startsWith("j")) return "일감 정보 수정: " + task.text;
+                return "상세 정보 수정: " + task.text;
+            }
+        };
         gantt.templates.rightside_text = function (start, end, task) {
-            return "ID: #" + task.id;
-        };
-        gantt.templates.leftside_text = function (start, end, task) {
-            return task.duration + " days";
+            if (task.type === "project") return ""; // 프로젝트 바 옆에는 표시 안 함
+            return (task.workerName || "미지정") + " [" + (task.jobPriority || "보통") + "]";
         };
 
+        // ★ 모달창 저장 클릭 시 이벤트 ★
+        gantt.attachEvent("onLightboxSave", function(id, task, is_new){
+            var dateToStr = gantt.date.date_to_str("%d-%m-%Y");
+
+            var cleanTaskData = {
+                id: String(task.id),
+                text: task.text,
+                start_date: dateToStr(task.start_date), 
+                duration: task.duration,
+                parent: String(task.parent || "0"),
+                workerName: task.workerName || "",
+                jobPriority: task.jobPriority || ""
+            };
+
+            fetch(add_url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(cleanTaskData) 
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("전송 실패");
+                return response.text(); 
+            })
+            .then(message => {
+                // 1) 모달창 닫기
+                gantt.hideLightbox();
+                
+                // 2) 전체 DB를 다시 부르는 대신, 화면에 방금 만든 데이터를 즉시 끼워 넣음 (엄청 빠름!)
+                // (나중에 DB INSERT를 구현하면 서버가 주는 진짜 ID로 덮어씌워야 합니다)
+                if (is_new) {
+                    gantt.addTask(task, task.parent); // 차트에 즉시 추가
+                } else {
+                    gantt.updateTask(task.id);        // 기존 일감 즉시 업데이트
+                }
+
+                // 3) 토스트 메시지 띄우기
+                gantt.message({ text: message, type: "success", expire: 3000 });
+            })
+            .catch(err => {
+                console.error("에러 발생:", err);
+                gantt.message({ text: "저장 중 오류가 발생했습니다.", type: "error", expire: 3000 });
+            });
+
+            return false; 
+        });
+
+        gantt.attachEvent("onGridHeaderClick", function(name, e) {
+            if (name === "add") return false; 
+            return true; 
+        });
+
+        gantt.templates.rightside_text = function (start, end, task) { return "ID: #" + task.id; };
+        gantt.templates.leftside_text = function (start, end, task) { return task.duration + " days"; };
+
+        // UI 껍데기 렌더링
         gantt.init("gantt_here");
-        gantt.parse(tasks);
+    }
+    // 전역 변수로 마커 ID 관리
+    let todayMarkerId = null;
 
+    // 마커 생성 전용 함수
+    function renderTodayMarker() {
+        if (!gantt.getMarker) return; // 플러그인 로드 확인
+        
         var dateToStr = gantt.date.date_to_str(gantt.config.task_date);
-        var todayMarkerId = gantt.addMarker({
+        
+        // 기존 마커가 있다면 지우고 다시 생성
+        if (todayMarkerId) gantt.deleteMarker(todayMarkerId);
+        
+        todayMarkerId = gantt.addMarker({
             start_date: new Date(),
             css: "today",
             text: "오늘",
             title: dateToStr(new Date())
         });
+    }
 
-        setInterval(function() {
+    // 1분마다 마커 위치 업데이트 (전역에 한 번만 선언)
+    setInterval(function() {
+        if (todayMarkerId && gantt.getMarker(todayMarkerId)) {
             var todayMarker = gantt.getMarker(todayMarkerId);
             todayMarker.start_date = new Date();
+            var dateToStr = gantt.date.date_to_str(gantt.config.task_date);
             todayMarker.title = dateToStr(todayMarker.start_date);
             gantt.updateMarker(todayMarkerId);
-        }, 1000 * 60);
-    }
-    
-    // 3. Fetch API를 사용하여 서버의 데이터를 비동기 호출
-    fetch(url)
-    .then(response => {
-    	if(!response.ok) {
-    		throw new Error("서버에서 데이터를 가져오는데 실패했습니다. 상태코드 "+response.status);
-    	}
-    	return response.json(); // 전송받은 데이터를 json 객체로 변환
-    })
-    .then(ganttData => {
-    	// JS에서 데이터를 순회하며 속성 및 연결선(Links) 자동 부여
-        let linkIdCounter = 1;
-        let previousTaskByParent = {}; // 부모 ID별로 '직전 작업'을 기억하기 위한 객체
-        
-        ganttData.data.forEach( task => {
-        // 최상위(parent가 0)이거나 하위 '프로젝트(p)'인 경우
-        if (task.parent === "0" || String(task.id).startsWith("p")) {
-            task.open = true;        // 폴더를 기본으로 열어둠
-            task.type = "project";   // 모양을 '요약 바'로 바꾸고, 날짜 자동 계산 활성화
+        }
+    }, 1000 * 60);
+    // ==========================================
+    // 2. 서버에서 데이터를 가져와서 차트에 채우는 함수
+    // ==========================================
+    function loadGanttData() {
+        fetch(url)
+        .then(response => {
+            if(!response.ok) throw new Error("상태코드 "+response.status);
+            return response.json(); 
+        })
+        .then(ganttData => {
+            let linkIdCounter = 1;
+            let previousTaskByParent = {}; 
             
-            // [색상 설정] 프로젝트(Project) 색상
-            task.color = "#10c16f";          // 전체 바 색상 (초록색 예시)
-            task.progressColor = "#65c16f"; // 진행 바 색상 (진한 초록색)
-        }else{
-            // [색상 설정] 일반 일감(Task) 색상
-            task.color = "#3db9d3";          // 전체 바 색상 (하늘색 예시)
-            task.progressColor = "#2a8e9d"; // 진행 바 색상 (진한 하늘색)
-        }
+            ganttData.data.forEach( task => {
+                if (task.parent === "0" || String(task.id).startsWith("p")) {
+                    task.open = true;        
+                    task.type = "project";   
+                    task.color = "#10c16f";          
+                    task.progressColor = "#65c16f"; 
+                } else {
+                    task.color = "#3db9d3";          
+                    task.progressColor = "#2a8e9d"; 
+                }
 
-        //부모 프로젝트에서 하위 일감으로 선(Link) 긋기
-        let parentId = task.parent || "0";
-
-        if (parentId !== "0") {
-            // 부모(Project)와 현재 자식(Task)을 연결합니다.
-            ganttData.links.push({
-                id: linkIdCounter++,
-                source: parentId, // 선의 시작점: 부모 프로젝트 ID
-                target: task.id,  // 선의 도착점: 자식 작업 ID
-                type: "1"         // 타입 "1" (Start-to-Start): 프로젝트 시작과 동시에 일감 시작
+                let parentId = task.parent || "0";
+                if (parentId !== "0") {
+                    ganttData.links.push({
+                        id: linkIdCounter++,
+                        source: parentId, 
+                        target: task.id,  
+                        type: "1"         
+                    });
+                }
+                previousTaskByParent[parentId] = task; 
             });
-        }
-        
-        // 현재 작업을 이 부모 그룹의 '직전 작업'으로 기록하여 다음 루프 때 쓰도록 갱신
-        previousTaskByParent[parentId] = task; 
-	});
-    	// 3. 가공이 완료된 데이터로 차트 렌더링
-    	initGantt(ganttData);
-    })
-    .catch(err => {
-    	console.log(err);
-    	alert("데이터 호출 중 문제가 발생했습니다.");
-    });
+
+            // ★ 중요: 이전 화면에 있던 데이터를 지우고 새 데이터로 파싱 ★
+            gantt.clearAll();
+            gantt.parse(ganttData);
+
+            // 마커 다시그리기
+            renderTodayMarker();
+        })
+        .catch(err => {
+            console.error(err);
+            gantt.message({ text: "데이터 호출 중 문제가 발생했습니다.", type: "error" });
+        });
+    }
+
+    // ==========================================
+    // 3. 페이지가 로드되면 실행되는 메인 로직
+    // ==========================================
+    initGanttUI();   // 1. 차트 껍데기를 먼저 그리고
+    loadGanttData(); // 2. 데이터를 채워 넣습니다.
 </script>
 
 </body>
