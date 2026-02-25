@@ -52,11 +52,39 @@
 	<div class="gantt-wrapper">
 		<div id="gantt_here"></div>
 	</div>
+	
+	
+	<div class="modal fade" id="ganttCustomModal" tabindex="-1" aria-labelledby="ganttModalLabel" aria-hidden="true" style="z-index: 1055;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ganttModalLabel">새 일감 등록</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <th:block th:replace="~{common/fragments/project/issue-form-fragment :: IssueForm}"></th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <th:block th:replace="~{common/fragments/issue/user-select-modal :: UserSelectModal}"></th:block>
+    <th:block th:replace="~{common/fragments/issue/issue-select-modal :: IssueSelectModal}"></th:block>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/locales/bootstrap-datepicker.ko.min.js"></script>
+	
 	<script th:inline="javascript">
+	// 입력폼 관리하는 전역데이터
+    let ganttIssueModal;
+    let currentTaskInfo = null;
+	
     const projectCode = /*[[${projectCode}]]*/ null;
     const url = /*[[@{/project/user/{code}/gantt/data(code=${projectCode})}]]*/ '/';
     const add_url = /*[[@{/project/user/{code}/gantt/insert(code=${projectCode})}]]*/ '/';
-
+    const setting_url = /*[[@{/project/user/{code}/gantt/setting(code=${projectCode})}]]*/ '/';
+    
     gantt.plugins({ marker: true });
 
     // ==========================================
@@ -100,116 +128,118 @@
         ];
         
         // --- 이벤트 설정들 ---
-        gantt.attachEvent("onBeforeLightbox", function(id) {
-            var task = gantt.getTask(id);
-            var taskId = String(task.id);
-            var isNew = task.$new || (!taskId.startsWith("p") && !taskId.startsWith("j"));
-            var parentId = String(task.parent);
-
-            if (isNew) {
-                if (parentId.startsWith("p")) {
-                    gantt.config.lightbox.sections = [
-                        { name: "description", height: 38, map_to: "text", type: "textarea", focus: true },
-                        { name: "worker", height: 30, map_to: "workerName", type: "textarea" },
-                        { name: "priority", map_to: "jobPriority", type: "select", options: [ {key:"High", label:"높음"}, {key:"Normal", label:"보통"} ] },
-                        { name: "time", type: "duration", map_to: "auto" }
-                    ];
-                } else if (parentId.startsWith("j")) {
-                    gantt.config.lightbox.sections = [
-                        { name: "description", height: 38, map_to: "text", type: "textarea", focus: true },
-                        { name: "worker", height: 30, map_to: "workerName", type: "textarea" },
-                        { name: "time", type: "duration", map_to: "auto" }
-                    ];
-                }
-            } else {
-                if (taskId.startsWith("p")) {
-                    gantt.config.lightbox.sections = [ /* 프로젝트 수정 항목 */ ];
-                } else {
-                    gantt.config.lightbox.sections = [ /* 일감 수정 항목 */ ];
-                }
-            }
-            gantt.resetLightbox(); 
-            return true; 
-        });
-
-        gantt.templates.lightbox_header = function(start, end, task){
-            var taskId = String(task.id);
-            var isNew = task.$new || (!taskId.startsWith("p") && !taskId.startsWith("j"));
-
-            if (isNew) {
-                var parentId = String(task.parent);
-                if (parentId.startsWith("p")) return "새 일감 생성";
-                else return "새 하위 일감 생성";
-                	/* if (parentId.startsWith("j")) return "새 하위 일감 생성";
-                return "최상위 프로젝트 생성";  */
-            } else {
-                if (taskId.startsWith("p")) return "프로젝트 정보 수정: " + task.text;
-                else if (taskId.startsWith("j")) return "일감 정보 수정: " + task.text;
-                return "상세 정보 수정: " + task.text;
-            }
-        };
-        gantt.templates.rightside_text = function (start, end, task) {
-            if (task.type === "project") return ""; // 프로젝트 바 옆에는 표시 안 함
-            return (task.workerName || "미지정") + " [" + (task.jobPriority || "보통") + "]";
-        };
-
-        // ★ 모달창 저장 클릭 시 이벤트 ★
-        gantt.attachEvent("onLightboxSave", function(id, task, is_new){
-            var dateToStr = gantt.date.date_to_str("%d-%m-%Y");
-
-            var cleanTaskData = {
-                id: String(task.id),
-                text: task.text,
-                start_date: dateToStr(task.start_date), 
-                duration: task.duration,
-                parent: String(task.parent || "0"),
-                workerName: task.workerName || "",
-                jobPriority: task.jobPriority || ""
-            };
-
-            fetch(add_url, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(cleanTaskData) 
-            })
-            .then(response => {
-                if (!response.ok) throw new Error("전송 실패");
-                return response.text(); 
-            })
-            .then(message => {
-                // 1) 모달창 닫기
-                gantt.hideLightbox();
-                
-                // 2) 전체 DB를 다시 부르는 대신, 화면에 방금 만든 데이터를 즉시 끼워 넣음 (엄청 빠름!)
-                // (나중에 DB INSERT를 구현하면 서버가 주는 진짜 ID로 덮어씌워야 합니다)
-                if (is_new) {
-                    gantt.addTask(task, task.parent); // 차트에 즉시 추가
-                } else {
-                    gantt.updateTask(task.id);        // 기존 일감 즉시 업데이트
-                }
-
-                // 3) 토스트 메시지 띄우기
-                gantt.message({ text: message, type: "success", expire: 3000 });
-            })
-            .catch(err => {
-                console.error("에러 발생:", err);
-                gantt.message({ text: "저장 중 오류가 발생했습니다.", type: "error", expire: 3000 });
-            });
-
-            return false; 
-        });
-
+     // 1. 헤더 '추가' 클릭 시 더미 데이터 생성 방지
         gantt.attachEvent("onGridHeaderClick", function(name, e) {
             if (name === "add") return false; 
             return true; 
         });
 
-        gantt.templates.rightside_text = function (start, end, task) { return "ID: #" + task.id; };
-        gantt.templates.leftside_text = function (start, end, task) { return task.duration + " days"; };
+        // 2. 기본 모달 대신 커스텀 부트스트랩 모달 띄우기
+        gantt.attachEvent("onBeforeLightbox", function(id) {
+            currentTaskInfo = gantt.getTask(id);
+
+            if (!ganttIssueModal) {
+                ganttIssueModal = new bootstrap.Modal(document.getElementById('ganttCustomModal'));
+            }
+            
+            document.getElementById('issueInsert').reset(); 
+
+            const modalTitle = document.getElementById('ganttModalLabel');
+            const progressSelect = document.getElementById('progressSelect');
+            const hiddenProjectNo = document.getElementById('hiddenProjectNo');
+            const hiddenParentJobNo = document.getElementById('hiddenParentJobNo');
+            const startDateInput = document.getElementById('startDate');
+            const endDateInput = document.getElementById('endDate');
+
+            // [추가] 숨김 필드(Hidden) 자동 세팅
+            let rawParentId = String(currentTaskInfo.parent);
+            if (rawParentId.startsWith("p")) {
+                hiddenProjectNo.value = rawParentId.replace("p", "");
+                hiddenParentJobNo.value = ""; 
+            } else if (rawParentId.startsWith("j")) {
+                hiddenParentJobNo.value = rawParentId.replace("j", "");
+            } else {
+                hiddenProjectNo.value = projectCode;
+            }
+
+            // [추가] 날짜 기본값 세팅
+            startDateInput.value = gantt.date.date_to_str("%Y-%m-%d")(currentTaskInfo.start_date);
+            endDateInput.value = gantt.date.date_to_str("%Y-%m-%d")(currentTaskInfo.end_date);
+
+            // [추가] 신규/수정 상태에 따른 진척도 제어
+            if (currentTaskInfo.$new) {
+                modalTitle.innerText = "새 일감 등록";
+                progressSelect.value = "0";
+                progressSelect.setAttribute("disabled", "true");
+            } else {
+                modalTitle.innerText = "일감 수정";
+                progressSelect.removeAttribute("disabled");
+                progressSelect.value = (currentTaskInfo.progress * 100).toString() || "0";
+                // 기존 제목 불러오기
+                document.getElementById('issueTitle').value = currentTaskInfo.text;
+            }
+
+            ganttIssueModal.show();
+            return false; 
+        });
 
         // UI 껍데기 렌더링
         gantt.init("gantt_here");
     }
+    
+     // ==========================================
+    // 부트스트랩 모달 이벤트 및 Fetch 전송 (initGanttUI 밖으로 빼냄)
+    // ==========================================
+    document.addEventListener("DOMContentLoaded", function() {
+        // 1. 모달이 닫힐 때 작동하는 안전 클린업 로직 (취소, X버튼 등)
+        document.getElementById('ganttCustomModal').addEventListener('hidden.bs.modal', function () {
+            if (currentTaskInfo && currentTaskInfo.$new) {
+                gantt.deleteTask(currentTaskInfo.id); // 신규 작성 중 취소 시 임시 바(Bar) 삭제
+            }
+            currentTaskInfo = null;
+        });
+
+        // 2. [등록] 버튼 클릭 시 Fetch 전송
+        document.getElementById('btnIssueSubmit').addEventListener('click', function() {
+            const form = document.getElementById('issueInsert');
+            const formData = new FormData(form);
+
+            if (currentTaskInfo && currentTaskInfo.$new) {
+                formData.append("progress", 0);
+            }
+            // 프로젝트 코드 필수 주입
+            formData.append("projectCode", projectCode);
+            
+            // 간트 차트 렌더링을 위한 필수 데이터 강제 추가
+            formData.append("parent", currentTaskInfo.parent || "0");
+            formData.append("duration", 1); 
+            
+            fetch(add_url, {
+                method: 'POST',
+                body: formData 
+            })
+            .then(response => {
+                if(!response.ok) throw new Error("서버 응답 오류");
+                return response.json(); // 성공 시 서버가 발급한 ID가 담긴 JSON 반환을 기대함
+            })
+            .then(savedTask => {
+                // 저장 성공: $new 플래그 지워서 모달 닫힐 때 삭제되지 않게 방어
+                if (currentTaskInfo) delete currentTaskInfo.$new; 
+                ganttIssueModal.hide(); 
+
+                // 임시 바를 지우고, 서버에서 온 진짜 데이터로 차트 갱신
+                gantt.deleteTask(currentTaskInfo.id);
+                gantt.addTask(savedTask, savedTask.parent);
+
+                gantt.message({text: "일감이 등록되었습니다.", type: "success"});
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                gantt.message({text: "등록 중 오류가 발생했습니다.", type: "error"});
+            });
+        });
+    });
+    
     // 전역 변수로 마커 ID 관리
     let todayMarkerId = null;
 
@@ -288,12 +318,45 @@
             gantt.message({ text: "데이터 호출 중 문제가 발생했습니다.", type: "error" });
         });
     }
+    
+    // ==========================================
+    // 폼 Select Box 기초 데이터 로딩
+    // ==========================================
+    function loadSettingData() {
+        fetch(setting_url)
+        .then(res => res.json())
+        .then(data => {
+            // 셀렉트 박스 옵션 채우는 도우미 함수
+            const bindOptions = (selectName, list, valueKey, textKey) => {
+                const selectEl = document.querySelector(`select[name="${selectName}"]`);
+                if(!selectEl || !list) return;
+                list.forEach(item => selectEl.add(new Option(item[textKey], item[valueKey])));
+            };
 
+            // 상태, 유형, 우선순위 바인딩
+            bindOptions('jobStatusNo', data.statusList, 'jobStatusNo', 'jobStatus');
+            bindOptions('jobTypeNo', data.typeList, 'jobTypeNo', 'jobType');
+            bindOptions('priority', data.priorityList, 'commonNo', 'commonName');
+            
+            // 담당자 & 작업자 바인딩 (동일한 리스트 사용)
+            const managerSelect = document.querySelector('select[name="managerId"]');
+            const workerSelect = document.querySelector('select[name="userId"]');
+            if(data.managerList) {
+                data.managerList.forEach(user => {
+                    let option = new Option(user.username, user.userId);
+                    managerSelect.add(option.cloneNode(true));
+                    workerSelect.add(option);
+                });
+            }
+        })
+        .catch(err => console.error("세팅 로드 에러:", err));
+    }
     // ==========================================
     // 3. 페이지가 로드되면 실행되는 메인 로직
     // ==========================================
     initGanttUI();   // 1. 차트 껍데기를 먼저 그리고
     loadGanttData(); // 2. 데이터를 채워 넣습니다.
+    loadSettingData();
 </script>
 
 </body>
