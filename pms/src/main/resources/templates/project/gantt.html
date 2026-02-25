@@ -115,7 +115,7 @@
         
         gantt.config.columns = [
             { name: "text",       label: "작업명",  tree: true, width: "*", min_width: 150, resize: true },
-            /* { name: "duration",   label: "기간(일)", align: "center" }, */
+            { name: "duration",   label: "기간(일)", align: "center" },
             { name: "start_date", label: "시작일", width: "*", min_width: 90, align: "center", resize: true },
             { name: "displayEnd", label: "종료일", width: "*", min_width: 90, align: "center", resize: true
             	, template: function(task) {
@@ -270,8 +270,11 @@
                 const startDateObj = new Date(savedTask.startDate);
                 const endDateObj = new Date(savedTask.endDate);
                 
-                // 시작일과 종료일의 차이를 일(Day) 단위로 계산 (+1을 해야 당일치기도 1일로 계산됨)
-                const calcDuration = Math.max(1, Math.round((endDateObj - startDateObj) / (1000 * 60 * 60 * 24)) + 1);
+                // TO-BE (적용): 간트 차트 내부의 휴일(WorkTime) 정보를 반영하여 순수 영업일수만 뽑아냄!
+                const calcDuration = gantt.calculateDuration({
+                    start_date: startDateObj, 
+                    end_date: endDateObj
+                });
                 
                 // 간트 차트가 읽을 수 있는 포맷("DD-MM-YYYY")으로 변환하는 함수
                 const formatFunc = gantt.date.date_to_str("%d-%m-%Y");
@@ -431,8 +434,25 @@
             //휴일 목록을 전역 Set에 세팅하고 차트 새로고침
             if (data.holidayList) {
                 holidaySet = new Set(data.holidayList);
-                // gantt.render(); // 이제 데이터 로드 후 알아서 그리므로 필요 없음
-                console.log("★★ 서버에서 받아온 휴일 목록:", Array.from(holidaySet)); // 디버깅용 로그
+                
+             // 1. 간트 차트 엔진에 휴일 등록
+                data.holidayList.forEach(dateStr => {
+                    const parts = dateStr.split('-');
+                    gantt.setWorkTime({
+                        date: new Date(parts[0], parts[1] - 1, parts[2]),
+                        hours: false 
+                    });
+                });
+
+                // 2. ★ 추가: 부트스트랩 Datepicker에 휴일 배열을 넣어 비활성화!
+                $('.custom-datepicker').datepicker({
+                    format: 'yyyy-mm-dd',
+                    language: 'ko',
+                    autoclose: true,
+                    todayHighlight: true,
+                    datesDisabled: Array.from(holidaySet) // 이 배열에 있는 날짜는 클릭 불가(회색 처리)
+                });
+
             }
         })
         .catch(err => console.error("세팅 로드 에러:", err));
