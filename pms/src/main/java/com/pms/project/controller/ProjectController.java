@@ -1,5 +1,9 @@
 package com.pms.project.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,9 +13,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.pms.config.CustomUserDetails;
+import com.pms.issue.mapper.IssueMapper;
+import com.pms.issue.service.IssueService;
+import com.pms.issue.web.IssueDto;
 import com.pms.project.common.mapper.ProjectCommonStatusMapper;
 import com.pms.project.dto.ProjectInsertDTO;
 import com.pms.project.dto.ProjectSearchDTO; // 추가
@@ -19,7 +28,8 @@ import com.pms.project.service.ProjectService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/project")
@@ -28,6 +38,9 @@ public class ProjectController {
     // 인터페이스 타입으로 주입받아 결합도를 낮춤
     private final ProjectService projectService;
     private final ProjectCommonStatusMapper projectCommonStatusMapper;
+    
+    private final IssueMapper issueMapper;
+    private final IssueService issueService;
     
     @GetMapping("/")
     public String listProjects(Model model 
@@ -123,10 +136,71 @@ public class ProjectController {
     	return "null";
     }
     
+    // 페이지 전달 
     @GetMapping("/user/{projectCode}/gantt")
     public String getGantProject(@PathVariable String projectCode, Model model) {
-    	model.addAttribute("ganttData", projectService.findGanttDataByCode(projectCode));
-    	
     	return "project/gantt";
+    }
+    
+    // 데이터 전달
+    @GetMapping("/user/{projectCode}/gantt/data")
+    @ResponseBody // 타임리프가 개입하여 웹페이지를 찾지않고 JSON을 반환
+    public Map<String, Object> getGanttDataApi(@PathVariable String projectCode) {
+    	return projectService.findGanttDataByCode(projectCode);
+    }
+    
+    @GetMapping("/user/{projectCode}/gantt/setting")
+    @ResponseBody
+    public Map<String, Object> getGanttInsertData(@PathVariable String projectCode
+    		, @AuthenticationPrincipal CustomUserDetails customUser) {
+    	
+    	// 1. 결과를 한 번에 담을 Map 컨테이너 생성
+        Map<String, Object> responseData = new HashMap<>();
+
+        // 2. 로그인한 내 정보 (Security 에서 추출)
+        String currentUserId = customUser.getUserEntity().getUserId();
+        responseData.put("currentUserId", currentUserId);
+
+        // 3. 매퍼를 호출하여 각각의 리스트 데이터를 가져옵니다.
+        // (매퍼 인터페이스 파라미터 구성에 따라 빈 DTO를 넘기거나 생략하세요)
+        IssueDto paramDto = new IssueDto();
+        paramDto.setProjectCode(projectCode);
+        
+        List<IssueDto> statusList = issueMapper.selectIssueStatus(paramDto);
+        List<IssueDto> typeList = issueMapper.selectIssueType(paramDto);
+        List<IssueDto> priorityList = issueMapper.selectIssuePriority(paramDto);
+        List<IssueDto> managerList = issueMapper.selectIssueManager(paramDto);
+
+        // 4. 조회한 리스트들을 모두 Map에 포장합니다.
+        responseData.put("statusList", statusList);
+        responseData.put("typeList", typeList);
+        responseData.put("priorityList", priorityList);
+        responseData.put("managerList", managerList);
+
+        // 4. 조회한 리스트들을 모두 Map에 포장
+        responseData.put("statusList", statusList);
+        responseData.put("typeList", typeList);
+        responseData.put("priorityList", priorityList);
+        responseData.put("managerList", managerList);
+        
+        return responseData;
+    }
+    
+    @PostMapping("/user/{projectCode}/gantt/insert")
+    @ResponseBody
+    public IssueDto addGanttData(
+            @PathVariable String projectCode,
+            @ModelAttribute IssueDto issueDto,
+            @RequestParam("files") List<MultipartFile> files, 
+            @AuthenticationPrincipal CustomUserDetails customUser) {
+        
+        // 1. 경로 변수로 들어온 프로젝트 코드 및 필수 데이터 세팅
+        issueDto.setProjectCode(projectCode);
+
+        // 2. 파일 처리 로직 (List<MultipartFile> files 등 DTO에 파일 필드가 있다면 여기서 처리)
+		Integer jobNo = issueService.addIssue(issueDto, files);
+
+        // 3. ★ 새 ID(jobNo)가 담긴 DTO 객체를 그대로 반환! (이게 프론트엔드의 savedTask로 들어갑니다)
+        return issueDto;
     }
 }
