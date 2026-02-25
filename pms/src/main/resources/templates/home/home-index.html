@@ -425,8 +425,11 @@ function showNoticeAddModal() {
 async function showNoticeEditModal(noticeNo) {
     try {
         const res = await fetch(`/api/notices/${noticeNo}`);
+        if (!res.ok) throw new Error("데이터를 가져오지 못했습니다.");
+        
         const data = await res.json();
         
+        // 텍스트 필드 데이터 채우기
         document.getElementById('noticeId').value = data.noticeNo;
         document.getElementById('noticeTitle').value = data.title;
         document.getElementById('noticeContent').value = data.content;
@@ -434,31 +437,76 @@ async function showNoticeEditModal(noticeNo) {
         document.getElementById('noticeModalLabel').innerText = '공지사항 상세/수정';
         document.getElementById('btnDeleteNotice').style.display = 'block';
 
-        // --- 첨부파일 목록 표시 로직 추가 ---
+        // --- 첨부파일 목록 표시 로직 (DB 구조 반영) ---
         const fileListDiv = document.getElementById('existingFileList');
         fileListDiv.innerHTML = ''; // 초기화
         
         if (data.files && data.files.length > 0) {
-            let fileHtml = '<p class="fw-bold mb-1 small mt-2">저장된 파일:</p><ul class="list-unstyled small">';
+            let fileHtml = '<p class="fw-bold mb-1 small mt-2 text-dark">기존 첨부파일:</p>';
+            fileHtml += '<ul class="list-group list-group-sm shadow-sm mb-3">';
+            
             data.files.forEach(file => {
                 fileHtml += `
-                    <li class="mb-1">
-                        <i class="cil-file text-primary"></i> 
-                        <a href="/download/${file.fileUuid}" class="text-decoration-none">${file.fileName}</a>
-                        <span class="text-muted">(${file.fileSize})</span>
+                    <li class="list-group-item d-flex justify-content-between align-items-center py-2">
+                        <div class="text-truncate" style="max-width: 80%;">
+                            <i class="cil-file text-primary"></i> 
+                            <a href="/download/${file.filesUuid}" class="text-decoration-none small text-dark fw-semibold" title="다운로드">
+                                ${file.filesName}
+                            </a>
+                            <span class="text-muted small ms-2">(${file.filesSize})</span>
+                        </div>
+                        <button type="button" class="btn btn-sm text-danger border-0 p-0" 
+                                onclick="deleteIndividualFile(${file.detailsNo}, this)" title="파일만 삭제">
+                            <i class="cil-x-circle" style="font-size: 1.2rem;">&times;</i>
+                        </button>
                     </li>`;
             });
             fileHtml += '</ul>';
             fileListDiv.innerHTML = fileHtml;
+        } else {
+            fileListDiv.innerHTML = '<p class="text-muted small mt-2">첨부된 파일이 없습니다.</p>';
         }
 
         new bootstrap.Modal(document.getElementById('noticeModal')).show();
     } catch (e) { 
         console.error(e);
-        alert("상세 정보를 가져올 수 없습니다."); 
+        alert("상세 정보를 가져오는 중 오류가 발생했습니다."); 
     }
 }
 
+/**
+ * 파일 개별 삭제 함수
+ * @param {number} detailsNo - FILES_DETAILS 테이블의 PK
+ * @param {HTMLElement} btn - 클릭된 버튼 요소
+ */
+async function deleteIndividualFile(detailsNo, btn) {
+    if (!confirm("이 파일을 서버에서 영구적으로 삭제하시겠습니까?\n삭제 후 복구할 수 없습니다.")) return;
+
+    const csrf = getCsrf();
+    try {
+        const res = await fetch(`/api/files/details/${detailsNo}`, {
+            method: 'DELETE',
+            headers: { 
+                [csrf.header]: csrf.token 
+            }
+        });
+
+        if (res.ok) {
+            alert("파일이 삭제되었습니다.");
+            // 성공 시 해당 리스트 아이템(li)을 화면에서 제거
+            const listItem = btn.closest('li');
+            listItem.style.transition = '0.3s';
+            listItem.style.opacity = '0';
+            setTimeout(() => listItem.remove(), 300);
+        } else {
+            const errorMsg = await res.text();
+            alert("파일 삭제 실패: " + errorMsg);
+        }
+    } catch (error) {
+        console.error("File delete error:", error);
+        alert("파일 삭제 요청 중 네트워크 오류가 발생했습니다.");
+    }
+}
 document.getElementById('noticeForm').onsubmit = async function(e) {
     e.preventDefault();
     const id = document.getElementById('noticeId').value;
@@ -496,34 +544,28 @@ document.getElementById('noticeForm').onsubmit = async function(e) {
     }
 };
 
-async function handleDeleteNotice() {
-    const id = document.getElementById('noticeId').value;
-    if (!id) return;
-    if (!confirm("정말 삭제하시겠습니까?")) return;
+async function deleteIndividualFile(detailsNo, btn) {
+    if (!confirm("파일을 삭제하시겠습니까?")) return;
 
     const csrf = getCsrf();
     const headers = {};
     if (csrf.header && csrf.token) {
-        headers[csrf.header] = csrf.token;
+        headers[csrf.header] = csrf.token; // 여기서 Invalid name 에러 방지됨
     }
 
     try {
-        const res = await fetch(`/api/notices/${id}`, { 
-            method: 'DELETE', 
-            headers: headers 
+        // 경로를 위 컨트롤러와 맞춥니다.
+        const res = await fetch(`/api/notices/files/${detailsNo}`, {
+            method: 'DELETE',
+            headers: headers
         });
 
         if (res.ok) {
-            alert("삭제되었습니다.");
-            location.reload();
+            btn.closest('li').remove();
         } else {
-            const errorMsg = await res.text();
-            alert("삭제 권한이 없거나 실패했습니다: " + errorMsg);
+            alert("삭제 실패");
         }
-    } catch (error) {
-        console.error("Delete fetch error:", error);
-        alert("삭제 처리 중 오류가 발생했습니다.");
-    }
+    } catch (e) { console.error(e); }
 }
 
 /* --- 4. 메모 (Memo) API --- */

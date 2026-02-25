@@ -121,4 +121,17 @@ public class HomeNoticeRestController {
         int result = noticeMapper.deleteNotice(noticeNo, user.getUsername());
         return result > 0 ? ResponseEntity.ok().build() : ResponseEntity.status(403).body("삭제 권한이 없습니다.");
     }
+    
+    @DeleteMapping("/files/{detailsNo}")
+    public ResponseEntity<?> deleteFileIndividual(@PathVariable Integer detailsNo) {
+        try {
+            // filesUploadService에 개별 파일을 지우는 메서드가 있는지 확인 필요
+            // 없다면 아래 4번 항목의 서비스 로직을 서비스 클래스에 추가해야 합니다.
+            boolean isDeleted = filesUploadService.deleteFileDetail(detailsNo); 
+            
+            return isDeleted ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
 }
