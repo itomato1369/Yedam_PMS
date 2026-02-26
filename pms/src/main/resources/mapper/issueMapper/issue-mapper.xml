@@ -235,4 +235,24 @@
     WHERE job_no = #{jobNo}
 	</select>
 	
+	
+	<select id="findIssueList" resultType="IssueSelectDto">
+    SELECT i.*, p.project_name
+    FROM pms_issue i
+    JOIN pms_project p ON i.project_code = p.project_code
+    <where>
+        <if test="projectCode != null and projectCode != ''">
+            AND i.project_code = #{projectCode}
+        </if>
+        <if test="userId != null and userId != ''">
+            AND i.manager_id = #{userId}
+        </if>
+ 
+    </where>
+    ORDER BY 
+        CASE WHEN i.priority_name = '긴급' THEN 1 
+             WHEN i.priority_name = '높음' THEN 2 
+             ELSE 3 END, 
+        i.add_date DESC
+</select>
 </mapper>

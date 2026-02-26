@@ -13,20 +13,20 @@
 <style>
 /* CoreUI 테마 변수 활용을 위한 기본 설정 */
 :root {
-    --box-bg: #ffffff;
-    --box-text: #333333;
-    --box-shadow: rgba(0, 0, 0, 0.05);
-    --item-hover: #f8f9fa;
-    --border-color: #eeeeee;
+	--box-bg: #ffffff;
+	--box-text: #333333;
+	--box-shadow: rgba(0, 0, 0, 0.05);
+	--item-hover: #f8f9fa;
+	--border-color: #eeeeee;
 }
 
 /* 다크모드일 때 색상 반전 정의 */
 [data-coreui-theme="dark"] {
-    --box-bg: #212631;       /* CoreUI 다크 카드 배경색 */
-    --box-text: #f0f2f5;      /* 밝은 텍스트 */
-    --box-shadow: rgba(0, 0, 0, 0.3);
-    --item-hover: #2d323c;    /* 다크모드용 호버 색상 */
-    --border-color: #323a49;  /* 어두운 테두리 */
+	--box-bg: #212631; /* CoreUI 다크 카드 배경색 */
+	--box-text: #f0f2f5; /* 밝은 텍스트 */
+	--box-shadow: rgba(0, 0, 0, 0.3);
+	--item-hover: #2d323c; /* 다크모드용 호버 색상 */
+	--border-color: #323a49; /* 어두운 테두리 */
 }
 
 /* 1. 대시보드 그리드 레이아웃 */
@@ -47,7 +47,8 @@
 	height: 520px;
 	display: flex;
 	flex-direction: column;
-	transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+	transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s
+		ease;
 }
 
 .section-box:hover {
@@ -80,6 +81,7 @@
 .section-content::-webkit-scrollbar {
 	width: 5px;
 }
+
 .section-content::-webkit-scrollbar-thumb {
 	background-color: #ccc;
 	border-radius: 10px;
@@ -91,16 +93,42 @@
 }
 
 /* 6. 메모 카드 스타일 - 다크모드 최적화 */
-.memo-bg-1 { background-color: #fff9db !important; }
-.memo-bg-2 { background-color: #e3faf2 !important; }
-.memo-bg-3 { background-color: #f3f0ff !important; }
-.memo-bg-4 { background-color: #fff0f6 !important; }
+.memo-bg-1 {
+	background-color: #fff9db !important;
+}
+
+.memo-bg-2 {
+	background-color: #e3faf2 !important;
+}
+
+.memo-bg-3 {
+	background-color: #f3f0ff !important;
+}
+
+.memo-bg-4 {
+	background-color: #fff0f6 !important;
+}
 
 /* 다크모드에서 메모 가독성을 위해 배경 채도 조절 */
-[data-coreui-theme="dark"] .memo-bg-1 { background-color: #4a452a !important; color: #fff9db !important; }
-[data-coreui-theme="dark"] .memo-bg-2 { background-color: #2b453e !important; color: #e3faf2 !important; }
-[data-coreui-theme="dark"] .memo-bg-3 { background-color: #38324a !important; color: #f3f0ff !important; }
-[data-coreui-theme="dark"] .memo-bg-4 { background-color: #4a323a !important; color: #fff0f6 !important; }
+[data-coreui-theme="dark"] .memo-bg-1 {
+	background-color: #4a452a !important;
+	color: #fff9db !important;
+}
+
+[data-coreui-theme="dark"] .memo-bg-2 {
+	background-color: #2b453e !important;
+	color: #e3faf2 !important;
+}
+
+[data-coreui-theme="dark"] .memo-bg-3 {
+	background-color: #38324a !important;
+	color: #f3f0ff !important;
+}
+
+[data-coreui-theme="dark"] .memo-bg-4 {
+	background-color: #4a323a !important;
+	color: #fff0f6 !important;
+}
 
 .memo-card {
 	position: relative;
@@ -130,7 +158,7 @@
 	cursor: pointer;
 	transition: background 0.2s;
 	border-bottom: 1px solid var(--border-color);
-    color: var(--box-text);
+	color: var(--box-text);
 }
 
 .notice-row:hover {
@@ -147,8 +175,8 @@
 
 /* 프로젝트 카드 배경 대응 */
 .card.bg-light {
-    background-color: var(--item-hover) !important;
-    color: var(--box-text) !important;
+	background-color: var(--item-hover) !important;
+	color: var(--box-text) !important;
 }
 
 .hidden-item {
@@ -309,11 +337,30 @@
 			<div class="dashboard-item" data-id="stats">
 				<div class="section-box border-top border-info border-4">
 					<div class="section-title text-info">
-						<span><i class="cil-chart"></i> 통계</span>
+						<span><i class="cil-chart"></i> 일감 통합 현황</span>
+						<div class="form-check form-switch mb-0"
+							style="font-size: 0.9rem;">
+							<input class="form-check-input" type="checkbox"
+								id="dashShowOnlyMe" onchange="loadDashboardIssues()"> <label
+								class="form-check-label text-muted" for="dashShowOnlyMe">내
+								것만</label>
+						</div>
 					</div>
-					<div
-						class="section-content d-flex align-items-center justify-content-center">
-						<p class="text-muted">Chart.js 영역</p>
+					<div class="section-content">
+						<div class="mb-3">
+							<select id="dashProjectSelect" class="form-select form-select-sm"
+								onchange="loadDashboardIssues()">
+								<option value="all">모든 프로젝트 (전체 보기)</option>
+								<th:block th:each="p : ${list.projects}">
+									<option th:value="${p.projectCode}" th:text="${p.projectName}"></option>
+								</th:block>
+							</select>
+						</div>
+
+						<div id="dash-issue-list"
+							class="list-group list-group-flush small">
+							<p class="text-center text-muted py-4">일감을 불러오는 중...</p>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -630,6 +677,83 @@ function viewMemoDetail(content) {
     document.getElementById('fullMemoContent').innerText = content; 
     new bootstrap.Modal(document.getElementById('memoDetailModal')).show(); 
 }
+
+/* --- 대시보드 일감 로드 (통합 버전) --- */
+async function loadDashboardIssues() {
+    // 📍 타임리프 변수가 아니라, 셀렉트 박스에서 현재 선택된 값을 직접 가져옵니다.
+    const selectEl = document.getElementById('dashProjectSelect');
+    
+    // 셀렉트 박스가 있으면 그 값을 쓰고, 페이지 처음 로딩 시 없으면 'all'을 기본값으로 씁니다.
+    const projectCode = selectEl ? selectEl.value : 'all'; 
+
+    const isOnlyMe = document.getElementById('dashShowOnlyMe').checked ? 'Y' : 'N';
+    const listContainer = document.getElementById('dash-issue-list');
+
+    try {
+        // 📍 이제 projectCode에 "all"이 담겨서 /api/dashboard/all/issues... 로 호출됩니다!
+        const response = await fetch(`/api/dashboard/${projectCode}/issues?showOnlyMe=${isOnlyMe}`);
+        
+        if (!response.ok) throw new Error('API 응답 에러');
+        
+        const issues = await response.json();
+
+        // 📍 우선순위 및 날짜순 정렬
+        const priorityMap = { "긴급": 1, "높음": 2, "보통": 3, "낮음": 4 };
+
+        issues.sort((a, b) => {
+            // 1순위: 우선순위 가중치 비교
+            const pA = priorityMap[a.priorityName] || 99;
+            const pB = priorityMap[b.priorityName] || 99;
+            if (pA !== pB) return pA - pB;
+
+            // 2순위: 작성일(혹은 시작일) 최신순 (데이터 필드명에 따라 수정 필요)
+            return new Date(b.addDate || 0) - new Date(a.addDate || 0);
+        });
+
+        // 📍 리스트 렌더링
+        listContainer.innerHTML = '';
+        if (issues.length === 0) {
+            listContainer.innerHTML = '<div class="text-center text-muted py-4">해당하는 일감이 없습니다.</div>';
+            return;
+        }
+
+        issues.forEach(issue => {
+            let badgeColor = 'bg-info';
+            if(issue.priorityName === '긴급') badgeColor = 'bg-danger';
+            else if(issue.priorityName === '높음') badgeColor = 'bg-warning text-dark';
+
+            // 📍 전체보기일 때만 프로젝트 이름 표시 (issue 객체에 projectName이 있어야 함)
+            const currentSelect = document.getElementById('dashProjectSelect').value;
+            const projectTag = (currentSelect === "") ? 
+                `<span class="badge bg-light text-dark border me-1" style="font-size: 0.65rem;">${issue.projectName || '알수없음'}</span>` : '';
+
+            const itemHtml = `
+                <div class="list-group-item px-0 py-2 border-bottom" style="cursor:pointer;" 
+                     onclick="location.href='/project/user/${issue.projectCode}/issue/info?jobNo=${issue.jobNo}'">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="text-truncate" style="max-width: 80%;">
+                            ${projectTag}
+                            <small class="text-muted" style="font-size: 0.7rem;">#${issue.jobNo}</small>
+                            <span class="fw-bold d-block" style="font-size: 0.85rem;">${issue.title}</span>
+                        </div>
+                        <span class="badge ${badgeColor}" style="font-size: 0.7rem;">${issue.priorityName}</span>
+                    </div>
+                </div>`;
+            listContainer.insertAdjacentHTML('beforeend', itemHtml);
+        });
+    } catch (error) {
+        console.error("일감 로드 에러:", error);
+        listContainer.innerHTML = '<div class="text-center text-danger py-4">데이터를 가져오지 못했습니다.</div>';
+    }
+}
+
+// 스위치 클릭 시 재로드
+function filterDashIssues() {
+    loadDashboardIssues();
+}
+
+// 페이지 로드 시 최초 실행
+document.addEventListener("DOMContentLoaded", loadDashboardIssues);
 
 /* --- 5. 기타 --- */
 function goToProjectInfo(projectCode) { location.href = `/project/user/${projectCode}/info`; }
