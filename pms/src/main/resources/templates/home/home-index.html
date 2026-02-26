@@ -11,6 +11,24 @@
 	src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
 <style>
+/* CoreUI 테마 변수 활용을 위한 기본 설정 */
+:root {
+    --box-bg: #ffffff;
+    --box-text: #333333;
+    --box-shadow: rgba(0, 0, 0, 0.05);
+    --item-hover: #f8f9fa;
+    --border-color: #eeeeee;
+}
+
+/* 다크모드일 때 색상 반전 정의 */
+[data-coreui-theme="dark"] {
+    --box-bg: #212631;       /* CoreUI 다크 카드 배경색 */
+    --box-text: #f0f2f5;      /* 밝은 텍스트 */
+    --box-shadow: rgba(0, 0, 0, 0.3);
+    --item-hover: #2d323c;    /* 다크모드용 호버 색상 */
+    --border-color: #323a49;  /* 어두운 테두리 */
+}
+
 /* 1. 대시보드 그리드 레이아웃 */
 .dashboard-grid {
 	display: grid;
@@ -19,21 +37,22 @@
 	align-items: start;
 }
 
-/* 2. 위젯 박스 공통 스타일 */
+/* 2. 위젯 박스 공통 스타일 - 변수 적용 */
 .section-box {
-	background: #ffffff;
+	background: var(--box-bg);
+	color: var(--box-text);
 	border-radius: 12px;
 	padding: 24px;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+	box-shadow: 0 4px 12px var(--box-shadow);
 	height: 520px;
 	display: flex;
 	flex-direction: column;
-	transition: transform 0.2s ease, box-shadow 0.2s ease;
+	transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
 }
 
 .section-box:hover {
 	transform: translateY(-3px);
-	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 /* 3. 타이틀 디자인 */
@@ -52,68 +71,36 @@
 /* 콘텐츠 영역: 내부 스크롤 활성화 */
 .section-content {
 	flex: 1 1 auto;
-	overflow-y: auto !important; /* 내부 세로 스크롤 허용 */
+	overflow-y: auto !important;
 	overflow-x: hidden;
 	padding-right: 5px;
 }
 
-/* 스크롤바 커스텀 (위젯 안에서만 보이게) */
+/* 스크롤바 커스텀 */
 .section-content::-webkit-scrollbar {
 	width: 5px;
 }
-
 .section-content::-webkit-scrollbar-thumb {
 	background-color: #ccc;
 	border-radius: 10px;
 }
 
-/* 5. 페이지네이션 스타일 */
-.widget-pagination {
-	display: flex;
-	justify-content: center;
-	gap: 6px;
-	padding-top: 15px;
-	flex: 0 0 auto;
-}
-
-/* 페이징 버튼은 이제 필요 없으므로 완전히 숨김 */
+/* 5. 페이지네이션 스타일 (숨김 유지) */
 .widget-pagination {
 	display: none !important;
 }
 
-.page-link-sm {
-	padding: 3px 9px;
-	font-size: 11px;
-	font-weight: 600;
-	cursor: pointer;
-	border-radius: 4px;
-	border: 1px solid #eee;
-	background: #fdfdfd;
-	color: #666;
-}
+/* 6. 메모 카드 스타일 - 다크모드 최적화 */
+.memo-bg-1 { background-color: #fff9db !important; }
+.memo-bg-2 { background-color: #e3faf2 !important; }
+.memo-bg-3 { background-color: #f3f0ff !important; }
+.memo-bg-4 { background-color: #fff0f6 !important; }
 
-.page-link-sm.active {
-	background-color: #333;
-	color: white;
-	border-color: #333;
-}
-
-/* 6. 메모 카드 스타일 (이전 스타일 유지) */
-.memo-bg-1 {
-	background-color: #fff9db !important;
-}
-
-.memo-bg-2 {
-	background-color: #e3faf2 !important;
-}
-
-.memo-bg-3 {
-	background-color: #f3f0ff !important;
-}
-
-.memo-bg-4 {
-	background-color: #fff0f6 !important;
-}
+/* 다크모드에서 메모 가독성을 위해 배경 채도 조절 */
+[data-coreui-theme="dark"] .memo-bg-1 { background-color: #4a452a !important; color: #fff9db !important; }
+[data-coreui-theme="dark"] .memo-bg-2 { background-color: #2b453e !important; color: #e3faf2 !important; }
+[data-coreui-theme="dark"] .memo-bg-3 { background-color: #38324a !important; color: #f3f0ff !important; }
+[data-coreui-theme="dark"] .memo-bg-4 { background-color: #4a323a !important; color: #fff0f6 !important; }
 
 .memo-card {
 	position: relative;
@@ -125,7 +112,7 @@
 
 .memo-card:hover {
 	transform: scale(1.03);
-	box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1) !important;
+	box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2) !important;
 }
 
 .memo-content-preview {
@@ -135,9 +122,44 @@
 	overflow: hidden;
 	font-size: 0.85rem;
 	line-height: 1.5;
-	color: #333;
+	color: inherit; /* 부모 색상 상속 */
 }
 
+/* 공지사항 행 스타일 - 변수 적용 */
+.notice-row {
+	cursor: pointer;
+	transition: background 0.2s;
+	border-bottom: 1px solid var(--border-color);
+    color: var(--box-text);
+}
+
+.notice-row:hover {
+	background-color: var(--item-hover) !important;
+}
+
+.date-badge {
+	font-size: 0.75rem;
+	color: #888;
+	border: 1px solid var(--border-color);
+	padding: 2px 6px;
+	border-radius: 4px;
+}
+
+/* 프로젝트 카드 배경 대응 */
+.card.bg-light {
+    background-color: var(--item-hover) !important;
+    color: var(--box-text) !important;
+}
+
+.hidden-item {
+	display: none !important;
+}
+
+.drag-ghost {
+	opacity: 0.3;
+}
+
+/* 6. 메모 삭제 버튼 스타일 (이전 스타일로 복구) */
 .btn-delete-memo {
 	position: absolute;
 	top: 8px;
@@ -145,7 +167,7 @@
 	width: 24px;
 	height: 24px;
 	border-radius: 50%;
-	background-color: rgba(0, 0, 0, 0.1);
+	background-color: rgba(0, 0, 0, 0.1); /* 이전의 반투명 스타일 */
 	color: #666;
 	border: none;
 	font-size: 14px;
@@ -158,38 +180,18 @@
 	z-index: 10;
 }
 
+/* 호버 시에는 삭제 느낌이 나도록 빨간색으로 변경되는 이전 로직 유지 */
 .btn-delete-memo:hover {
-	background-color: #dc3545;
-	color: white;
+	background-color: #dc3545 !important;
+	color: white !important;
 }
 
-/* 공지사항 행 스타일 */
-.notice-row {
-	cursor: pointer;
-	transition: background 0.2s;
-}
-
-.notice-row:hover {
-	background-color: #f8f9fa !important;
-}
-
-.date-badge {
-	font-size: 0.75rem;
-	color: #888;
-	border: 1px solid #eee;
-	padding: 2px 6px;
-	border-radius: 4px;
-}
-
-.hidden-item {
-	display: none !important;
-}
-
-.drag-ghost {
-	opacity: 0.3;
+/* 다크모드일 때 삭제 버튼이 너무 안 보일 수 있으니 대비감 살짝 조정 */
+[data-coreui-theme="dark"] .btn-delete-memo {
+	background-color: rgba(255, 255, 255, 0.2);
+	color: #eee;
 }
 </style>
-
 <meta name="_csrf" th:content="${_csrf?.token}" />
 <meta name="_csrf_header" th:content="${_csrf?.headerName}" />
 </head>
