@@ -1,8 +1,14 @@
 package com.pms.project.controller;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -22,6 +28,8 @@ import com.pms.issue.mapper.IssueMapper;
 import com.pms.issue.service.IssueService;
 import com.pms.issue.web.IssueDto;
 import com.pms.project.common.mapper.ProjectCommonStatusMapper;
+import com.pms.project.dto.HistoryDTO;
+import com.pms.project.dto.HolidayDTO;
 import com.pms.project.dto.ProjectInsertDTO;
 import com.pms.project.dto.ProjectSearchDTO; // 추가
 import com.pms.project.service.ProjectService;
@@ -170,18 +178,21 @@ public class ProjectController {
         List<IssueDto> typeList = issueMapper.selectIssueType(paramDto);
         List<IssueDto> priorityList = issueMapper.selectIssuePriority(paramDto);
         List<IssueDto> managerList = issueMapper.selectIssueManager(paramDto);
+        
+        Set<HolidayDTO> rawHolidays = projectService.findHolidays(); 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        List<String> holidayStrList = rawHolidays.stream()
+                .filter(h -> "Y".equals(h.getIsHoliday()))      // 1. 쉬는 날('Y')만 필터링
+                .map(h -> sdf.format(h.getHolidayDt()))         // 2. Date 객체를 "2026-02-28" 형태의 문자열로 변환
+                .collect(Collectors.toList());                  // 3. 리스트로 수집
 
         // 4. 조회한 리스트들을 모두 Map에 포장합니다.
         responseData.put("statusList", statusList);
         responseData.put("typeList", typeList);
         responseData.put("priorityList", priorityList);
         responseData.put("managerList", managerList);
-
-        // 4. 조회한 리스트들을 모두 Map에 포장
-        responseData.put("statusList", statusList);
-        responseData.put("typeList", typeList);
-        responseData.put("priorityList", priorityList);
-        responseData.put("managerList", managerList);
+        responseData.put("holidayList", holidayStrList); // 휴일정보 추가
         
         return responseData;
     }
@@ -198,9 +209,37 @@ public class ProjectController {
         issueDto.setProjectCode(projectCode);
 
         // 2. 파일 처리 로직 (List<MultipartFile> files 등 DTO에 파일 필드가 있다면 여기서 처리)
-		Integer jobNo = issueService.addIssue(issueDto, files);
+		try {
+			Integer jobNo = issueService.addIssue(issueDto, files);
+			log.debug("jobNo check{}", jobNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
         // 3. ★ 새 ID(jobNo)가 담긴 DTO 객체를 그대로 반환! (이게 프론트엔드의 savedTask로 들어갑니다)
         return issueDto;
+    }
+    
+    
+    @GetMapping("/user/{projectCode}/history")
+    public String getHistory(@PathVariable String projectCode, Model model) {
+    	
+    	List<HistoryDTO> historyList = projectService.findHistoryByCode(projectCode);
+    	// 오늘 날짜 구하기
+        String todayStr = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+
+        // 날짜(yyyy/MM/dd)를 Key로, 해당 날짜의 작업내역 List를 Value로 묶기 - 순서를 보장하기 위해 반드시 LinkedHashMap을 사용
+        Map<String, List<HistoryDTO>> groupedHistory = historyList.stream()
+            .collect(Collectors.groupingBy(
+                dto -> {
+                    String dateStr = new SimpleDateFormat("yyyy/MM/dd").format(dto.getHistoryDate());
+                    return dateStr.equals(todayStr) ? "오늘" : dateStr; // 오늘이면 "오늘"로 변환
+                },
+                LinkedHashMap::new, // 내림차순 정렬 순서 유지
+                Collectors.toList()
+            ));
+
+        model.addAttribute("groupedHistory", groupedHistory);
+        return "project/history";
     }
 }

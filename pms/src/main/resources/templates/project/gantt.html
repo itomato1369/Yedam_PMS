@@ -41,11 +41,9 @@
     font-size: 1rem !important;
 }
 </style>
-<!--/* <link th:href="@{/dhtmlx/gantt/dhtmlxgantt.css}" rel="stylesheet">
-    <script th:src="@{/dhtmlx/gantt/dhtmlxgantt.js}"></script> */-->
-<link href="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.css"
-	rel="stylesheet">
-<script src="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.js"></script>
+<link th:href="@{/dhtmlx/gantt/dhtmlxgantt.css}" rel="stylesheet">
+<script th:src="@{/dhtmlx/gantt/dhtmlxgantt.js}"></script> 
+<!-- <script src="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.js"></script> -->
 <!-- <script src="https://cdn.dhtmlx.com/gantt/edge/locales/locale_kr.js"></script> -->
 </head>
 <body>
@@ -79,13 +77,17 @@
 	// 입력폼 관리하는 전역데이터
     let ganttIssueModal;
     let currentTaskInfo = null;
-	
+    let holidaySet = new Set(); // 휴일 목록을 담아둘 Set 자료구조 추가
+    
     const projectCode = /*[[${projectCode}]]*/ null;
     const url = /*[[@{/project/user/{code}/gantt/data(code=${projectCode})}]]*/ '/';
     const add_url = /*[[@{/project/user/{code}/gantt/insert(code=${projectCode})}]]*/ '/';
     const setting_url = /*[[@{/project/user/{code}/gantt/setting(code=${projectCode})}]]*/ '/';
     
-    gantt.plugins({ marker: true });
+    gantt.plugins({ 
+    	    marker: true,
+            worktime: true 
+        });
 
     // ==========================================
     // 1. 차트 외형(UI) 및 이벤트 설정 함수
@@ -99,16 +101,21 @@
         gantt.config.grid_header_height = 60; 
         gantt.config.scale_height = 60;       
 
-        // ★ [리사이즈 해결 핵심] 
+        // 리사이즈 기능 용도, 적용안됨. TODO: 안되는원인 파악해서 적용되게 수정해야함
         gantt.config.grid_resize = true;       // 왼쪽 테이블과 오른쪽 차트 사이의 경계선 드래그 허용
         gantt.config.keep_grid_width = false;  // 내부 컬럼 크기 조절 시 테이블 전체 넓이도 같이 변하도록 허용
         
         // 진척도 드래그불가능
         gantt.config.drag_progress = false;
         
+        // 업무일 기준으로만 일감의 기간(Duration)이 늘어나도록 보정
+        gantt.config.work_time = true; 
+        gantt.config.correct_work_time = true;
+        gantt.config.skip_off_time = true;
+        
         gantt.config.columns = [
             { name: "text",       label: "작업명",  tree: true, width: "*", min_width: 150, resize: true },
-            /* { name: "duration",   label: "기간(일)", align: "center" }, */
+            { name: "duration",   label: "기간(일)", align: "center" },
             { name: "start_date", label: "시작일", width: "*", min_width: 90, align: "center", resize: true },
             { name: "displayEnd", label: "종료일", width: "*", min_width: 90, align: "center", resize: true
             	, template: function(task) {
@@ -127,13 +134,34 @@
             { unit: "day",   step: 1, format: "%d일(%D)" } 
         ];
         
+        gantt.ignore_time = function(date) {
+            const yyyy = date.getFullYear();
+            const mm = String(date.getMonth() + 1).padStart(2, '0');
+            const dd = String(date.getDate()).padStart(2, '0');
+            const dateStr = `${yyyy}-${mm}-${dd}`; 
+            
+            // 전역 Set에 해당 날짜가 존재하면 true 반환 -> 화면에서 아예 안 그림!
+            if (holidaySet.has(dateStr)) {
+                return true; 
+            }
+            return false; 
+        };
+
         // --- 이벤트 설정들 ---
-     // 1. 헤더 '추가' 클릭 시 더미 데이터 생성 방지
+        // 헤더 '추가' 클릭 시 더미 데이터 생성 방지
         gantt.attachEvent("onGridHeaderClick", function(name, e) {
             if (name === "add") return false; 
             return true; 
         });
 
+        // 프로젝트는 수정 안 할거니까 부트스트랩 모달 안 띄우게 막기 
+        gantt.attachEvent("onTaskDblClick", function(id, e){
+            // ID가 'p'로 시작하면 프로젝트이므로 차단
+            if (String(id).startsWith("p")) {
+                return false; // false를 반환하면 기본 모달(Lightbox)이 열리지 않습니다.
+            }
+            return true; // 그 외의 일반 일감('j' 등)은 정상적으로 열리도록 허용
+        });
         // 2. 기본 모달 대신 커스텀 부트스트랩 모달 띄우기
         gantt.attachEvent("onBeforeLightbox", function(id) {
             currentTaskInfo = gantt.getTask(id);
@@ -154,11 +182,17 @@
             // [추가] 숨김 필드(Hidden) 자동 세팅
             let rawParentId = String(currentTaskInfo.parent);
             if (rawParentId.startsWith("p")) {
+                // 1. 프로젝트(p)의 '+' 버튼을 누른 경우
                 hiddenProjectNo.value = rawParentId.replace("p", "");
                 hiddenParentJobNo.value = ""; 
             } else if (rawParentId.startsWith("j")) {
+                // 2. 일감(j)의 '+' 버튼을 누른 경우 (하위 일감)
                 hiddenParentJobNo.value = rawParentId.replace("j", "");
+                let parentTaskNode = gantt.getTask(rawParentId);
+                let pId = parentTaskNode.project_id || ""; 
+                hiddenProjectNo.value = pId.replace("p", ""); 
             } else {
+                // 3. 예외 상황
                 hiddenProjectNo.value = projectCode;
             }
 
@@ -222,7 +256,7 @@
             })
             .then(response => {
                 if(!response.ok) throw new Error("서버 응답 오류");
-                return response.json(); // 성공 시 서버가 발급한 ID가 담긴 JSON 반환을 기대함
+                return response.json(); 
             })
             .then(savedTask => {
                 // 저장 성공: $new 플래그 지워서 모달 닫힐 때 삭제되지 않게 방어
@@ -232,20 +266,53 @@
                 // 임시 바 지우기
                 gantt.deleteTask(currentTaskInfo.id);
 
-                // ★ 핵심: 서버에서 온 DTO(IssueDto)를 간트 차트 규격으로 변환!
+                // 날짜 파싱 및 Duration(기간) 계산
+                const startDateObj = new Date(savedTask.startDate);
+                const endDateObj = new Date(savedTask.endDate);
+                
+                // TO-BE (적용): 간트 차트 내부의 휴일(WorkTime) 정보를 반영하여 순수 영업일수만 뽑아냄!
+                const calcDuration = gantt.calculateDuration({
+                    start_date: startDateObj, 
+                    end_date: endDateObj
+                });
+                
+                // 간트 차트가 읽을 수 있는 포맷("DD-MM-YYYY")으로 변환하는 함수
+                const formatFunc = gantt.date.date_to_str("%d-%m-%Y");
+
+                // Select Box에서 Text 추출
+                const managerSelect = document.querySelector('select[name="managerId"]');
+                const managerName = managerSelect.options[managerSelect.selectedIndex].text;
+
+                const prioritySelect = document.querySelector('select[name="priority"]');
+                const priorityName = prioritySelect.options[prioritySelect.selectedIndex].text;
+
+                // 차트용 데이터 조립
                 let newGanttTask = {
-                    id: "j" + savedTask.jobNo,        // 간트 차트의 일감 고유 ID
-                    text: savedTask.title,            // 화면에 보일 작업명 (title -> text)
-                    start_date: savedTask.startDate,  // 서버 포맷에 따라 Date 객체나 스트링으로 가공 필요할 수 있음
-                    duration: 1,                      // 기본 기간
-                    parent: currentTaskInfo.parent,   // 기존에 가지고 있던 부모 ID 유지
-                    workerName: savedTask.username,   // 담당자 이름 매핑
-                    jobPriority: savedTask.commonName // 우선순위 매핑
-                };
+                        id: "j" + savedTask.jobNo,        
+                        text: savedTask.title,            
+                        start_date: formatFunc(startDateObj), 
+                        duration: calcDuration,               
+                        parent: currentTaskInfo.parent,   
+                        workerName: managerName,              
+                        jobPriority: priorityName,
+                        // loadGanttData와 동일한 일감 색상 강제 지정
+                        color: "#3db9d3",
+                        progressColor: "#2a8e9d",
+                        open: true // 추가된 일감의 하위 트리가 있다면 기본으로 열어두기
+                    };
 
-                // 변환된 데이터로 차트에 추가
-                gantt.addTask(newGanttTask, newGanttTask.parent);
+                    // 조립된 데이터로 차트에 추가
+                    gantt.addTask(newGanttTask, newGanttTask.parent);
 
+                    // Link 추가
+                    if (newGanttTask.parent && String(newGanttTask.parent).startsWith("j")) {
+	                    gantt.addLink({
+	                        id: "link_" + newGanttTask.id, // 겹치지 않는 임의의 링크 ID
+	                        source: newGanttTask.parent,   // 상위 일감(j~)에서 선이 시작됨
+	                        target: newGanttTask.id,       // 방금 만든 하위 일감(j~)으로 이어짐
+	                        type: "1"                      // Finish-to-Start (끝남과 동시에 시작) 타입
+	                    });
+	                }
                 gantt.message({text: "일감이 등록되었습니다.", type: "success"});
             })
             .catch(error => {
@@ -338,7 +405,7 @@
     // 폼 Select Box 기초 데이터 로딩
     // ==========================================
     function loadSettingData() {
-        fetch(setting_url)
+    	return fetch(setting_url)
         .then(res => res.json())
         .then(data => {
             // 셀렉트 박스 옵션 채우는 도우미 함수
@@ -363,6 +430,30 @@
                     workerSelect.add(option);
                 });
             }
+            
+            //휴일 목록을 전역 Set에 세팅하고 차트 새로고침
+            if (data.holidayList) {
+                holidaySet = new Set(data.holidayList);
+                
+             // 1. 간트 차트 엔진에 휴일 등록
+                data.holidayList.forEach(dateStr => {
+                    const parts = dateStr.split('-');
+                    gantt.setWorkTime({
+                        date: new Date(parts[0], parts[1] - 1, parts[2]),
+                        hours: false 
+                    });
+                });
+
+                // 2. ★ 추가: 부트스트랩 Datepicker에 휴일 배열을 넣어 비활성화!
+                $('.custom-datepicker').datepicker({
+                    format: 'yyyy-mm-dd',
+                    language: 'ko',
+                    autoclose: true,
+                    todayHighlight: true,
+                    datesDisabled: Array.from(holidaySet) // 이 배열에 있는 날짜는 클릭 불가(회색 처리)
+                });
+
+            }
         })
         .catch(err => console.error("세팅 로드 에러:", err));
     }
@@ -370,8 +461,9 @@
     // 3. 페이지가 로드되면 실행되는 메인 로직
     // ==========================================
     initGanttUI();   // 1. 차트 껍데기를 먼저 그리고
-    loadGanttData(); // 2. 데이터를 채워 넣습니다.
-    loadSettingData();
+    loadSettingData().then(() => {
+        loadGanttData(); 
+    });
 </script>
 
 </body>
