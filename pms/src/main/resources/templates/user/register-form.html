@@ -8,9 +8,24 @@
 <meta charset="utf-8" />
 <title>회원 등록</title>
 
-<!-- CoreUI CSS -->
 <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.0.0/dist/css/coreui.min.css"
       rel="stylesheet">
+
+<style>
+    /* 📍 필수 항목 시각적 표시 스타일 */
+    .required-label::after {
+        content: " *";
+        color: #e55353; /* CoreUI Danger 컬러 */
+        font-weight: bold;
+    }
+    .mandatory-notice {
+        font-size: 0.85rem;
+        background-color: #f0f2f5;
+        padding: 8px 12px;
+        border-radius: 6px;
+        border-left: 4px solid #3c4b64;
+    }
+</style>
 </head>
 
 <body class="bg-body-tertiary">
@@ -24,7 +39,6 @@
                 <div class="card shadow-lg border-0 rounded-4">
                     <div class="card-body p-4">
 
-                        <!-- 타이틀 -->
                         <div class="text-center mb-4">
                             <h3 class="fw-bold">회원 등록</h3>
                             <p class="text-medium-emphasis small">
@@ -32,7 +46,11 @@
                             </p>
                         </div>
 
-                        <!-- 글로벌 에러 -->
+<!--                         <div class="mandatory-notice mb-4">
+                            <span class="text-danger fw-bold">*</span> 
+                            <span class="text-dark">모든 필드는 필수 입력 항목입니다.</span>
+                        </div> -->
+
                         <div th:if="${error}" 
                              class="alert alert-danger"
                              th:text="${error}">
@@ -42,9 +60,8 @@
                               th:object="${userDto}"
                               method="post">
 
-                            <!-- 유저 ID -->
                             <div class="mb-3">
-                                <label class="form-label">유저 ID</label>
+                                <label class="form-label required-label">유저 ID</label>
                                 <input type="text"
                                        th:field="*{userId}"
                                        class="form-control"
@@ -56,9 +73,8 @@
                                 </div>
                             </div>
 
-                            <!-- 비밀번호 -->
                             <div class="mb-3">
-                                <label class="form-label">비밀번호</label>
+                                <label class="form-label required-label">비밀번호</label>
                                 <input type="password"
                                        th:field="*{password}"
                                        class="form-control"
@@ -70,9 +86,8 @@
                                 </div>
                             </div>
 
-                            <!-- 이름 -->
                             <div class="mb-3">
-                                <label class="form-label">이름</label>
+                                <label class="form-label required-label">이름</label>
                                 <input type="text"
                                        th:field="*{username}"
                                        class="form-control"
@@ -84,35 +99,34 @@
                                 </div>
                             </div>
 
-                            <!-- 이메일 -->
                             <div class="mb-3">
-                                <label class="form-label">이메일</label>
+                                <label class="form-label required-label">이메일</label>
                                 <input type="email"
                                        th:field="*{email}"
                                        class="form-control"
                                        placeholder="example@email.com">
+                                
+                                <div class="invalid-feedback d-block"
+                                     th:if="${#fields.hasErrors('email')}"
+                                     th:errors="*{email}">
+                                </div>
                             </div>
 
-                            <!-- 관리자 체크 -->
-                            <div class="form-check mb-3"
+                            <div class="form-check mb-4 mt-4"
                                  sec:authorize="hasRole('ROLE_ADMIN')">
-
                                 <input type="checkbox"
                                        id="adminCheck"
                                        th:field="*{admin}"
                                        class="form-check-input">
-
-                                <label for="adminCheck"
-                                       class="form-check-label">
+                                <label for="adminCheck" class="form-check-label text-primary fw-semibold">
                                     관리자 권한 부여
                                 </label>
                             </div>
 
-                            <!-- 버튼 -->
-                            <div class="d-grid gap-2">
+                            <div class="d-grid gap-2 mt-4">
                                 <button type="submit"
-                                        class="btn btn-primary rounded-3">
-                                    등록
+                                        class="btn btn-primary rounded-3 py-2 fw-bold">
+                                    회원 등록 완료
                                 </button>
 
                                 <a th:href="@{/}"
@@ -132,7 +146,6 @@
 
 </div>
 
-<!-- CoreUI JS -->
 <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.0.0/dist/js/coreui.bundle.min.js"></script>
 
 </body>
