@@ -6,81 +6,302 @@
 <head>
 <title>권한 상세 설정</title>
 <style>
-.table th { background-color: #f8f9fa; }
-.permission-checkbox { transform: scale(1.2); cursor: pointer; }
-.menu-name { font-weight: 600; color: #333; }
-.url-text { font-size: 0.85rem; color: #666; }
-#roleNameInput { font-size: 1.25rem; font-weight: bold; border-color: #4f5d73; }
-.role-header-area { padding: 1.5rem 1rem; }
-/* 행 체크박스 강조 */
-.row-select-all { transform: scale(1.1); cursor: pointer; border-color: #adb5bd; }
+/* 📍 모든 체크박스의 기준선 통일 */
+.form-check-input {
+	margin: 0 !important; /* 브라우저 기본 마진 제거 */
+	cursor: pointer;
+	width: 1.1rem;
+	height: 1.1rem;
+	position: relative;
+	/* 📍 수평선을 맞추는 핵심: 수직 중앙 정렬 */
+	display: inline-block;
+	vertical-align: middle;
+}
+
+/* 📍 행 선택(Row) 체크박스 정렬 */
+.row-select-all {
+	margin-top: 0 !important;
+}
+
+/* 📍 첫 번째 열(메뉴명) 내부 레이아웃 */
+.table td:first-child .d-flex {
+	display: flex;
+	align-items: center; /* 텍스트와 체크박스 수직 중앙 정렬 */
+	min-height: 40px; /* 행 높이를 고정하여 수평선 유지 */
+}
+
+/* 📍 텍스트 위치 미세 조정 */
+.menu-name {
+	line-height: 1.2;
+	margin-bottom: 2px;
+}
+
+/* 📍 테이블 셀 자체의 수직 정렬 */
+.table td, .table th {
+	vertical-align: middle !important;
+}
+/* 1. 테마 변수 설정 */
+:root {
+	--pms-card-bg: #ffffff;
+	--pms-header-bg: #f8f9fa;
+	--pms-text-main: #212529;
+	--pms-text-muted: #666666;
+	--pms-border: #dee2e6;
+	--pms-input-bg: #ffffff;
+}
+
+[data-coreui-theme="dark"] {
+	--pms-card-bg: #2a303d;
+	--pms-header-bg: #1d222b; /* 📍 헤더와 검색창 배경을 더 어둡게 */
+	--pms-text-main: #d8dbe0;
+	--pms-text-muted: #a5a9b1;
+	--pms-border: #3c434f;
+	--pms-input-bg: #1b1f28;
+}
+
+/* 📍 2. 전방위 눈부심 차단 (bg-white 무력화) */
+[data-coreui-theme="dark"] .bg-white, [data-coreui-theme="dark"] .card-header.bg-white,
+	[data-coreui-theme="dark"] .input-group-text.bg-white {
+	background-color: var(--pms-header-bg) !important;
+	color: var(--pms-text-main) !important;
+	border-color: var(--pms-border) !important;
+}
+
+/* 📍 3. 역할 이름 입력 필드 (너무 밝지 않게 조정) */
+#roleNameInput {
+	background-color: var(--pms-input-bg) !important;
+	color: var(--pms-text-main) !important;
+	border-color: var(--pms-border) !important;
+	font-size: 1.25rem;
+	font-weight: bold;
+}
+
+/* 📍 4. 테이블 디자인 최적화 (CRUD Matrix) */
+.table {
+	color: var(--pms-text-main) !important;
+	border-color: var(--pms-border) !important;
+}
+
+/* 테이블 헤더 암전 */
+.table th, thead.table-light, .table-light {
+	background-color: var(--pms-header-bg) !important;
+	color: var(--pms-text-main) !important;
+	border-bottom: 2px solid var(--pms-border) !important;
+}
+
+[data-coreui-theme="dark"] .table-bordered td, [data-coreui-theme="dark"] .table-bordered th
+	{
+	border-color: var(--pms-border) !important;
+}
+
+/* 📍 5. 체크박스 가시성 확보 */
+.permission-checkbox, .row-select-all, .form-check-input {
+	transform: scale(1.2);
+	cursor: pointer;
+	border-color: var(--pms-border) !important;
+}
+
+[data-coreui-theme="dark"] .form-check-input:checked {
+	background-color: #321fdb !important; /* 체크 시 파란색 유지 */
+	border-color: #321fdb !important;
+}
+
+/* 📍 6. 텍스트 디테일 (안 보이던 부분 해결) */
+.menu-name {
+	font-weight: 600;
+	color: var(--pms-text-main) !important;
+}
+
+.url-text {
+	font-size: 0.85rem;
+	color: var(--pms-text-muted) !important;
+}
+
+h3, .card-title {
+	color: var(--pms-text-main) !important;
+}
+
+/* 📍 7. 검색창 및 기타 요소 */
+.form-control {
+	background-color: var(--pms-input-bg) !important;
+	color: var(--pms-text-main) !important;
+	border-color: var(--pms-border) !important;
+}
+
+[data-coreui-theme="dark"] .btn-light {
+	background-color: #3c434f !important;
+	color: #fff !important;
+	border: none !important;
+}
+
+[data-coreui-theme="dark"] .badge.bg-light {
+	background-color: rgba(255, 255, 255, 0.1) !important;
+	color: var(--pms-text-main) !important;
+}
+
+/* 행 마우스 호버 시 강조색상 변경 */
+[data-coreui-theme="dark"] .table-hover tbody tr:hover {
+	background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+/* 📍 테이블 헤더 내 체크박스 수직 정렬 강화 */
+.table thead th {
+	vertical-align: middle !important;
+}
+
+/* 헤더 텍스트와 체크박스를 세로로 예쁘게 정렬 */
+.table thead th div.d-flex.flex-column {
+	gap: 8px; /* 글자와 체크박스 사이 간격 */
+}
+
+/* 📍 체크박스 자체 스타일 교정 */
+.permission-checkbox, .row-select-all, .select-all, #selectAllMaster {
+	margin: 0 !important; /* 브라우저 기본 마진 제거 */
+	display: inline-block;
+	vertical-align: middle;
+	transform: scale(1.2);
+	cursor: pointer;
+}
+
+/* 📍 셀 내부 중앙 정렬 보정 */
+.table td, .table th {
+	text-align: center;
+}
+
+/* 메뉴명 열(첫 번째 열)은 왼쪽 정렬 유지하되 체크박스 높이 맞춤 */
+.table td:first-child {
+	text-align: left !important;
+	vertical-align: middle !important;
+}
+
+/* 📍 다크모드 보정 (선택 사항: 테두리 강조) */
+[data-coreui-theme="dark"] .form-check-input {
+	border-color: var(--pms-border) !important;
+}
+
+<style>
+/* 📍 헤더와 본문의 체크박스 위치를 물리적으로 고정 */
+.table th.ps-4, .table td.ps-4 {
+    padding-left: 1.5rem !important; /* 본문의 ps-4와 헤더의 ps-4를 완벽히 일치시킴 */
+}
+
+/* 📍 체크박스와 텍스트의 수직 중앙 정렬 */
+.search-target .d-flex, 
+.table thead th .d-flex {
+    display: flex;
+    align-items: center;
+    min-height: 24px; /* 높이를 맞춰서 세로 중심을 잡음 */
+}
+
+/* 📍 체크박스 마진 완전 제거 (정렬 방해 요소) */
+#selectAllMaster, .row-select-all {
+    margin: 0 !important;
+}
+</style>
 </style>
 </head>
 
 <body>
 	<div layout:fragment="Content">
 		<div class="container-fluid">
-            <div class="card mb-4 shadow-sm">
-				<div class="card-body d-flex justify-content-between align-items-center role-header-area">
+			<div class="card mb-4 shadow-sm">
+				<div
+					class="card-body d-flex justify-content-between align-items-center role-header-area">
 					<div id="roleNameContainer" class="d-flex align-items-center gap-3">
 						<h3 class="mb-0 d-flex align-items-center gap-2">
-							<i class="cil-shield-check text-primary"></i> 
-                            <span id="roleNameDisplay">역할 권한 설정</span> 
-                            <input type="text" id="roleNameInput" class="form-control d-none" style="width: 300px;">
+							<i class="cil-shield-check text-primary"></i> <span
+								id="roleNameDisplay">역할 권한 설정</span> <input type="text"
+								id="roleNameInput" class="form-control d-none"
+								style="width: 300px;">
 						</h3>
 						<div class="action-buttons">
-							<button type="button" id="btnEditRoleName" class="btn btn-outline-secondary btn-sm"><i class="cil-pencil"></i> 이름 수정</button>
-							<button type="button" id="btnSaveRoleName" class="btn btn-success btn-sm text-white d-none">확인</button>
-							<button type="button" id="btnCancelRoleName" class="btn btn-link btn-sm text-danger d-none">취소</button>
+							<button type="button" id="btnEditRoleName"
+								class="btn btn-outline-secondary btn-sm">
+								<i class="cil-pencil"></i> 이름 수정
+							</button>
+							<button type="button" id="btnSaveRoleName"
+								class="btn btn-success btn-sm text-white d-none">확인</button>
+							<button type="button" id="btnCancelRoleName"
+								class="btn btn-link btn-sm text-danger d-none">취소</button>
 						</div>
 						<span class="badge bg-light text-dark p-2" id="roleIdDisplay"></span>
 					</div>
 					<div class="d-flex gap-2">
-						<button type="button" class="btn btn-outline-dark" onclick="history.back()"><i class="cil-arrow-left"></i> 뒤로가기</button>
-						<button type="button" id="btnSaveAll" class="btn btn-primary px-4"><i class="cil-save"></i> 전체 권한 저장</button>
+						<button type="button" class="btn btn-outline-dark"
+							onclick="history.back()">
+							<i class="cil-arrow-left"></i> 뒤로가기
+						</button>
+						<button type="button" id="btnSaveAll" class="btn btn-primary px-4">
+							<i class="cil-save"></i> 전체 권한 저장
+						</button>
 					</div>
 				</div>
 			</div>
 
-            <div class="card mb-4 border-0">
+			<div class="card mb-4 border-0">
 				<div class="card-body p-0">
 					<div class="input-group input-group-lg shadow-sm">
-						<span class="input-group-text bg-white border-end-0"><i class="cil-search"></i></span> 
-                        <input type="text" id="menuSearchInput" class="form-control border-start-0 ps-0" placeholder="찾으시는 메뉴명 또는 경로를 입력하세요">
-						<button class="btn btn-light border" type="button" id="btnSearchClear">초기화</button>
+						<span class="input-group-text bg-white border-end-0"><i
+							class="cil-search"></i></span> <input type="text" id="menuSearchInput"
+							class="form-control border-start-0 ps-0"
+							placeholder="찾으시는 메뉴명 또는 경로를 입력하세요">
+						<button class="btn btn-light border" type="button"
+							id="btnSearchClear">초기화</button>
 					</div>
 				</div>
 			</div>
 
-            <div class="card shadow-sm">
+			<div class="card shadow-sm">
 				<div class="card-header bg-white py-3">
 					<h5 class="card-title mb-0">메뉴 접근 제어 행렬 (CRUD Matrix)</h5>
 				</div>
 				<div class="card-body p-0">
-					<table class="table table-bordered table-hover mb-0 text-center align-middle" id="permissionTable">
+					<table
+						class="table table-bordered table-hover mb-0 text-center align-middle"
+						id="permissionTable">
 						<thead class="table-light">
 							<tr>
-                                <th style="width: 30%;" class="py-3">
-                                    <div class="d-flex align-items-center justify-content-center gap-2">
-                                        <input type="checkbox" class="form-check-input mt-0" id="selectAllMaster">
-                                        <span>메뉴명 / 경로 (행 선택)</span>
-                                    </div>
-                                </th>
-								<th style="width: 15%;">조회(READ) <br> <input type="checkbox" class="form-check-input select-all mt-2" data-type="read"></th>
-								<th style="width: 15%;">생성(CREATE) <br> <input type="checkbox" class="form-check-input select-all mt-2" data-type="create"></th>
-								<th style="width: 15%;">수정(UPDATE) <br> <input type="checkbox" class="form-check-input select-all mt-2" data-type="update"></th>
-								<th style="width: 15%;">삭제(DELETE) <br> <input type="checkbox" class="form-check-input select-all mt-2" data-type="delete"></th>
+								<th style="width: 30%;" class="py-3 ps-4">
+									<div
+										class="d-flex align-items-center justify-content-start gap-2">
+										<input type="checkbox" class="form-check-input mt-0"
+											id="selectAllMaster"> <span class="fw-bold">메뉴명
+											/ 경로 (행 선택)</span>
+									</div>
+								</th>
+								<th style="width: 17.5%;"><div
+										class="d-flex flex-column align-items-center gap-2">
+										<span>조회</span><input type="checkbox"
+											class="form-check-input select-all" data-type="read">
+									</div></th>
+								<th style="width: 17.5%;"><div
+										class="d-flex flex-column align-items-center gap-2">
+										<span>생성</span><input type="checkbox"
+											class="form-check-input select-all" data-type="create">
+									</div></th>
+								<th style="width: 17.5%;"><div
+										class="d-flex flex-column align-items-center gap-2">
+										<span>수정</span><input type="checkbox"
+											class="form-check-input select-all" data-type="update">
+									</div></th>
+								<th style="width: 17.5%;"><div
+										class="d-flex flex-column align-items-center gap-2">
+										<span>삭제</span><input type="checkbox"
+											class="form-check-input select-all" data-type="delete">
+									</div></th>
 							</tr>
 						</thead>
 						<tbody id="permissionTableBody">
-							<tr><td colspan="5" class="py-5 text-muted">데이터를 불러오는 중입니다...</td></tr>
+							<tr>
+								<td colspan="5" class="py-5 text-muted">데이터를 불러오는 중입니다...</td>
+							</tr>
 						</tbody>
 					</table>
 				</div>
 			</div>
 		</div>
 
-<script th:inline="javascript">
+		<script th:inline="javascript">
 $(document).ready(function () {
     const urlParams = new URLSearchParams(window.location.search);
     const roleNo = urlParams.get('menu_id');
