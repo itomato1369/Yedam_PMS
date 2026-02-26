@@ -179,7 +179,7 @@ h3, .card-title {
 	border-color: var(--pms-border) !important;
 }
 
-<style>
+
 /* 📍 헤더와 본문의 체크박스 위치를 물리적으로 고정 */
 .table th.ps-4, .table td.ps-4 {
     padding-left: 1.5rem !important; /* 본문의 ps-4와 헤더의 ps-4를 완벽히 일치시킴 */
@@ -197,7 +197,23 @@ h3, .card-title {
 #selectAllMaster, .row-select-all {
     margin: 0 !important;
 }
-</style>
+
+/* 📍 다크모드에서 '뒤로가기' 버튼 가시성 강화 */
+[data-coreui-theme="dark"] .btn-outline-dark {
+    color: #d8dbe0 !important;          /* 밝은 회색 글자 */
+    border-color: #4f5d73 !important;   /* 약간 밝은 테두리 */
+}
+
+[data-coreui-theme="dark"] .btn-outline-dark:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important; /* 호버 시 살짝 밝아짐 */
+    color: #ffffff !important;
+}
+
+/* 📍 (보너스) '이름 수정' 버튼도 다크모드에서 더 잘 보이게 */
+[data-coreui-theme="dark"] .btn-outline-secondary {
+    color: #a5a9b1 !important;
+    border-color: #3c434f !important;
+}
 </style>
 </head>
 
