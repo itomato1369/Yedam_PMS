@@ -33,13 +33,13 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf(csrf -> csrf.disable())
+			.headers(headers -> headers.cacheControl(cache -> cache.disable()))
 			.authorizeHttpRequests(auth -> auth
 					.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
 					.requestMatchers("/coreui/**").permitAll()
-					.requestMatchers("/home/**", "/user/**", "/error/**").permitAll()
-					.requestMatchers("/settings/**").hasRole("ADMIN")
+					.requestMatchers("/home/**", "/user/**", "/download/**", "/error", "/error/**").permitAll()
+					.requestMatchers("/settings/**").access(projectAuthorizationManager)
 					.anyRequest().access(projectAuthorizationManager)
-					//.anyRequest().authenticated()
 					)
 			.formLogin(form -> form
 					.loginPage("/user/login")
