@@ -75,7 +75,7 @@ public class ProjectServiceImpl implements ProjectService {
 	    List<MemberDTO> allMembers = projectMapper.selectMembersByProjectNos(projectNos);
 	    
 	    // ★ 휴일 데이터 캐싱 (is_holiday == 'Y'인 날짜만 모음)
-	    Set<LocalDate> holidaySet = findHolidays().stream()
+	    Set<LocalDate> holidaySet = selfProxy.findHolidays().stream()
 	            .filter((HolidayDTO h) -> "Y".equals(h.getIsHoliday()))
 	            .map((HolidayDTO h) -> {
 	                return convertToLocalDate(h.getHolidayDt());

@@ -3,11 +3,10 @@ package com.pms.project.controller;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
@@ -27,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.pms.config.CustomUserDetails;
-import com.pms.issue.mapper.IssueMapper;
 import com.pms.issue.service.IssueService;
 import com.pms.issue.web.IssueDto;
 import com.pms.project.common.mapper.ProjectCommonStatusMapper;
@@ -55,7 +53,9 @@ public class ProjectController {
     		, @ModelAttribute ProjectSearchDTO searchDTO
     		, @AuthenticationPrincipal CustomUserDetails customUser 
     		) {
-        // 실제 운영 시에는 세션 또는 SecurityContext에서 userId를 가져옴
+    	// 비동기로 휴일 데이터를 조회하여 캐시에 적재
+    	CompletableFuture.runAsync(() -> projectService.findHolidays());
+        
         String currentUserId = customUser.getUserEntity().getUserId();
         boolean isAdmin = customUser.getUserEntity().isAdmin();
         
