@@ -88,6 +88,7 @@
                            th:href="@{/project/user/{code}/read(code=${project.projectCode})}" 
                            class="text-decoration-none"></a>
                     </h5>
+                    <i th:if="${project.isPm}" class="cil-user" style="font-size: 1.2rem;"></i>
                     <span th:if="${project.publicYn == 1}" class="badge bg-info-light text-info small" style="font-size: 0.7rem;">Public</span>
                 </div>
                 <p class="text-muted small mb-3" th:text="${project.projectDesc}"></p>
@@ -125,6 +126,7 @@
                 <a th:href="@{/project/user/{code}/read(code=${sub.projectCode})}" 
                    th:text="${sub.projectName}" class="text-decoration-none"></a>
             </h6>
+            <i th:if="${sub.isPm}" class="cil-user" style="font-size: 1.2rem;"></i>
             <span th:if="${sub.publicYn == 1}" class="badge bg-info-light text-info small" style="font-size: 0.65rem;">Public</span>
         </div>
         <p class="text-muted mb-0" style="font-size: 0.85rem;" th:text="${sub.projectDesc}"></p>

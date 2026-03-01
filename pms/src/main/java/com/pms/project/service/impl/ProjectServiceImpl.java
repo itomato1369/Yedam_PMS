@@ -63,7 +63,7 @@ public class ProjectServiceImpl implements ProjectService {
 		return projectMapper.selectIsPM(userId);
 	}
 
-	private void applyBulkStats(List<ProjectSelectDTO> projects) {
+	private void applyBulkStats(List<ProjectSelectDTO> projects, String userId, boolean isAdmin) {
 	    if (projects == null || projects.isEmpty()) return;
 
 	    List<Integer> projectNos = projects.stream().map(ProjectSelectDTO::getProjectNo).toList();
@@ -75,13 +75,29 @@ public class ProjectServiceImpl implements ProjectService {
 	            .filter((HolidayDTO h) -> "Y".equals(h.getIsHoliday()))
 	            .map((HolidayDTO h) -> convertToLocalDate(h.getHolidayDt()))
 	            .collect(Collectors.toSet());
-
+	    
+	    // PM으로 있는 프로젝트 번호 
+	    Set<Integer> pmProjectNos = selfProxy.findIsPM(userId).stream()
+	            .map(PMGroupDTO::getProjectNo)
+	            .collect(Collectors.toSet());
+	    
 	    Map<Integer, List<JobDTO>> jobMap = allJobs.stream().collect(Collectors.groupingBy(JobDTO::getProjectNo));
 	    Map<Integer, List<MemberDTO>> memberMap = allMembers.stream().collect(Collectors.groupingBy(MemberDTO::getProjectNo));
 
+	    // [디버깅 로그] 로그인 사용자 및 권한 정보 출력
+	    log.info("====== PM 권한 체크 로그 ======");
+	    log.info("로그인 아이디: {}, 관리자 여부: {}", userId, isAdmin);
+	    log.info("사용자가 PM으로 등록된 프로젝트 번호 목록: {}", pmProjectNos);
+	    
 	    for (ProjectSelectDTO p : projects) {
+	    	p.setIsPm(pmProjectNos.contains(p.getProjectNo()));
+	    	
+	    	boolean isPmAuth = pmProjectNos.contains(p.getProjectNo());
+	    	log.info("프로젝트 [{}] (코드: {}) - 계산된 isPm 값: {}", p.getProjectName(), p.getProjectCode(), isPmAuth);
+	    	
 	        p.setProjectTotalDTO(calculateSubtreeStats(p, projects, jobMap, memberMap, holidaySet)); 
 	    }
+	    log.info("===============================");
 	}
 	
 	// 전체 조회
@@ -89,7 +105,7 @@ public class ProjectServiceImpl implements ProjectService {
 	@Transactional(readOnly = true)
 	public List<ProjectSelectDTO> findUserProjects(String userId, boolean isAdmin) {
 	    List<ProjectSelectDTO> allProjects = projectMapper.selectUserProjects(userId, isAdmin);
-	    applyBulkStats(allProjects); // 공통 로직 태우기
+	    applyBulkStats(allProjects, userId, isAdmin); // 공통 로직 태우기
 	    return allProjects;
 	}
 
@@ -98,7 +114,7 @@ public class ProjectServiceImpl implements ProjectService {
 	@Transactional(readOnly = true)
 	public List<ProjectSelectDTO> findProjectByOptions(ProjectSearchDTO searchDTO, String currentUserId, boolean isAdmin) {
 	    List<ProjectSelectDTO> searchResults = projectMapper.selectProjectsByOptions(searchDTO, currentUserId, isAdmin);
-	    applyBulkStats(searchResults); 
+	    applyBulkStats(searchResults, currentUserId, isAdmin); 
 	    return searchResults;
 	}
 	
