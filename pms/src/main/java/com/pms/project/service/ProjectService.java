@@ -24,7 +24,7 @@ public interface ProjectService {
 	List<PMGroupDTO> findIsPM(String userId);
 	List<ProjectSelectDTO> findUserProjects(String userId, boolean isAdmin);	    
 	List<ProjectSelectDTO> findProjectByOptions(ProjectSearchDTO searchDTO, String currentUserId, boolean isAdmin);
-    
+	public List<String> findAssigneeNames(); 
     List<ParentProjectDTO> findParentProjects();
     
     // 새 프로젝트 페이지

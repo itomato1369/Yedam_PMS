@@ -46,6 +46,8 @@ public interface ProjectMapper {
     int insertInheritedGroups(@Param("newProjectNo") int newProjectNo, @Param("parentProjectNo") int parentProjectNo);
     // 상위 프로젝트의 시작-종료 기간 조회 
     ProjectInsertDTO selectParentProjectDuration(ProjectInsertDTO projectInsertDTO);
+    // 프로젝트 관리자 이름 목록조회
+    List<String> selectAssigneeNames();
     
     // 프로젝트 개요 페이지 
     ProjectInsertDTO selectInfoByCode(@Param("projectCode") String projectCode);

@@ -62,6 +62,10 @@ public class ProjectServiceImpl implements ProjectService {
 	public List<PMGroupDTO> findIsPM(String userId) {
 		return projectMapper.selectIsPM(userId);
 	}
+	@Override
+	public List<String> findAssigneeNames() {
+	    return projectMapper.selectAssigneeNames();
+	}
 
 	private void applyBulkStats(List<ProjectSelectDTO> projects, String userId, boolean isAdmin) {
 	    if (projects == null || projects.isEmpty()) return;

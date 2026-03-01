@@ -54,7 +54,10 @@
 	        <option th:each="common : ${commons}" th:value="${common.commonNo}" th:text="${common.commonName}"></option>
 	      </select>
 	      
-	      <input type="text" class="form-control" placeholder="담당자" th:field="*{projectAssignee}" style="max-width: 120px" />
+	      <select class="form-select" th:field="*{projectAssignee}" style="max-width: 160px">
+		    <option value="" selected>담당자 (전체)</option>
+		    <option th:each="name : ${assignees}" th:value="${name}" th:text="${name}"></option>
+		  </select>
 	
 	      <div class="input-group input-group-sm ms-2" style="max-width: 350px;">
 	          <span class="input-group-text"><i class="cil-calendar me-1"></i> 기간</span>

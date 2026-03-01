@@ -73,10 +73,11 @@ public class ProjectController {
             model.addAttribute("projects", projectService.findUserProjects(currentUserId, isAdmin));
         }
         
-        model.addAttribute("commons" , projectCommonStatusMapper.selectProjectCommonStatusAll());
+        model.addAttribute("commons" , projectCommonStatusMapper.selectProjectCommonStatusAll(isAdmin));
         model.addAttribute("searchDTO", searchDTO); // 검색 폼의 값 유지를 위해 모델에 추가
         model.addAttribute("admin", isAdmin);
         model.addAttribute("pm", projectService.findIsPM(currentUserId).size() > 0);
+        model.addAttribute("assignees", projectService.findAssigneeNames());
         
         return "project/list";
     }
