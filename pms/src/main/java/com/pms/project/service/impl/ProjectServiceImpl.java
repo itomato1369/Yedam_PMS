@@ -63,35 +63,45 @@ public class ProjectServiceImpl implements ProjectService {
 		return projectMapper.selectIsPM(userId);
 	}
 
-	@Override
-	@Transactional(readOnly = true)
-	public List<ProjectSelectDTO> findUserProjects(String userId, boolean isAdmin) {
-	    List<ProjectSelectDTO> allProjects = projectMapper.selectUserProjects(userId, isAdmin);
-	    if (allProjects.isEmpty()) return allProjects;
+	private void applyBulkStats(List<ProjectSelectDTO> projects) {
+	    if (projects == null || projects.isEmpty()) return;
 
-	    List<Integer> projectNos = allProjects.stream().map(ProjectSelectDTO::getProjectNo).toList();
-
+	    List<Integer> projectNos = projects.stream().map(ProjectSelectDTO::getProjectNo).toList();
 	    List<JobDTO> allJobs = projectMapper.selectJobsByProjectNos(projectNos);
 	    List<MemberDTO> allMembers = projectMapper.selectMembersByProjectNos(projectNos);
 	    
-	    // ★ 휴일 데이터 캐싱 (is_holiday == 'Y'인 날짜만 모음)
+	    // 캐싱된 휴일 데이터 로드
 	    Set<LocalDate> holidaySet = selfProxy.findHolidays().stream()
 	            .filter((HolidayDTO h) -> "Y".equals(h.getIsHoliday()))
-	            .map((HolidayDTO h) -> {
-	                return convertToLocalDate(h.getHolidayDt());
-	            })
+	            .map((HolidayDTO h) -> convertToLocalDate(h.getHolidayDt()))
 	            .collect(Collectors.toSet());
 
 	    Map<Integer, List<JobDTO>> jobMap = allJobs.stream().collect(Collectors.groupingBy(JobDTO::getProjectNo));
 	    Map<Integer, List<MemberDTO>> memberMap = allMembers.stream().collect(Collectors.groupingBy(MemberDTO::getProjectNo));
 
-	    for (ProjectSelectDTO p : allProjects) {
-	        // holidaySet 파라미터 추가
-	        p.setProjectTotalDTO(calculateSubtreeStats(p, allProjects, jobMap, memberMap, holidaySet)); 
+	    for (ProjectSelectDTO p : projects) {
+	        p.setProjectTotalDTO(calculateSubtreeStats(p, projects, jobMap, memberMap, holidaySet)); 
 	    }
-
+	}
+	
+	// 전체 조회
+	@Override
+	@Transactional(readOnly = true)
+	public List<ProjectSelectDTO> findUserProjects(String userId, boolean isAdmin) {
+	    List<ProjectSelectDTO> allProjects = projectMapper.selectUserProjects(userId, isAdmin);
+	    applyBulkStats(allProjects); // 공통 로직 태우기
 	    return allProjects;
 	}
+
+	// 검색 조회
+	@Override
+	@Transactional(readOnly = true)
+	public List<ProjectSelectDTO> findProjectByOptions(ProjectSearchDTO searchDTO, String currentUserId, boolean isAdmin) {
+	    List<ProjectSelectDTO> searchResults = projectMapper.selectProjectsByOptions(searchDTO, currentUserId, isAdmin);
+	    applyBulkStats(searchResults); 
+	    return searchResults;
+	}
+	
 
 	/**
 	 * 계층형 통계 합산 로직 (재귀 활용)
@@ -205,12 +215,6 @@ public class ProjectServiceImpl implements ProjectService {
 		}
 		return workingDays;
 	}
-
-	@Override
-	public List<ProjectSelectDTO> findProjectByOptions(ProjectSearchDTO searchDTO) {
-		return projectMapper.selectProjectsByOptions(searchDTO);
-	}
-
 	@Override
 	public List<ParentProjectDTO> findParentProjects() {
 		return projectMapper.selectParentProjects();

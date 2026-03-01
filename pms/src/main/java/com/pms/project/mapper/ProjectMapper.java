@@ -28,7 +28,11 @@ public interface ProjectMapper {
     List<PMGroupDTO> selectIsPM(@Param("userId") String userId);
     
     // 사용자의 검색결과를 바탕으로하는 프로젝트 목록 조회 (통계 포함) 
-    List<ProjectSelectDTO> selectProjectsByOptions(ProjectSearchDTO searchDTO);
+    List<ProjectSelectDTO> selectProjectsByOptions(
+    	    @Param("search") ProjectSearchDTO searchDTO, 
+    	    @Param("currentUserId") String currentUserId, 
+    	    @Param("isAdmin") boolean isAdmin
+    	);
     List<ParentProjectDTO> selectParentProjects();
     
     // 조회 가속을 위한 메서드 추가 (List<Integer>를 파라미터로 받음)

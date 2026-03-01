@@ -60,17 +60,16 @@ public class ProjectController {
         boolean isAdmin = customUser.getUserEntity().isAdmin();
         
         // 검색 조건이 있는지 확인 (projectName, projectStatus, projectAssignee 중 하나라도 값이 있으면 검색 조건으로 간주)
-        boolean hasSearchCriteria = searchDTO.getProjectName() != null && !searchDTO.getProjectName().isEmpty() ||
-                                    searchDTO.getProjectStatus() != null ||
-                                    searchDTO.getProjectAssignee() != null && !searchDTO.getProjectAssignee().isEmpty();
+        boolean hasSearchCriteria = 
+        	    (searchDTO.getProjectName() != null && !searchDTO.getProjectName().isEmpty()) ||
+        	    (searchDTO.getProjectStatus() != null) ||
+        	    (searchDTO.getProjectAssignee() != null && !searchDTO.getProjectAssignee().isEmpty()) ||
+        	    (searchDTO.getStartDate() != null) || (searchDTO.getEndDate() != null);
 
         if (hasSearchCriteria) {
-            // 검색 조건이 있으면 검색 결과 반환
-            // 현재 로그인 사용자 ID를 searchDTO에 추가하여 쿼리에서 활용 (예: has_login_user_joined 필드)
-            searchDTO.setCurrentUserId(currentUserId); // ProjectSearchDTO에 currentUserId 필드 추가 필요
-            model.addAttribute("projects", projectService.findProjectByOptions(searchDTO));
+            // DTO 세팅 삭제, 서비스 메서드에 직관적으로 인자 전달
+            model.addAttribute("projects", projectService.findProjectByOptions(searchDTO, currentUserId, isAdmin));
         } else {
-            // 검색 조건이 없으면 사용자 프로젝트 전체 목록 반환
             model.addAttribute("projects", projectService.findUserProjects(currentUserId, isAdmin));
         }
         

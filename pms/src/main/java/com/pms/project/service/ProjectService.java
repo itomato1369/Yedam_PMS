@@ -23,8 +23,7 @@ public interface ProjectService {
 	// 새프로젝트 생성버튼 표시용도 - PM여부 반환해서
 	List<PMGroupDTO> findIsPM(String userId);
 	List<ProjectSelectDTO> findUserProjects(String userId, boolean isAdmin);	    
-    
-    List<ProjectSelectDTO> findProjectByOptions(ProjectSearchDTO searchDTO);
+	List<ProjectSelectDTO> findProjectByOptions(ProjectSearchDTO searchDTO, String currentUserId, boolean isAdmin);
     
     List<ParentProjectDTO> findParentProjects();
     
