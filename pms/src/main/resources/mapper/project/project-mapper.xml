@@ -298,7 +298,7 @@
 	  , u.username AS "worker_name"
 	  , c.common_name AS "job_priority"
 	  , description
-	  , job_status_no, job_type_no, public_role, files_no
+	  , job_status_no, job_type_no, public_role, files_no, worker_id
 	FROM (
 	  SELECT
 	    'p' || pt.project_no AS id
@@ -369,11 +369,15 @@
 		  , j.job_status_no
 		FROM history h
 		JOIN job j ON h.job_no = j.job_no
-		JOIN project p ON j.project_no = p.project_no
+		JOIN (
+		    SELECT project_no
+		    FROM project
+		    START WITH project_code = #{projectCode}
+		    CONNECT BY PRIOR project_no = parent_project_no
+		) p                ON j.project_no = p.project_no
 		JOIN users u ON u.user_id = h.user_id
-		JOIN job_type jt ON jt.job_type_no = j.job_type_no
+		JOIN job_type jtON jt.job_type_no = j.job_type_no
 		JOIN job_status js ON js.job_status_no = j.job_status_no
-		WHERE p.project_code = #{projectCode}
 		ORDER BY h.history_date DESC
 	</select>
 </mapper>
