@@ -3,6 +3,7 @@ package com.pms.project.controller;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.pms.config.CustomUserDetails;
+import com.pms.files.dto.FileListDto;
+import com.pms.files.service.FileListService;
 import com.pms.issue.service.IssueService;
 import com.pms.issue.web.IssueDto;
 import com.pms.project.common.mapper.ProjectCommonStatusMapper;
@@ -47,6 +50,7 @@ public class ProjectController {
     private final ProjectService projectService;
     private final ProjectCommonStatusMapper projectCommonStatusMapper;
     private final IssueService issueService;
+    private final FileListService fileListService;
     
     @GetMapping("/read")
     public String listProjects(Model model 
@@ -159,6 +163,15 @@ public class ProjectController {
         String userId = customUser.getUserEntity().getUserId();
         // 동일한 병렬 처리 서비스를 호출하여 순수 JSON 데이터만 반환
         return projectService.findGanttDataByCode(projectCode, userId);
+    }
+    @GetMapping("/user/{projectCode}/issue/gantt/files/read")
+    @ResponseBody
+    public List<FileListDto> getGanttIssueFiles(@RequestParam(required = false) Integer filesNo) {
+        // filesNo가 없거나 0이면 빈 배열 반환 (신규 일감이거나 파일이 없는 경우)
+        if (filesNo == null || filesNo == 0) {
+            return new ArrayList<>(); 
+        }
+        return fileListService.findFileList(filesNo);
     }
 	
     @PostMapping("/user/{projectCode}/issue/gantt/create")

@@ -298,7 +298,7 @@
 	  , u.username AS "worker_name"
 	  , c.common_name AS "job_priority"
 	  , description
-	  , job_status_no, job_type_no, public_role
+	  , job_status_no, job_type_no, public_role, files_no
 	FROM (
 	  SELECT
 	    'p' || pt.project_no AS id
@@ -317,6 +317,7 @@
 	    , NULL AS job_status_no
 	    , NULL AS job_type_no
 	    , NULL AS public_role
+	    , NULL AS files_no
 	  FROM project_tree pt
 	
 	  UNION ALL
@@ -338,6 +339,7 @@
 	    , j.job_status_no
 	    , j.job_type_no
 	    , j.public_role
+	    , j.files_no
 	    FROM job j
 	    JOIN project_tree pt ON pt.project_no = j.project_no
 	  )
