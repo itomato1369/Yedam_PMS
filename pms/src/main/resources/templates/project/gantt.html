@@ -450,7 +450,7 @@
             submitBtn.disabled = true;
 
             const isNew     = !!(currentTaskInfo?.$new);
-            const reqMethod = isNew ? 'POST' : 'PUT';
+            const reqMethod = 'POST';
             const targetUrl = isNew ? add_url : update_url;
             const formData  = new FormData(form);
 
@@ -461,6 +461,13 @@
                 formData.append("duration", 1);
             } else {
                 formData.append("jobNo", String(currentTaskInfo.id).replace("j", ""));
+                
+                const curFilesNo = currentTaskInfo.filesNo;
+                if (curFilesNo && curFilesNo !== "null" && curFilesNo !== "undefined") {
+                    formData.append("filesNo", curFilesNo);
+                }
+                
+                formData.append("_method", "PUT"); // 스프링에게 이 POST 요청을 PUT으로 취급하라고 지시!
             }
 
             fetch(targetUrl, { method: reqMethod, body: formData })
