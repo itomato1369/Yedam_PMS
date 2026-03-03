@@ -698,7 +698,7 @@
             issues.forEach(issue => {
                 let badgeColor = issue.priorityName === '긴급' ? 'bg-danger' : (issue.priorityName === '높음' ? 'bg-warning text-dark' : 'bg-info');
                 listContainer.insertAdjacentHTML('beforeend', `
-                    <div class="list-group-item px-0 py-2 border-bottom" style="cursor:pointer;" onclick="location.href='/project/user/${issue.projectCode}/issue/info?jobNo=${issue.jobNo}'">
+                    <div class="list-group-item px-0 py-2 border-bottom" style="cursor:pointer;" onclick="location.href='/project/user/${issue.projectCode}/issue/info/read?jobNo=${issue.jobNo}'">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="text-truncate" style="max-width: 80%;">
                                 <small class="text-muted">#${issue.jobNo}</small>
