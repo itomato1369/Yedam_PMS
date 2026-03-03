@@ -250,5 +250,24 @@
         padding-top: 0 !important;
     }
     /* 필요 시 다크 모드 전용 테이블이나 텍스트 색상을 여기에 추가하세요 */
+    /* 아코디언 버튼의 텍스트 색상을 --text-high로 고정 */
+    .accordion-button {
+        background-color: var(--surface-color) !important;
+        /* 헤더 글자색을 요청하신 변수로 설정 */
+        color: var(--text-high) !important; 
+        border: 1px solid var(--border-color) !important;
+    }
+
+    /* 아코디언이 펼쳐졌을 때(활성화 시) 스타일 */
+    .accordion-button:not(.collapsed) {
+        background-color: var(--table-hover-color) !important;
+        /* 활성화 상태에서도 일관성 유지를 위해 설정 (필요 시 white 등으로 변경 가능) */
+        color: var(--text-high) !important; 
+    }
+
+    /* 내부 아이콘(화살표) 색상도 글자색과 맞추기 위한 필터 (선택 사항) */
+    .accordion-button::after {
+        filter: bright
+    }
 }
 

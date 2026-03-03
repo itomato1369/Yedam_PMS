@@ -10,11 +10,32 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{common/layouts/default-layout}"
 	layout:fragment="Content">
+	<style>
+    /* 다크모드 전용: 현재 페이지의 테이블 모서리 잔상 및 라이트 헤더 강제 무력화 */
+    [data-coreui-theme="dark"] .card.bg-light, 
+    [data-coreui-theme="dark"] .table-responsive {
+        background-color: transparent !important;
+        border-color: transparent !important;
+    }
+
+    [data-coreui-theme="dark"] table th,
+    [data-coreui-theme="dark"] .table thead.table-light,
+    [data-coreui-theme="dark"] .table thead.table-light th {
+        background-color: transparent !important; 
+        color: var(--text-high) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    [data-coreui-theme="dark"] .table {
+        /* 전역 설정(border-radius 등)은 상속받고, 모서리 픽셀 새어 나옴만 방지 */
+        transform: translateZ(0); 
+    }
+</style>
 <div class="mb-2">
 	<!--/* row-header */-->
     <div class="mb-3">
         <!--/* 프로젝트 정보 */-->
-        <h2 class="fw-bold m-0 text-dark" 
+        <h2 class="fw-bold m-0 text-primary" 
             th:text="|${info.projectName} 개요(${#calendars.format(info.startDate, 'yyyy-MM-dd')} ~ ${#calendars.format(info.endDate, 'yyyy-MM-dd')})|">
         </h2>
     </div>
@@ -40,7 +61,7 @@
       <div class="card-body p-0">
         <div class="table-responsive">
   <table class="table table-hover table-bordered mb-0">
-    <thead class="table-light">
+    <thead class="my-0 table-light">
       <tr>
         <th>유형</th>
         <th class="text-center" 
@@ -52,7 +73,7 @@
     <tbody>
       <tr th:each="row : ${trackerData.rows}">
         
-        <td class="text-left col-2 col-md-1">
+        <td class="text-left col-2 col-md-2">
           <a class="text-decoration-none" th:text="${row['JOB_TYPE']}">유형</a>
         </td>
         
