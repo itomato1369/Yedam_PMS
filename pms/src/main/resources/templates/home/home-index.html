@@ -335,35 +335,40 @@
 			</div>
 
 			<div class="dashboard-item" data-id="stats">
-				<div class="section-box border-top border-info border-4">
-					<div class="section-title text-info">
-						<span><i class="cil-chart"></i> 일감 통합 현황</span>
-						<div class="form-check form-switch mb-0"
-							style="font-size: 0.9rem;">
-							<input class="form-check-input" type="checkbox"
-								id="dashShowOnlyMe" onchange="loadDashboardIssues()"> <label
-								class="form-check-label text-muted" for="dashShowOnlyMe">내
-								것만</label>
-						</div>
-					</div>
-					<div class="section-content">
-						<div class="mb-3">
-							<select id="dashProjectSelect" class="form-select form-select-sm"
-								onchange="loadDashboardIssues()">
-								<option value="all">모든 프로젝트 (전체 보기)</option>
-								<th:block th:each="p : ${list.projects}">
-									<option th:value="${p.projectCode}" th:text="${p.projectName}"></option>
-								</th:block>
-							</select>
-						</div>
+    <div class="section-box border-top border-info border-4">
+        <div class="section-title text-info">
+            <span><i class="cil-chart"></i> 일감 통합 현황</span>
+            <div class="form-check form-switch mb-0" style="font-size: 0.9rem;">
+                <input class="form-check-input" type="checkbox" id="dashShowOnlyMe" onchange="loadDashboardIssues()"> 
+                <label class="form-check-label text-muted" for="dashShowOnlyMe">내 것만</label>
+            </div>
+        </div>
+        <div class="section-content">
+            <div class="mb-2 d-flex gap-2">
+                <select id="dashProjectSelect" class="form-select form-select-sm" onchange="loadDashboardIssues()">
+                    <option value="all">모든 프로젝트</option>
+                    <th:block th:each="p : ${list.projects}">
+                        <option th:value="${p.projectCode}" th:text="${p.projectName}"></option>
+                    </th:block>
+                </select>
+                <select id="dashPriorityFilter" class="form-select form-select-sm" style="width: 120px;" onchange="renderIssueList()">
+                    <option value="all">전체 우선순위</option>
+                    <option value="긴급">긴급</option>
+                    <option value="높음">높음</option>
+                    <option value="보통">보통</option>
+                    <option value="낮음">낮음</option>
+                </select>
+            </div>
 
-						<div id="dash-issue-list"
-							class="list-group list-group-flush small">
-							<p class="text-center text-muted py-4">일감을 불러오는 중...</p>
-						</div>
-					</div>
-				</div>
-			</div>
+            <div id="priorityCountBadge" class="d-flex justify-content-between mb-3 gap-1">
+                </div>
+
+            <div id="dash-issue-list" class="list-group list-group-flush small">
+                <p class="text-center text-muted py-4">일감을 불러오는 중...</p>
+            </div>
+        </div>
+    </div>
+</div>
 		</div>
 	</div>
 
@@ -716,35 +721,96 @@
     }
 
     /* --- [일감 현황 로직] --- */
-    async function loadDashboardIssues() {
-        const selectEl = document.getElementById('dashProjectSelect');
-        const projectCode = selectEl ? selectEl.value : 'all'; 
-        const isOnlyMe = document.getElementById('dashShowOnlyMe').checked ? 'Y' : 'N';
-        const listContainer = document.getElementById('dash-issue-list');
+    // 전역 변수로 데이터 보관 (필터링 시 재사용)
+let currentDashboardIssues = [];
 
-        try {
-            const response = await fetch(`/api/dashboard/${projectCode}/issues?showOnlyMe=${isOnlyMe}`);
-            const issues = await response.json();
-            listContainer.innerHTML = '';
-            if (issues.length === 0) {
-                listContainer.innerHTML = '<div class="text-center text-muted py-4">해당하는 일감이 없습니다.</div>';
-                return;
-            }
-            issues.forEach(issue => {
-                let badgeColor = issue.priorityName === '긴급' ? 'bg-danger' : (issue.priorityName === '높음' ? 'bg-warning text-dark' : 'bg-info');
-                listContainer.insertAdjacentHTML('beforeend', `
-                    <div class="list-group-item px-0 py-2 border-bottom" style="cursor:pointer;" onclick="location.href='/project/user/${issue.projectCode}/issue/info/read?jobNo=${issue.jobNo}'">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="text-truncate" style="max-width: 80%;">
-                                <small class="text-muted">#${issue.jobNo}</small>
-                                <span class="fw-bold d-block" style="font-size: 0.85rem;">${issue.title}</span>
-                            </div>
-                            <span class="badge ${badgeColor}" style="font-size: 0.7rem;">${issue.priorityName}</span>
-                        </div>
-                    </div>`);
-            });
-        } catch (error) { listContainer.innerHTML = '<div class="text-center text-danger py-4">데이터 로딩 에러</div>'; }
+/* --- [일감 현황 로직 수정] --- */
+async function loadDashboardIssues() {
+    const projectCode = document.getElementById('dashProjectSelect')?.value || 'all';
+    const isOnlyMe = document.getElementById('dashShowOnlyMe').checked ? 'Y' : 'N';
+    const listContainer = document.getElementById('dash-issue-list');
+
+    try {
+        const response = await fetch(`/api/dashboard/${projectCode}/issues?showOnlyMe=${isOnlyMe}`);
+        const issues = await response.json();
+        
+        // 1. 우선순위 가중치 설정 및 정렬
+        const priorityWeight = { '긴급': 1, '높음': 2, '보통': 3, '낮음': 4 };
+        
+        currentDashboardIssues = issues.sort((a, b) => {
+            return (priorityWeight[a.priorityName] || 99) - (priorityWeight[b.priorityName] || 99);
+        });
+
+        renderIssueList(); // 화면 그리기
+        renderPriorityBadges(); // 상단 카운트 배지 그리기
+
+    } catch (error) { 
+        listContainer.innerHTML = '<div class="text-center text-danger py-4">데이터 로딩 에러</div>'; 
     }
+}
+
+// 📍 필터링 및 리스트 렌더링 함수
+function renderIssueList() {
+    const listContainer = document.getElementById('dash-issue-list');
+    const filterValue = document.getElementById('dashPriorityFilter').value;
+    
+    // 필터링 적용
+    const filtered = filterValue === 'all' 
+        ? currentDashboardIssues 
+        : currentDashboardIssues.filter(i => i.priorityName === filterValue);
+
+    listContainer.innerHTML = '';
+    
+    if (filtered.length === 0) {
+        listContainer.innerHTML = '<div class="text-center text-muted py-4">해당하는 일감이 없습니다.</div>';
+        return;
+    }
+
+    filtered.forEach(issue => {
+        let badgeClass = 'bg-info';
+        if (issue.priorityName === '긴급') badgeClass = 'bg-danger';
+        else if (issue.priorityName === '높음') badgeClass = 'bg-warning text-dark';
+        else if (issue.priorityName === '보통') badgeClass = 'bg-success';
+
+        listContainer.insertAdjacentHTML('beforeend', `
+            <div class="list-group-item px-0 py-2 border-bottom hover-light" style="cursor:pointer;" 
+                 onclick="location.href='/project/user/${issue.projectCode}/issue/info/read?jobNo=${issue.jobNo}'">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="text-truncate" style="max-width: 75%;">
+                        <div class="d-flex align-items-center gap-1 mb-1">
+                            <small class="text-muted fw-bold">#${issue.jobNo}</small>
+                            <span class="badge ${badgeClass}" style="font-size: 0.65rem;">${issue.priorityName}</span>
+                        </div>
+                        <span class="fw-bold d-block text-truncate" style="font-size: 0.85rem;">${issue.title}</span>
+                    </div>
+                    <small class="text-muted" style="font-size: 0.7rem;">${issue.projectCode}</small>
+                </div>
+            </div>`);
+    });
+}
+
+// 📍 상단 요약 배지 렌더링
+function renderPriorityBadges() {
+    const badgeContainer = document.getElementById('priorityCountBadge');
+    const counts = { '긴급': 0, '높음': 0, '보통': 0, '낮음': 0 };
+    
+    currentDashboardIssues.forEach(i => {
+        if (counts.hasOwnProperty(i.priorityName)) counts[i.priorityName]++;
+    });
+
+    badgeContainer.innerHTML = `
+        <div class="badge bg-danger flex-fill p-2" style="cursor:pointer" onclick="filterByBadge('긴급')">긴급 ${counts['긴급']}</div>
+        <div class="badge bg-warning text-dark flex-fill p-2" style="cursor:pointer" onclick="filterByBadge('높음')">높음 ${counts['높음']}</div>
+        <div class="badge bg-success flex-fill p-2" style="cursor:pointer" onclick="filterByBadge('보통')">보통 ${counts['보통']}</div>
+        <div class="badge bg-info flex-fill p-2" style="cursor:pointer" onclick="filterByBadge('낮음')">낮음 ${counts['낮음']}</div>
+    `;
+}
+
+// 배지 클릭 시 필터 셀렉트박스 변경 및 리스트 갱신
+function filterByBadge(priority) {
+    document.getElementById('dashPriorityFilter').value = priority;
+    renderIssueList();
+}
 
     function goToProjectInfo(projectCode) { location.href = `/project/user/${projectCode}/read`; }
 </script>
