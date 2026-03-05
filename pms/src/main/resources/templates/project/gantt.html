@@ -161,8 +161,6 @@
         </div>
     </div>
 
-    <th:block th:replace="~{common/fragments/issue/user-select-modal :: UserSelectModal}"></th:block>
-    <th:block th:replace="~{common/fragments/issue/issue-select-modal :: IssueSelectModal}"></th:block>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css" />
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
@@ -720,9 +718,9 @@
         (data.managerList || []).forEach(user => {
             const opt = new Option(user.username, user.userId);
             managerSelect.add(opt.cloneNode(true));
-            workerSelect.add(opt);
+            workerSelect.add(opt.cloneNode(true));
         });
-
+        
         // --- 휴일 등록 ---
         if (data.holidayList) {
             holidaySet = new Set(data.holidayList);

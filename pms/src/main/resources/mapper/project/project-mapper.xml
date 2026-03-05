@@ -320,7 +320,7 @@
 	<!--/* 간트차트 조회 */-->
 	<select id="selectGanttData" parameterType="String" resultType="GanttDTO">
 	WITH project_tree AS (
-	  SELECT /*+ MATERIALIZE */   p.project_no, p.project_name, p.start_date, p.end_date, p.project_code, p.parent_project_no, p.project_desc
+	  SELECT /*+ MATERIALIZE */   p.project_no, p.project_name, p.start_date, p.end_date, p.project_code, p.parent_project_no, p.project_desc, p.user_id
 	  FROM project p
 	  START WITH p.project_code = #{projectCode}
 	  CONNECT BY NOCYCLE PRIOR p.project_no = p.parent_project_no
@@ -344,7 +344,7 @@
 	        ELSE 'p' || pt.parent_project_no
 	      END AS parent
 	    , NULL AS project_id
-	    , NULL AS worker_id
+	    , pt.user_id AS worker_id
 	    , NULL AS manager_id
 	    , NULL AS job_priority
 	    , pt.project_desc AS description
