@@ -376,9 +376,12 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public List<ProjectSelectDTO> findFirstChildsByCode(String projectCode) {
-		return projectMapper.selectFirstChildsByCode(projectCode, ProjectStatus.ACTIVE.getCode(),
-				ProjectStatus.LOCKED.getCode());
+	public List<ProjectSelectDTO> findFirstChildsByCode(String projectCode, boolean isAdmin, String userId) {
+		return projectMapper.selectChildsByCode(projectCode, isAdmin, userId, 
+	            ProjectStatus.ACTIVE.getCode(), ProjectStatus.LOCKED.getCode())
+	            .stream()
+	            .filter(ProjectSelectDTO::isHasAccess)
+	            .toList();
 	}
 
 	@Override
@@ -469,6 +472,13 @@ public class ProjectServiceImpl implements ProjectService {
                     // 프론트엔드가 요구하는 JSON 규격에 맞게 문자열 덮어쓰기
                     dto.setStartDate(start.format(formatter));
                     dto.setEndDate(null);
+                }
+                
+                if (dto.getId().startsWith("p")) {
+                    dto.setEditLocked(true); 
+                } else {
+                    boolean canEdit = isAdmin || isPm || userId.equals(dto.getWorkerId()) || userId.equals(dto.getManagerId());
+                    dto.setEditLocked(!canEdit); 
                 }
             });
 
