@@ -32,6 +32,11 @@
 .gantt_grid_head_add { cursor: default !important; opacity: 1 !important; }
 .gantt_grid_head_cell, .gantt_scale_cell { font-size: 1rem !important; }
 
+.gantt_task_line, 
+.gantt_task_content {
+    overflow: visible !important;
+}
+
 /* [라이트 모드] 기존 밝은 회색 선 */
 [data-coreui-theme="light"] .gantt_grid_head_cell, 
 [data-coreui-theme="light"] .gantt_cell, 
@@ -219,7 +224,9 @@
             job_status_no: parseInt(savedTask.jobStatusNo),
             jobTypeNo:     parseInt(savedTask.jobTypeNo),
             job_type_no:   parseInt(savedTask.jobTypeNo),
-            filesNo:       savedTask.filesNo
+            filesNo:       savedTask.filesNo,
+            
+            editLocked:    false
         };
     }
 
@@ -413,6 +420,12 @@
                 // 진척도
                 const pct = currentTaskInfo.progress ? Math.round(currentTaskInfo.progress * 100) : 0;
                 progressSelect.value = String(pct);
+                
+                if (currentTaskInfo.editLocked) {
+                    progressSelect.disabled = true;
+                } else {
+                    progressSelect.disabled = false;
+                }
                 
                 // 파일 상세 정보
                 if (currentFilesNo) {
