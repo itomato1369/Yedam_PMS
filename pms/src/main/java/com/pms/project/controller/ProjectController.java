@@ -107,6 +107,18 @@ public class ProjectController {
     	// 로그인 사용자 정보에서 id 추출
     	dto.setUserId(customUser.getUserEntity().getUserId()); 
     	
+    	if(dto.getProjectName() == null || dto.getProjectName().trim().isEmpty()) {
+    		redirectAttributes.addFlashAttribute("errorMessage", "프로젝트 이름은 필수 입력값 입니다.");
+			redirectAttributes.addFlashAttribute("project", dto);
+			return "redirect:/project/create";
+    	}
+    	
+    	if(dto.getProjectCode() == null || dto.getProjectCode().trim().isEmpty()) {
+    		redirectAttributes.addFlashAttribute("errorMessage", "프로젝트 식별자는 필수 입력값 입니다.");
+			redirectAttributes.addFlashAttribute("project", dto);
+			return "redirect:/project/create";
+    	}
+    	
     	if(!projectService.findParentProjectDuration(dto)) {
     		redirectAttributes.addFlashAttribute("errorMessage", "하위프로젝트의 작업기간은 상위프로젝트의 작업기간을 벗어날 수 없습니다.");
 			redirectAttributes.addFlashAttribute("project", dto);
