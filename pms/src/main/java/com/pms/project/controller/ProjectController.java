@@ -107,6 +107,18 @@ public class ProjectController {
     	// 로그인 사용자 정보에서 id 추출
     	dto.setUserId(customUser.getUserEntity().getUserId()); 
     	
+    	if(dto.getProjectName() == null || dto.getProjectName().trim().isEmpty()) {
+    		redirectAttributes.addFlashAttribute("errorMessage", "프로젝트 이름은 필수 입력값 입니다.");
+			redirectAttributes.addFlashAttribute("project", dto);
+			return "redirect:/project/create";
+    	}
+    	
+    	if(dto.getProjectCode() == null || dto.getProjectCode().trim().isEmpty()) {
+    		redirectAttributes.addFlashAttribute("errorMessage", "프로젝트 식별자는 필수 입력값 입니다.");
+			redirectAttributes.addFlashAttribute("project", dto);
+			return "redirect:/project/create";
+    	}
+    	
     	if(!projectService.findParentProjectDuration(dto)) {
     		redirectAttributes.addFlashAttribute("errorMessage", "하위프로젝트의 작업기간은 상위프로젝트의 작업기간을 벗어날 수 없습니다.");
 			redirectAttributes.addFlashAttribute("project", dto);
@@ -140,7 +152,7 @@ public class ProjectController {
     	model.addAttribute("info", projectService.findInfoByCode(projectCode));
     	model.addAttribute("trackerData", projectService.findJobTrackerPivot(projectCode));
     	model.addAttribute("groupMembers", projectService.findGroupMemberByCode(projectCode));
-    	model.addAttribute("childProjects", projectService.findFirstChildsByCode(projectCode));
+    	model.addAttribute("childProjects", projectService.findFirstChildsByCode(projectCode, customUser.getUserEntity().isAdmin(),customUser.getUserEntity().getUserId() ));
 		model.addAttribute("news", projectService.findNoties());
     	
 		// 권한을 바탕으로 프로젝트 수정버튼이 보임
