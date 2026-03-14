@@ -63,4 +63,6 @@
 ---
 
 ## 📁 担当機能のディレクトリ
-![担当機能のディレクトリ](my_directory.txt)
+![担当機能のディレクトリ](my_directory1.png)
+![担当機能のディレクトリ](my_directory2.png)
+![担当機能のディレクトリ](my_directory3.png)
